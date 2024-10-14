@@ -129,13 +129,17 @@ public class RuntimeCodeSystem : MonoBehaviour
                     }
                     else if (_domain.SecurityResult.IsSecurityVerified == false)
                     {
-                        RuntimeManager.Instance.Console.LogError("NOT ALLOWED");
+                        RuntimeManager.Instance.Console.LogError("SECURITY FAILED: " + _domain.SecurityResult.GetAllText(true));
                         return;
                     }
                 }
-                if (_bannedCallsDetector.ContainsBannedCalls(codeWithAddedDirectives))
+                var bannedCalls = _bannedCallsDetector.GetBannedCalls(codeWithAddedDirectives);
+                if (bannedCalls.Count > 0)
                 {
-                    RuntimeManager.Instance.Console.LogError("BANNED CALL");
+                    for (int i = 0; i < bannedCalls.Count; i++)
+                    {
+                        RuntimeManager.Instance.Console.LogError($"SECURITY FAILED: {bannedCalls[i]}");
+                    }
                     return;
                 }
 
@@ -156,7 +160,6 @@ public class RuntimeCodeSystem : MonoBehaviour
             _activeScript.Call("Main");
         }
     }
-
 
 
 }

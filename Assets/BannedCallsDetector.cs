@@ -26,16 +26,18 @@ public class BannedCallsDetector : MonoBehaviour
     [SerializeField]
     private List<BannedCall> bannedCalls = new List<BannedCall>();
 
-    private void Awake()
-    {
-        // Example initialization of banned calls
-        bannedCalls.Add(new BannedCall("System", "Console", "Write"));
-        bannedCalls.Add(new BannedCall("System", "Console", "WriteLine"));
-        // Add more banned calls as needed
-    }
+    //private void Awake()
+    //{
+    //    // Example initialization of banned calls
+    //    bannedCalls.Add(new BannedCall("System", "Console", "Write"));
+    //    bannedCalls.Add(new BannedCall("System", "Console", "WriteLine"));
+    //    // Add more banned calls as needed
+    //}
 
-    public bool ContainsBannedCalls(string sourceCode)
+    public List<string> GetBannedCalls(string sourceCode)
     {
+        var detectedBannedCalls = new List<string>();
+
         var syntaxTree = CSharpSyntaxTree.ParseText(sourceCode);
         var references = new List<MetadataReference>
         {
@@ -50,7 +52,6 @@ public class BannedCallsDetector : MonoBehaviour
             new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
 
         var model = compilation.GetSemanticModel(syntaxTree);
-
         var invocations = syntaxTree.GetRoot()
             .DescendantNodes()
             .OfType<InvocationExpressionSyntax>();
@@ -67,14 +68,16 @@ public class BannedCallsDetector : MonoBehaviour
                 {
                     if (IsMatchingBannedCall(containingNamespace, containingType, methodSymbol, bannedCall))
                     {
-                        Debug.Log($"Banned call detected: {containingNamespace}.{containingType}.{methodSymbol.Name}");
-                        return true;
+                        //{containingNamespace.ToDisplayString()}.
+                        string bannedCallString = $"{containingType}.{methodSymbol.Name}";
+                        detectedBannedCalls.Add(bannedCallString);
+                        Debug.Log($"Banned call detected: {bannedCallString}");
                     }
                 }
             }
         }
 
-        return false;
+        return detectedBannedCalls;
     }
 
     private bool IsMatchingBannedCall(INamespaceSymbol namespaceSymbol, INamedTypeSymbol typeSymbol, IMethodSymbol methodSymbol, BannedCall bannedCall)

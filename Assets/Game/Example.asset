@@ -15,4 +15,5 @@ MonoBehaviour:
   _fileName: ExampleFile
   _codeSegments:
   - _isEditable: 1
-    _text: "public class Test\n{\n\tpublic void Main()\n\t{\n\t\tConsole.WriteLine(\"HelloWorld\");\n\t}\n}"
+    _text: "public class Test\n{\n\tpublic void Main()\n\t{\n\t\tint x = 5;\n\t\tint
+      y = 10;\n\t\tint result = x + y;\n\t\tConsole.WriteLine(result);\n\t}\n}"
