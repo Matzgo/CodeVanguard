@@ -20,7 +20,7 @@ public class MazeCrawlerTest : MonoBehaviour
     /// <summary>
     /// The main code editor input field.
     /// </summary>
-    public CustomCodeEditor runCrawlerInput;
+    public CodeEditor runCrawlerInput;
 
     /// <summary>
     /// The run code button.

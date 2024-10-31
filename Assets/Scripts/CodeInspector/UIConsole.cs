@@ -25,6 +25,17 @@ public class UIConsole : MonoBehaviour
         outputBuilder.AppendLine(message);
         UpdateConsoleText();
     }
+    public void WriteLine(string message, Color color)
+    {
+        // Convert the Color to a hex string
+        string hexColor = ColorUtility.ToHtmlStringRGBA(color);
+
+        // Add the message with color formatting using rich text
+        outputBuilder.AppendLine($"<color=#{hexColor}>{message}</color>");
+
+        // Update the console text
+        UpdateConsoleText();
+    }
 
     private void UpdateConsoleText()
     {

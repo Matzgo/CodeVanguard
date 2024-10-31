@@ -10,6 +10,9 @@ namespace CodeInspector
         UIConsole _console;
         public UIConsole Console => _console;
 
+        [SerializeField]
+        CustomCodeEditor _customCodeEditor;
+
         private void Awake()
         {
             if (Instance == null)
@@ -21,6 +24,17 @@ namespace CodeInspector
             {
                 Destroy(gameObject);
             }
+        }
+
+        public void HighlightLine(int lineNr)
+        {
+            Debug.Log("Highlight");
+            _customCodeEditor.HightlightRunningLine(lineNr);
+        }
+
+        public void DisableHighlightLine()
+        {
+            _customCodeEditor.DisableRunningLine();
         }
 
     }
