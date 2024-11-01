@@ -2,116 +2,323 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+
+
 
 public class CoroutineTransformer : MonoBehaviour
 {
     private int _lineOffset;
+    private HashSet<string> _methodsToTransform = new HashSet<string>();
 
     public void Initialize(int lineOffset)
     {
         _lineOffset = lineOffset;
+        _methodsToTransform = new HashSet<string>();
     }
 
+    private StatementSyntax TransformMethodInvocationsToYieldReturn(StatementSyntax statement)
+    {
+        // Find method invocations in the statement
+        var invocationExpressions = statement.DescendantNodes()
+            .OfType<InvocationExpressionSyntax>()
+            .ToList();
+
+        StatementSyntax transformedStatement;
+        foreach (var invocation in invocationExpressions)
+        {
+            string methodName = null;
+
+            if (invocation.Expression is IdentifierNameSyntax identifier)
+            {
+                methodName = identifier.Identifier.Text;
+            }
+            else if (invocation.Expression is MemberAccessExpressionSyntax memberAccess)
+            {
+                methodName = memberAccess.Name.Identifier.Text;
+            }
+
+            if (methodName != null && _methodsToTransform.Contains(methodName))
+            {
+                // Create a new yield return statement
+                var arguments = invocation.ArgumentList.Arguments;
+                var argList = string.Join(", ", arguments.Select(arg => arg.ToString()));
+
+                // Construct the yield return statement
+                var yieldReturnStatement = SyntaxFactory.ParseStatement($"yield return COR_{methodName}({argList});");
+
+                return yieldReturnStatement;
+            }
+        }
+        return statement; // Return the original if no method calls were found
+    }
+
+    public string TransformToCoroutine(string sourceCode)
+    {
+        var syntaxTree = CSharpSyntaxTree.ParseText(sourceCode);
+        var root = syntaxTree.GetRoot();
+
+        // Get all method declarations in the class
+        var methods = root.DescendantNodes().OfType<MethodDeclarationSyntax>().ToList();
+        if (methods.Count == 0) return sourceCode;
+
+        // Get the parent class of the methods
+        var parentClass = methods.First().Parent as ClassDeclarationSyntax;
+        if (parentClass == null) return sourceCode;
+
+        // Create a list to store modified methods
+        var transformedMethods = new List<MethodDeclarationSyntax>();
+
+        foreach (var method in methods)
+        {
+            _methodsToTransform.Add(method.Identifier.Text);
+        }
+
+        foreach (var method in methods)
+        {
+            // Transform each method into a coroutine with a unique name
+            var coroutineMethod = TransformToCoroutine(method)
+                                                       .WithIdentifier(SyntaxFactory.Identifier("COR_" + method.Identifier.Text));
+
+            // Add the transformed method to the list
+            transformedMethods.Add(coroutineMethod);
+
+            // TODO: Modify the original method to call the coroutine instead
+            // You could do this by adding a call to the coroutine in the method body,
+            // or by replacing the method's body entirely depending on the intended behavior.
+        }
+
+        // Add both the original and coroutine-transformed methods to the class
+        var modifiedClass = parentClass.AddMembers(transformedMethods.ToArray());
+
+        // Add the RunCoroutineMethod to the class
+        modifiedClass = AddRunCoroutineMethod(modifiedClass);
+
+        // Replace the modified class in the root syntax tree
+        var newRoot = root.ReplaceNode(parentClass, modifiedClass);
+
+        return newRoot.NormalizeWhitespace().ToFullString();
+    }
     public MethodDeclarationSyntax TransformToCoroutine(MethodDeclarationSyntax method)
     {
-        float lineTime = .5f;
         var newReturnType = SyntaxFactory.ParseTypeName("System.Collections.IEnumerator");
         var parameters = method.ParameterList.Parameters;
         var originalStatements = method.Body?.Statements ?? new SyntaxList<StatementSyntax>();
-        var newStatements = new List<StatementSyntax>();
 
-        foreach (var statement in originalStatements)
-        {
-            if (statement is ReturnStatementSyntax returnStatement)
-            {
-                if (returnStatement.Expression != null)
-                {
-                    // Handle return with value
-                    var returnValueExpression = returnStatement.Expression;
-                    var location = statement.GetLocation();
-                    var lineSpan = location.GetLineSpan();
-                    var lineNumber = lineSpan.StartLinePosition.Line;
+        // Transform all statements, including nested blocks
+        var transformedStatements = TransformStatements(originalStatements);
 
-                    var runningLine = SyntaxFactory.ParseStatement($"CodeInspector.RuntimeManager.Instance.HighlightLine({lineNumber - _lineOffset});");
-                    newStatements.Add(runningLine);
+        // Disable highlight line after all statements
+        var disableRunningLine = SyntaxFactory.ParseStatement($"CodeInspector.RuntimeManager.Instance.DisableHighlightLine();");
+        transformedStatements.Add(disableRunningLine);
 
+        var newBody = SyntaxFactory.Block(transformedStatements);
 
-                    var logReturnValue = SyntaxFactory.ParseStatement(
-                        $"Console.WriteLine(\"Line {lineNumber - _lineOffset}: RETURN \" + {"(" + returnValueExpression + ")"}.ToString());");
-                    newStatements.Add(logReturnValue);
-                }
-                else
-                {
-                    // Handle void return
-                    var location = statement.GetLocation();
-                    var lineSpan = location.GetLineSpan();
-                    var lineNumber = lineSpan.StartLinePosition.Line;
-                    //var logReturnValue = SyntaxFactory.ParseStatement($"Console.WriteLine(\"Line {lineNumber - _lineOffset}: RETURN\");");
-                    //newStatements.Add(logReturnValue);
-                    var runningLine = SyntaxFactory.ParseStatement($"CodeInspector.RuntimeManager.Instance.HighlightLine({lineNumber - _lineOffset});");
-                    newStatements.Add(runningLine);
-                }
-            }
-            else
-            {
-                // Add the original statement
-                newStatements.Add(statement);
-                var location = statement.GetLocation();
-                var lineSpan = location.GetLineSpan();
-                var lineNumber = lineSpan.StartLinePosition.Line;
-                //var logStatement = SyntaxFactory.ParseStatement($"Console.WriteLine(\"Line {lineNumber - _lineOffset}: {statement.ToString()}\");");
-                //newStatements.Add(logStatement);
-                var runningLine = SyntaxFactory.ParseStatement($"CodeInspector.RuntimeManager.Instance.HighlightLine({lineNumber - _lineOffset});");
-                newStatements.Add(runningLine);
-            }
-
-            // Add yield return after each statement
-            var yieldStatement = SyntaxFactory.ParseStatement($"yield return new UnityEngine.WaitForSeconds({lineTime}f);");
-            newStatements.Add(yieldStatement);
-
-            var disableRunningLine = SyntaxFactory.ParseStatement($"CodeInspector.RuntimeManager.Instance.DisableHighlightLine();");
-            newStatements.Add(disableRunningLine);
-        }
-
-        var newBody = SyntaxFactory.Block(newStatements);
-
-        // Preserve the original method modifiers and attributes
         return method
             .WithReturnType(newReturnType)
             .WithParameterList(SyntaxFactory.ParameterList(SyntaxFactory.SeparatedList(parameters)))
             .WithBody(newBody)
-            .WithModifiers(method.Modifiers) // Preserve original modifiers
-            .WithAttributeLists(method.AttributeLists); // Preserve original attributes
+            .WithModifiers(method.Modifiers)
+            .WithAttributeLists(method.AttributeLists);
+    }
+    // Recursive method to transform statements, handling nested blocks
+    private List<StatementSyntax> TransformStatements(SyntaxList<StatementSyntax> statements)
+    {
+        var newStatements = new List<StatementSyntax>();
+        float lineTime = 1f;
+        foreach (var statement in statements)
+        {
+            var location = statement.GetLocation();
+            var lineSpan = location.GetLineSpan();
+            var lineNumber = lineSpan.StartLinePosition.Line;
+
+            // Add coroutine markers and line highlighting for each statement
+            newStatements.Add(SyntaxFactory.ParseStatement($"//---- COR START ----"));
+            newStatements.Add(SyntaxFactory.ParseStatement($"CodeInspector.RuntimeManager.Instance.HighlightLine({lineNumber - _lineOffset});"));
+            newStatements.Add(SyntaxFactory.ParseStatement($"yield return new UnityEngine.WaitForSeconds({lineTime}f);"));
+
+            // Recursively handle nested blocks
+            if (statement is BlockSyntax block)
+            {
+                var transformedNestedStatements = TransformStatements(block.Statements);
+                var newBlock = SyntaxFactory.Block(transformedNestedStatements);
+                newStatements.Add(newBlock);
+            }
+            else if (statement is IfStatementSyntax ifStatement)
+            {
+                // Recursively transform the 'then' and 'else' blocks of the if statement
+                var transformedIfStatement = TransformIfStatement(ifStatement);
+                newStatements.Add(transformedIfStatement);
+            }
+            else if (statement is ForStatementSyntax forStatement)
+            {
+                // Recursively transform the body of the for statement
+                var transformedForStatement = TransformForStatement(forStatement);
+                newStatements.Add(transformedForStatement);
+            }
+            else if (statement is WhileStatementSyntax whileStatement)
+            {
+                // Recursively transform the body of the while statement
+                var transformedWhileStatement = TransformWhileStatement(whileStatement);
+                newStatements.Add(transformedWhileStatement);
+            }
+            else if (ContainsMethodInvocation(statement))
+            {
+                var transformedStatement = TransformMethodInvocationsToYieldReturn(statement);
+                newStatements.Add(transformedStatement);
+            }
+            else if (statement is ReturnStatementSyntax returnStatement)
+            {
+                if (returnStatement.Expression != null)
+                {
+                    var logReturnValue = SyntaxFactory.ParseStatement(
+                        $"Debug.Log($\"Line {lineNumber - _lineOffset}: RETURN \" + {returnStatement.Expression}.ToString());");
+                    newStatements.Add(logReturnValue);
+                }
+                //newStatements.Add(statement); // add the actual return statement
+            }
+            else
+            {
+                newStatements.Add(statement); // Add the statement as is
+            }
+
+            newStatements.Add(SyntaxFactory.ParseStatement($"//---- COR END ----"));
+        }
+
+        return newStatements;
+    }
+    // Helper method for transforming If statements
+    private IfStatementSyntax TransformIfStatement(IfStatementSyntax ifStatement)
+    {
+        var transformedCondition = ifStatement.Condition;
+
+        // Wrap single statements in a block if braces are missing
+        var transformedThenStatement = ifStatement.Statement is BlockSyntax block
+            ? SyntaxFactory.Block(TransformStatements(block.Statements))
+            : SyntaxFactory.Block(TransformStatements(new SyntaxList<StatementSyntax> { ifStatement.Statement }));
+
+        ElseClauseSyntax? transformedElse = null;
+        if (ifStatement.Else != null)
+        {
+            // Wrap single statements in a block if braces are missing in the else clause
+            var elseStatements = ifStatement.Else.Statement is BlockSyntax elseBlock
+                ? elseBlock.Statements
+                : new SyntaxList<StatementSyntax> { ifStatement.Else.Statement };
+
+            var transformedElseStatements = SyntaxFactory.Block(TransformStatements(elseStatements));
+            transformedElse = SyntaxFactory.ElseClause(transformedElseStatements);
+        }
+
+        return ifStatement
+            .WithCondition(transformedCondition)
+            .WithStatement(transformedThenStatement)
+            .WithElse(transformedElse);
     }
 
+
+
+    // Helper method for transforming For statements
+    private ForStatementSyntax TransformForStatement(ForStatementSyntax forStatement)
+    {
+        var transformedBody = SyntaxFactory.Block(TransformStatements(forStatement.Statement is BlockSyntax block ? block.Statements : new SyntaxList<StatementSyntax> { forStatement.Statement }));
+        return forStatement.WithStatement(transformedBody);
+    }
+
+    // Helper method for transforming While statements
+    private WhileStatementSyntax TransformWhileStatement(WhileStatementSyntax whileStatement)
+    {
+        var transformedBody = SyntaxFactory.Block(TransformStatements(whileStatement.Statement is BlockSyntax block ? block.Statements : new SyntaxList<StatementSyntax> { whileStatement.Statement }));
+        return whileStatement.WithStatement(transformedBody);
+    }
+    private bool ContainsMethodInvocation(StatementSyntax statement)
+    {
+        // Check if the statement contains any method invocations that need to be transformed
+        return statement.DescendantNodes()
+            .OfType<InvocationExpressionSyntax>()
+            .Any(invocation =>
+            {
+                if (invocation.Expression is IdentifierNameSyntax identifier)
+                {
+                    return _methodsToTransform.Contains(identifier.Identifier.ValueText);
+                }
+                if (invocation.Expression is MemberAccessExpressionSyntax memberAccess)
+                {
+                    return _methodsToTransform.Contains(memberAccess.Name.Identifier.ValueText);
+                }
+                return false;
+            });
+    }
+
+    private StatementSyntax TransformMethodInvocations(StatementSyntax statement)
+    {
+        // Create a new syntax rewriter to transform method calls
+        var rewriter = new MethodInvocationRewriter(_methodsToTransform);
+        var transformedStatement = rewriter.Visit(statement);
+        return transformedStatement as StatementSyntax;
+    }
 
     public ClassDeclarationSyntax AddRunCoroutineMethod(ClassDeclarationSyntax classDeclaration)
     {
-        // Generate the RunCoroutineMethod
         var runCoroutineMethod = GenerateRunCoroutineMethod();
-
-        // Add the generated method to the class
         return classDeclaration.AddMembers(runCoroutineMethod);
     }
 
-
     private MethodDeclarationSyntax GenerateRunCoroutineMethod()
     {
-        var runCoroutineMethodCode = $@"
+        var runCoroutineMethodCode = @"
         public void RunCoroutineMethod(string methodName, params object[] args)
-        {{
+        {
             var method = this.GetType().GetMethod(methodName);
             if (method != null)
-            {{
+            {
                 CodeInspector.RuntimeManager.Instance.StartCoroutine((System.Collections.IEnumerator)method.Invoke(this, args));
-            }}
+            }
             else
-            {{
-                throw new System.Exception($""Coroutine '{{methodName}}' not found."");
-            }}
-        }}";
+            {
+                throw new System.Exception($""Coroutine '{methodName}' not found."");
+            }
+        }";
 
         return SyntaxFactory.ParseMemberDeclaration(runCoroutineMethodCode) as MethodDeclarationSyntax;
+    }
+}
+
+// Syntax rewriter to transform method invocations into coroutine calls
+public class MethodInvocationRewriter : CSharpSyntaxRewriter
+{
+    private readonly HashSet<string> _methodsToTransform;
+
+    public MethodInvocationRewriter(HashSet<string> methodsToTransform)
+    {
+        _methodsToTransform = methodsToTransform;
+    }
+
+    public override SyntaxNode VisitInvocationExpression(InvocationExpressionSyntax node)
+    {
+        string methodName = null;
+
+        if (node.Expression is IdentifierNameSyntax identifier)
+        {
+            methodName = identifier.Identifier.Text;
+        }
+        else if (node.Expression is MemberAccessExpressionSyntax memberAccess)
+        {
+            methodName = memberAccess.Name.Identifier.Text;
+        }
+
+        if (methodName != null && _methodsToTransform.Contains(methodName))
+        {
+            // Transform the method call into a yield return StartCoroutine
+            var arguments = node.ArgumentList.Arguments;
+            var argList = string.Join(", ", arguments.Select(arg => arg.ToString()));
+
+            // Create a new yield return statement
+            var startCoroutineCall = SyntaxFactory.ParseExpression($"yield return CodeInspector.RuntimeManager.Instance.StartCoroutine(COR_{methodName}({argList}))");
+
+            return startCoroutineCall;
+        }
+
+        return base.VisitInvocationExpression(node);
     }
 }

@@ -1,11 +1,10 @@
 using CodeInspector;
 using Game;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using RoslynCSharp;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TMPro;
 using UnityEngine;
@@ -64,7 +63,10 @@ public class RuntimeCodeSystem : MonoBehaviour
     [SerializeField]
     [TextArea(minLines: 10, maxLines: 50)]
     string _transformedCode;
-
+    [SerializeField]
+    string outputPath;
+    string outputCSFileName = "transformedCode.cs";
+    string outputSyntaxTreeName = "syntaxTree.txt";
     private void Awake()
     {
         _runButton.onClick.AddListener(OnRunClicked);
@@ -175,6 +177,9 @@ public class RuntimeCodeSystem : MonoBehaviour
                 _activeCSharpSource = cSharpSource;
 
 
+                var syntaxTree = CSharpSyntaxTree.ParseText(codeWithAddedDirectives);
+                var p = Path.Combine(Directory.GetParent(Application.dataPath).FullName, outputPath);
+                DebugFileSaving.SaveSyntaxTree(syntaxTree, $"{p}/{outputSyntaxTreeName}");
 
 
                 // Assuming the 'Add' method takes two integers, pass values and call it
@@ -198,7 +203,12 @@ public class RuntimeCodeSystem : MonoBehaviour
                 var codeWithCoroutineDirectives = _coroutineUsingStatements + "\n" + cSharpSource;
 
 
-                _transformedCode = TransformToCoroutine(codeWithCoroutineDirectives);
+
+                _transformedCode = _coroutineTransformer.TransformToCoroutine(codeWithCoroutineDirectives);
+                DebugFileSaving.SaveCSharp(_transformedCode, $"{p}/{outputCSFileName}");
+
+
+
 
                 var refs = coroutineReferences.ToList();
                 refs.AddRange(assemblyReferences.ToList());
@@ -220,9 +230,8 @@ public class RuntimeCodeSystem : MonoBehaviour
                 }
 
 
-
                 var tranformedActiveScript = tType.CreateInstance();
-                StartTransformedCoroutine(tranformedActiveScript, "Add", 5, 3);
+                StartTransformedCoroutine(tranformedActiveScript, "COR_Add", 5, 3);
             }
             catch (Exception e)
             {
@@ -262,31 +271,6 @@ public class RuntimeCodeSystem : MonoBehaviour
         }
     }
 
-    private string TransformToCoroutine(string sourceCode)
-    {
-        var syntaxTree = CSharpSyntaxTree.ParseText(sourceCode);
-        var root = syntaxTree.GetRoot();
-        var method = root.DescendantNodes().OfType<MethodDeclarationSyntax>().FirstOrDefault(m => m.Identifier.Text == "Add");
 
-        if (method == null) return sourceCode;
-
-        // Transform the method into a coroutine
-        var newMethod = _coroutineTransformer.TransformToCoroutine(method);
-
-        // Get the parent class of the method
-        var parentClass = method.Parent as ClassDeclarationSyntax;
-        if (parentClass == null) return sourceCode;
-
-        // Add the transformed method back to the parent class
-        var modifiedClass = parentClass.ReplaceNode(method, newMethod);
-
-        // Add the RunCoroutineMethod to the class
-        modifiedClass = _coroutineTransformer.AddRunCoroutineMethod(modifiedClass);
-
-        // Replace the modified class in the root syntax tree
-        var newRoot = root.ReplaceNode(parentClass, modifiedClass);
-
-        return newRoot.NormalizeWhitespace().ToFullString();
-    }
 
 }

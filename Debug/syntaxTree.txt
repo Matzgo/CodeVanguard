@@ -1,0 +1,169 @@
+CompilationUnitSyntax (CompilationUnit)
+       Code: using Game;
+using System;
+using System.Collections.Generic;
+using Console = Game.Console;
+
+public class Test
+{
+	public int Add(int a, int b)
+	{
+		int result = a + b;
+		Console.WriteLine(result);
+		TestMethod();
+		return result;
+	}
+
+	private void TestMethod()
+	{
+		Console.WriteLine("Test");
+	}
+}
+    UsingDirectiveSyntax (UsingDirective)
+           Code: using Game;
+        IdentifierNameSyntax (IdentifierName)
+               Code: Game
+    UsingDirectiveSyntax (UsingDirective)
+           Code: using System;
+        IdentifierNameSyntax (IdentifierName)
+               Code: System
+    UsingDirectiveSyntax (UsingDirective)
+           Code: using System.Collections.Generic;
+        QualifiedNameSyntax (QualifiedName)
+               Code: System.Collections.Generic
+            QualifiedNameSyntax (QualifiedName)
+                   Code: System.Collections
+                IdentifierNameSyntax (IdentifierName)
+                       Code: System
+                IdentifierNameSyntax (IdentifierName)
+                       Code: Collections
+            IdentifierNameSyntax (IdentifierName)
+                   Code: Generic
+    UsingDirectiveSyntax (UsingDirective)
+           Code: using Console = Game.Console;
+        NameEqualsSyntax (NameEquals)
+               Code: Console =
+            IdentifierNameSyntax (IdentifierName)
+                   Code: Console
+        QualifiedNameSyntax (QualifiedName)
+               Code: Game.Console
+            IdentifierNameSyntax (IdentifierName)
+                   Code: Game
+            IdentifierNameSyntax (IdentifierName)
+                   Code: Console
+    ClassDeclarationSyntax (ClassDeclaration)
+           Code: public class Test
+{
+	public int Add(int a, int b)
+	{
+		int result = a + b;
+		Console.WriteLine(result);
+		TestMethod();
+		return result;
+	}
+
+	private void TestMethod()
+	{
+		Console.WriteLine("Test");
+	}
+}
+        MethodDeclarationSyntax (MethodDeclaration)
+               Code: public int Add(int a, int b)
+	{
+		int result = a + b;
+		Console.WriteLine(result);
+		TestMethod();
+		return result;
+	}
+            PredefinedTypeSyntax (PredefinedType)
+                   Code: int
+            ParameterListSyntax (ParameterList)
+                   Code: (int a, int b)
+                ParameterSyntax (Parameter)
+                       Code: int a
+                    PredefinedTypeSyntax (PredefinedType)
+                           Code: int
+                ParameterSyntax (Parameter)
+                       Code: int b
+                    PredefinedTypeSyntax (PredefinedType)
+                           Code: int
+            BlockSyntax (Block)
+                   Code: {
+		int result = a + b;
+		Console.WriteLine(result);
+		TestMethod();
+		return result;
+	}
+                LocalDeclarationStatementSyntax (LocalDeclarationStatement)
+                       Code: int result = a + b;
+                    VariableDeclarationSyntax (VariableDeclaration)
+                           Code: int result = a + b
+                        PredefinedTypeSyntax (PredefinedType)
+                               Code: int
+                        VariableDeclaratorSyntax (VariableDeclarator)
+                               Code: result = a + b
+                            EqualsValueClauseSyntax (EqualsValueClause)
+                                   Code: = a + b
+                                BinaryExpressionSyntax (AddExpression)
+                                       Code: a + b
+                                    IdentifierNameSyntax (IdentifierName)
+                                           Code: a
+                                    IdentifierNameSyntax (IdentifierName)
+                                           Code: b
+                ExpressionStatementSyntax (ExpressionStatement)
+                       Code: Console.WriteLine(result);
+                    InvocationExpressionSyntax (InvocationExpression)
+                           Code: Console.WriteLine(result)
+                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                               Code: Console.WriteLine
+                            IdentifierNameSyntax (IdentifierName)
+                                   Code: Console
+                            IdentifierNameSyntax (IdentifierName)
+                                   Code: WriteLine
+                        ArgumentListSyntax (ArgumentList)
+                               Code: (result)
+                            ArgumentSyntax (Argument)
+                                   Code: result
+                                IdentifierNameSyntax (IdentifierName)
+                                       Code: result
+                ExpressionStatementSyntax (ExpressionStatement)
+                       Code: TestMethod();
+                    InvocationExpressionSyntax (InvocationExpression)
+                           Code: TestMethod()
+                        IdentifierNameSyntax (IdentifierName)
+                               Code: TestMethod
+                        ArgumentListSyntax (ArgumentList)
+                               Code: ()
+                ReturnStatementSyntax (ReturnStatement)
+                       Code: return result;
+                    IdentifierNameSyntax (IdentifierName)
+                           Code: result
+        MethodDeclarationSyntax (MethodDeclaration)
+               Code: private void TestMethod()
+	{
+		Console.WriteLine("Test");
+	}
+            PredefinedTypeSyntax (PredefinedType)
+                   Code: void
+            ParameterListSyntax (ParameterList)
+                   Code: ()
+            BlockSyntax (Block)
+                   Code: {
+		Console.WriteLine("Test");
+	}
+                ExpressionStatementSyntax (ExpressionStatement)
+                       Code: Console.WriteLine("Test");
+                    InvocationExpressionSyntax (InvocationExpression)
+                           Code: Console.WriteLine("Test")
+                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                               Code: Console.WriteLine
+                            IdentifierNameSyntax (IdentifierName)
+                                   Code: Console
+                            IdentifierNameSyntax (IdentifierName)
+                                   Code: WriteLine
+                        ArgumentListSyntax (ArgumentList)
+                               Code: ("Test")
+                            ArgumentSyntax (Argument)
+                                   Code: "Test"
+                                LiteralExpressionSyntax (StringLiteralExpression)
+                                       Code: "Test"

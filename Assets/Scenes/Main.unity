@@ -797,6 +797,7 @@ MonoBehaviour:
   _gameCSFile: {fileID: 11400000, guid: 0f126f2fecb78ec4c959da3fa8032c91, type: 2}
   _bannedCallsDetector: {fileID: 484836525}
   _transformedCode: 
+  outputPath: Debug
 --- !u!4 &484836524
 Transform:
   m_ObjectHideFlags: 0
