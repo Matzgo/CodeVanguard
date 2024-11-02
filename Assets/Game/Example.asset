@@ -16,5 +16,6 @@ MonoBehaviour:
   _codeSegments:
   - _isEditable: 1
     _text: "public class Test\n{\n\tpublic int Add(int a, int b)\n\t{\n\t\tint result
-      = a + b;\n\t\tConsole.WriteLine(result);\n\t\tTestMethod();\n\t\treturn result;\n\t}\n\n\tprivate
-      void TestMethod()\n\t{\n\t\tConsole.WriteLine(\"Test\");\n\t}\n}"
+      = a + b;\n\t\tConsole.WriteLine(result);\n\t\tfor(int i = 0; i < 10; i++)\n\t\t{\n\t\t\tresult
+      = Double(result);\n\t\t}\n\t\t\n\t\treturn result;\n\t}\n\n\tprivate int Double(int
+      n)\n\t{\n\t\treturn n * 2;\n\t}\n}"

@@ -6,9 +6,33 @@ using System.Linq;
 using UnityEngine;
 
 
+//               ___====-_  _-====___
+//         _--^^^#####//      \\#####^^^--_
+//      _-^##########// (    ) \\##########^-_
+//     -############//  |\^^/|  \\############-
+//   _/############//   (@::@)   \\############\_
+//  /#############((     \\//     ))#############\
+// -###############\\    (oo)    //###############-
+//-#################\\  / VV \  //#################-
+//-###################\\/      \//###################-
+//_#/|##########/\######(   /\   )######/\##########|\#_
+// |/ |#/\#/\#/\/  \#/\##\  |  |  /##/\#/  \/\#/\#/\| \
+// '  |/  V  V '   V  \\#\| |  | |/#/  V   '  V  V  \|
+//    '   '  '      '   / | |  | | \   '      '  '   '
+//                     (  | |  | |  )
+//                    __\ | |  | | /__
+//                   (vvv(VVV)(VVV)vvv)
+//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+//                                                              ||
+//                   SYNTAX PARSING HELL                        ||    
+//                                                              ||
+//||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+
 
 public class CoroutineTransformer : MonoBehaviour
 {
+    [SerializeField]
+    private float _codeRate = .2f;
     private int _lineOffset;
     private HashSet<string> _methodsToTransform = new HashSet<string>();
 
@@ -70,9 +94,14 @@ public class CoroutineTransformer : MonoBehaviour
         // Create a list to store modified methods
         var transformedMethods = new List<MethodDeclarationSyntax>();
 
+        //Pruned Methods have their Debug Log statements removed and stuff;
+        var prunedMethods = new List<MethodDeclarationSyntax>();
         foreach (var method in methods)
         {
             _methodsToTransform.Add(method.Identifier.Text);
+
+            var prunedMethod = RemoveConsoleStatements(method);
+            prunedMethods.Add(prunedMethod);
         }
 
         foreach (var method in methods)
@@ -89,8 +118,15 @@ public class CoroutineTransformer : MonoBehaviour
             // or by replacing the method's body entirely depending on the intended behavior.
         }
 
+
+        // Replace the original methods with the modified methods
+        var prunedClass = parentClass.ReplaceNodes(
+    parentClass.Members.OfType<MethodDeclarationSyntax>(),
+    (original, rewritten) => prunedMethods.First(m => m.Identifier.Text == original.Identifier.Text)
+);
+
         // Add both the original and coroutine-transformed methods to the class
-        var modifiedClass = parentClass.AddMembers(transformedMethods.ToArray());
+        var modifiedClass = prunedClass.AddMembers(transformedMethods.ToArray());
 
         // Add the RunCoroutineMethod to the class
         modifiedClass = AddRunCoroutineMethod(modifiedClass);
@@ -100,6 +136,32 @@ public class CoroutineTransformer : MonoBehaviour
 
         return newRoot.NormalizeWhitespace().ToFullString();
     }
+
+    private static MethodDeclarationSyntax RemoveConsoleStatements(MethodDeclarationSyntax method)
+    {
+        // Create a new method with the same identifier, return type, and parameters
+        var newMethod = method.WithBody(RemoveConsoleFromBlock(method.Body));
+
+        return newMethod;
+    }
+
+    private static BlockSyntax RemoveConsoleFromBlock(BlockSyntax block)
+    {
+        // Filter out statements that contain Console.
+        var statements = block.Statements
+            .Where(statement => !ContainsConsoleCall(statement))
+            .ToList();
+
+        // Return a new block with the filtered statements
+        return block.WithStatements(SyntaxFactory.List(statements));
+    }
+
+    private static bool ContainsConsoleCall(StatementSyntax statement)
+    {
+        // Check if the statement contains a Console call
+        return statement.ToString().Contains("Console.");
+    }
+
     public MethodDeclarationSyntax TransformToCoroutine(MethodDeclarationSyntax method)
     {
         var newReturnType = SyntaxFactory.ParseTypeName("System.Collections.IEnumerator");
@@ -126,17 +188,18 @@ public class CoroutineTransformer : MonoBehaviour
     private List<StatementSyntax> TransformStatements(SyntaxList<StatementSyntax> statements)
     {
         var newStatements = new List<StatementSyntax>();
-        float lineTime = 1f;
         foreach (var statement in statements)
         {
             var location = statement.GetLocation();
             var lineSpan = location.GetLineSpan();
             var lineNumber = lineSpan.StartLinePosition.Line;
 
-            // Add coroutine markers and line highlighting for each statement
-            newStatements.Add(SyntaxFactory.ParseStatement($"//---- COR START ----"));
+
             newStatements.Add(SyntaxFactory.ParseStatement($"CodeInspector.RuntimeManager.Instance.HighlightLine({lineNumber - _lineOffset});"));
-            newStatements.Add(SyntaxFactory.ParseStatement($"yield return new UnityEngine.WaitForSeconds({lineTime}f);"));
+            newStatements.Add(SyntaxFactory.ParseStatement($"yield return new UnityEngine.WaitForSeconds({_codeRate}f);"));
+
+
+
 
             // Recursively handle nested blocks
             if (statement is BlockSyntax block)
@@ -167,13 +230,24 @@ public class CoroutineTransformer : MonoBehaviour
             {
                 var transformedStatement = TransformMethodInvocationsToYieldReturn(statement);
                 newStatements.Add(transformedStatement);
+
+                // Check if the statement is an assignment of any type
+                if (statement is ExpressionStatementSyntax expressionStatement && expressionStatement.Expression is AssignmentExpressionSyntax)
+                {
+                    newStatements.Add(statement);
+                }
+                else if (statement is LocalDeclarationStatementSyntax)
+                {
+                    // It's a variable declaration like "int i = 5;"
+                    newStatements.Add(statement);
+                }
             }
             else if (statement is ReturnStatementSyntax returnStatement)
             {
                 if (returnStatement.Expression != null)
                 {
                     var logReturnValue = SyntaxFactory.ParseStatement(
-                        $"Debug.Log($\"Line {lineNumber - _lineOffset}: RETURN \" + {returnStatement.Expression}.ToString());");
+                        $"Debug.Log($\"Line {lineNumber - _lineOffset}: RETURN \" + ({returnStatement.Expression}).ToString());");
                     newStatements.Add(logReturnValue);
                 }
                 //newStatements.Add(statement); // add the actual return statement
@@ -182,8 +256,8 @@ public class CoroutineTransformer : MonoBehaviour
             {
                 newStatements.Add(statement); // Add the statement as is
             }
-
-            newStatements.Add(SyntaxFactory.ParseStatement($"//---- COR END ----"));
+            var corEnd = SyntaxFactory.EmptyStatement();
+            newStatements.Add(corEnd);
         }
 
         return newStatements;

@@ -28,7 +28,7 @@ namespace CodeInspector
 
         public void HighlightLine(int lineNr)
         {
-            Debug.Log("Highlight");
+            //Debug.Log("Highlight");
             _customCodeEditor.HightlightRunningLine(lineNr);
         }
 

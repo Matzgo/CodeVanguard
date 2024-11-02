@@ -1,5 +1,5 @@
 CompilationUnitSyntax (CompilationUnit)
-       Code: using Game;
+Code: using Game;
 using System;
 using System.Collections.Generic;
 using Console = Game.Console;
@@ -10,160 +10,209 @@ public class Test
 	{
 		int result = a + b;
 		Console.WriteLine(result);
-		TestMethod();
+		for(int i = 0; i < 10; i++)
+		{
+			result = Double(result);
+		}
+		
 		return result;
 	}
 
-	private void TestMethod()
+	private int Double(int n)
 	{
-		Console.WriteLine("Test");
+		return n * 2;
 	}
 }
     UsingDirectiveSyntax (UsingDirective)
-           Code: using Game;
+    Code: using Game;
         IdentifierNameSyntax (IdentifierName)
-               Code: Game
+        Code: Game
     UsingDirectiveSyntax (UsingDirective)
-           Code: using System;
+    Code: using System;
         IdentifierNameSyntax (IdentifierName)
-               Code: System
+        Code: System
     UsingDirectiveSyntax (UsingDirective)
-           Code: using System.Collections.Generic;
+    Code: using System.Collections.Generic;
         QualifiedNameSyntax (QualifiedName)
-               Code: System.Collections.Generic
+        Code: System.Collections.Generic
             QualifiedNameSyntax (QualifiedName)
-                   Code: System.Collections
+            Code: System.Collections
                 IdentifierNameSyntax (IdentifierName)
-                       Code: System
+                Code: System
                 IdentifierNameSyntax (IdentifierName)
-                       Code: Collections
+                Code: Collections
             IdentifierNameSyntax (IdentifierName)
-                   Code: Generic
+            Code: Generic
     UsingDirectiveSyntax (UsingDirective)
-           Code: using Console = Game.Console;
+    Code: using Console = Game.Console;
         NameEqualsSyntax (NameEquals)
-               Code: Console =
+        Code: Console =
             IdentifierNameSyntax (IdentifierName)
-                   Code: Console
+            Code: Console
         QualifiedNameSyntax (QualifiedName)
-               Code: Game.Console
+        Code: Game.Console
             IdentifierNameSyntax (IdentifierName)
-                   Code: Game
+            Code: Game
             IdentifierNameSyntax (IdentifierName)
-                   Code: Console
+            Code: Console
     ClassDeclarationSyntax (ClassDeclaration)
-           Code: public class Test
+    Code: public class Test
 {
 	public int Add(int a, int b)
 	{
 		int result = a + b;
 		Console.WriteLine(result);
-		TestMethod();
+		for(int i = 0; i < 10; i++)
+		{
+			result = Double(result);
+		}
+		
 		return result;
 	}
 
-	private void TestMethod()
+	private int Double(int n)
 	{
-		Console.WriteLine("Test");
+		return n * 2;
 	}
 }
         MethodDeclarationSyntax (MethodDeclaration)
-               Code: public int Add(int a, int b)
+        Code: public int Add(int a, int b)
 	{
 		int result = a + b;
 		Console.WriteLine(result);
-		TestMethod();
+		for(int i = 0; i < 10; i++)
+		{
+			result = Double(result);
+		}
+		
 		return result;
 	}
             PredefinedTypeSyntax (PredefinedType)
-                   Code: int
+            Code: int
             ParameterListSyntax (ParameterList)
-                   Code: (int a, int b)
+            Code: (int a, int b)
                 ParameterSyntax (Parameter)
-                       Code: int a
+                Code: int a
                     PredefinedTypeSyntax (PredefinedType)
-                           Code: int
+                    Code: int
                 ParameterSyntax (Parameter)
-                       Code: int b
+                Code: int b
                     PredefinedTypeSyntax (PredefinedType)
-                           Code: int
+                    Code: int
             BlockSyntax (Block)
-                   Code: {
+            Code: {
 		int result = a + b;
 		Console.WriteLine(result);
-		TestMethod();
+		for(int i = 0; i < 10; i++)
+		{
+			result = Double(result);
+		}
+		
 		return result;
 	}
                 LocalDeclarationStatementSyntax (LocalDeclarationStatement)
-                       Code: int result = a + b;
+                Code: int result = a + b;
                     VariableDeclarationSyntax (VariableDeclaration)
-                           Code: int result = a + b
+                    Code: int result = a + b
                         PredefinedTypeSyntax (PredefinedType)
-                               Code: int
+                        Code: int
                         VariableDeclaratorSyntax (VariableDeclarator)
-                               Code: result = a + b
+                        Code: result = a + b
                             EqualsValueClauseSyntax (EqualsValueClause)
-                                   Code: = a + b
+                            Code: = a + b
                                 BinaryExpressionSyntax (AddExpression)
-                                       Code: a + b
+                                Code: a + b
                                     IdentifierNameSyntax (IdentifierName)
-                                           Code: a
+                                    Code: a
                                     IdentifierNameSyntax (IdentifierName)
-                                           Code: b
+                                    Code: b
                 ExpressionStatementSyntax (ExpressionStatement)
-                       Code: Console.WriteLine(result);
+                Code: Console.WriteLine(result);
                     InvocationExpressionSyntax (InvocationExpression)
-                           Code: Console.WriteLine(result)
+                    Code: Console.WriteLine(result)
                         MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
-                               Code: Console.WriteLine
+                        Code: Console.WriteLine
                             IdentifierNameSyntax (IdentifierName)
-                                   Code: Console
+                            Code: Console
                             IdentifierNameSyntax (IdentifierName)
-                                   Code: WriteLine
+                            Code: WriteLine
                         ArgumentListSyntax (ArgumentList)
-                               Code: (result)
+                        Code: (result)
                             ArgumentSyntax (Argument)
-                                   Code: result
+                            Code: result
                                 IdentifierNameSyntax (IdentifierName)
-                                       Code: result
-                ExpressionStatementSyntax (ExpressionStatement)
-                       Code: TestMethod();
-                    InvocationExpressionSyntax (InvocationExpression)
-                           Code: TestMethod()
+                                Code: result
+                ForStatementSyntax (ForStatement)
+                Code: for(int i = 0; i < 10; i++)
+		{
+			result = Double(result);
+		}
+                    VariableDeclarationSyntax (VariableDeclaration)
+                    Code: int i = 0
+                        PredefinedTypeSyntax (PredefinedType)
+                        Code: int
+                        VariableDeclaratorSyntax (VariableDeclarator)
+                        Code: i = 0
+                            EqualsValueClauseSyntax (EqualsValueClause)
+                            Code: = 0
+                                LiteralExpressionSyntax (NumericLiteralExpression)
+                                Code: 0
+                    BinaryExpressionSyntax (LessThanExpression)
+                    Code: i < 10
                         IdentifierNameSyntax (IdentifierName)
-                               Code: TestMethod
-                        ArgumentListSyntax (ArgumentList)
-                               Code: ()
+                        Code: i
+                        LiteralExpressionSyntax (NumericLiteralExpression)
+                        Code: 10
+                    PostfixUnaryExpressionSyntax (PostIncrementExpression)
+                    Code: i++
+                        IdentifierNameSyntax (IdentifierName)
+                        Code: i
+                    BlockSyntax (Block)
+                    Code: {
+			result = Double(result);
+		}
+                        ExpressionStatementSyntax (ExpressionStatement)
+                        Code: result = Double(result);
+                            AssignmentExpressionSyntax (SimpleAssignmentExpression)
+                            Code: result = Double(result)
+                                IdentifierNameSyntax (IdentifierName)
+                                Code: result
+                                InvocationExpressionSyntax (InvocationExpression)
+                                Code: Double(result)
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: Double
+                                    ArgumentListSyntax (ArgumentList)
+                                    Code: (result)
+                                        ArgumentSyntax (Argument)
+                                        Code: result
+                                            IdentifierNameSyntax (IdentifierName)
+                                            Code: result
                 ReturnStatementSyntax (ReturnStatement)
-                       Code: return result;
+                Code: return result;
                     IdentifierNameSyntax (IdentifierName)
-                           Code: result
+                    Code: result
         MethodDeclarationSyntax (MethodDeclaration)
-               Code: private void TestMethod()
+        Code: private int Double(int n)
 	{
-		Console.WriteLine("Test");
+		return n * 2;
 	}
             PredefinedTypeSyntax (PredefinedType)
-                   Code: void
+            Code: int
             ParameterListSyntax (ParameterList)
-                   Code: ()
+            Code: (int n)
+                ParameterSyntax (Parameter)
+                Code: int n
+                    PredefinedTypeSyntax (PredefinedType)
+                    Code: int
             BlockSyntax (Block)
-                   Code: {
-		Console.WriteLine("Test");
+            Code: {
+		return n * 2;
 	}
-                ExpressionStatementSyntax (ExpressionStatement)
-                       Code: Console.WriteLine("Test");
-                    InvocationExpressionSyntax (InvocationExpression)
-                           Code: Console.WriteLine("Test")
-                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
-                               Code: Console.WriteLine
-                            IdentifierNameSyntax (IdentifierName)
-                                   Code: Console
-                            IdentifierNameSyntax (IdentifierName)
-                                   Code: WriteLine
-                        ArgumentListSyntax (ArgumentList)
-                               Code: ("Test")
-                            ArgumentSyntax (Argument)
-                                   Code: "Test"
-                                LiteralExpressionSyntax (StringLiteralExpression)
-                                       Code: "Test"
+                ReturnStatementSyntax (ReturnStatement)
+                Code: return n * 2;
+                    BinaryExpressionSyntax (MultiplyExpression)
+                    Code: n * 2
+                        IdentifierNameSyntax (IdentifierName)
+                        Code: n
+                        LiteralExpressionSyntax (NumericLiteralExpression)
+                        Code: 2

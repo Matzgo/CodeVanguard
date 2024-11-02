@@ -915,7 +915,7 @@ namespace CodeInspector
             {
                 return;
             }
-            Debug.Log("LINE");
+            //Debug.Log("LINE");
             // Position the highlight at the specified line
             RectTransform runningHighlightTransform = _lineRunningHighlight.GetComponent<RectTransform>();
             runningHighlightTransform.anchoredPosition = new Vector2(5,

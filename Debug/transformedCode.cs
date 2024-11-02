@@ -9,38 +9,54 @@ public class Test
     public int Add(int a, int b)
     {
         int result = a + b;
-        Console.WriteLine(result);
-        TestMethod();
+        for (int i = 0; i < 10; i++)
+        {
+            result = Double(result);
+        }
+
         return result;
     }
 
-    private void TestMethod()
+    private int Double(int n)
     {
-        Console.WriteLine("Test");
+        return n * 2;
     }
 
     public System.Collections.IEnumerator COR_Add(int a, int b)
     {
         CodeInspector.RuntimeManager.Instance.HighlightLine(5);
-        yield return new UnityEngine.WaitForSeconds(1f);
+        yield return new UnityEngine.WaitForSeconds(0.33f);
         int result = a + b;
+        ;
         CodeInspector.RuntimeManager.Instance.HighlightLine(6);
-        yield return new UnityEngine.WaitForSeconds(1f);
+        yield return new UnityEngine.WaitForSeconds(0.33f);
         Console.WriteLine(result);
+        ;
         CodeInspector.RuntimeManager.Instance.HighlightLine(7);
-        yield return new UnityEngine.WaitForSeconds(1f);
-        yield return COR_TestMethod();
-        CodeInspector.RuntimeManager.Instance.HighlightLine(8);
-        yield return new UnityEngine.WaitForSeconds(1f);
-        Debug.Log($"Line 8: RETURN " + result.ToString());
+        yield return new UnityEngine.WaitForSeconds(0.33f);
+        for (int i = 0; i < 10; i++)
+        {
+            CodeInspector.RuntimeManager.Instance.HighlightLine(9);
+            yield return new UnityEngine.WaitForSeconds(0.33f);
+            yield return COR_Double(result);
+            result = Double(result);
+            ;
+        }
+
+        ;
+        CodeInspector.RuntimeManager.Instance.HighlightLine(12);
+        yield return new UnityEngine.WaitForSeconds(0.33f);
+        Debug.Log($"Line 12: RETURN " + (result).ToString());
+        ;
         CodeInspector.RuntimeManager.Instance.DisableHighlightLine();
     }
 
-    private System.Collections.IEnumerator COR_TestMethod()
+    private System.Collections.IEnumerator COR_Double(int n)
     {
-        CodeInspector.RuntimeManager.Instance.HighlightLine(13);
-        yield return new UnityEngine.WaitForSeconds(1f);
-        Console.WriteLine("Test");
+        CodeInspector.RuntimeManager.Instance.HighlightLine(17);
+        yield return new UnityEngine.WaitForSeconds(0.33f);
+        Debug.Log($"Line 17: RETURN " + (n * 2).ToString());
+        ;
         CodeInspector.RuntimeManager.Instance.DisableHighlightLine();
     }
 
