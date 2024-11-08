@@ -18,7 +18,7 @@ public class RuntimeCodeSystem : MonoBehaviour
 
     // Private
     private string _activeCSharpSource = null;
-    private ScriptProxy _activeScript = null;
+    private ScriptProxy _userScript = null;
     private ScriptDomain _domain = null;
     private ScriptDomain _coroutineDomain;
 
@@ -28,6 +28,8 @@ public class RuntimeCodeSystem : MonoBehaviour
     /// </summary>
     [SerializeField]
     private CustomCodeEditor _codeEditorWindow;
+    [SerializeField]
+    private CodeGradingSystem _codeGradingSystem;
 
 
     /// <summary>
@@ -51,22 +53,35 @@ public class RuntimeCodeSystem : MonoBehaviour
     private List<string> _coroutineDirectives = new List<string>();
 
     [SerializeField]
-    GameCSFile _gameCSFile;
+    CSFile _gameCSFile;
     [SerializeField]
     BannedCallsDetector _bannedCallsDetector;
+
+
+    [SerializeField]
+    private CSFile _solutionCSFile;
+    [SerializeField]
+    private string _solutionCode;
+
+    private ScriptProxy _solutionScript;
 
 
     private string _usingStatements;
     private string _coroutineUsingStatements;
     private int _lineOffsetCount;
     private int _couroutineLineOffset;
+
+
     [SerializeField]
     [TextArea(minLines: 10, maxLines: 50)]
-    string _transformedCode;
+    string _coroutineCode;
     [SerializeField]
     string outputPath;
     string outputCSFileName = "transformedCode.cs";
     string outputSyntaxTreeName = "syntaxTree.txt";
+    [SerializeField]
+    private bool _coroutineDisabled;
+
     private void Awake()
     {
         _runButton.onClick.AddListener(OnRunClicked);
@@ -77,6 +92,7 @@ public class RuntimeCodeSystem : MonoBehaviour
     {
         _codeEditorWindow.Text = _gameCSFile.Text;
         _fileNameText.text = _gameCSFile.FileName;
+        _solutionCode = _solutionCSFile.Text;
     }
     private int GetLineCount(string code)
     {
@@ -107,6 +123,7 @@ public class RuntimeCodeSystem : MonoBehaviour
 
         _codeEditorWindow.Text = _gameCSFile.Text;
         _fileNameText.text = _gameCSFile.FileName + ".cs";
+        _solutionCode = _solutionCSFile.Text;
 
         _usingStatements = GenerateUsingStatements(_autoUsingDirectives);
         _coroutineUsingStatements = GenerateUsingStatements(_coroutineDirectives) + _usingStatements;
@@ -133,21 +150,21 @@ public class RuntimeCodeSystem : MonoBehaviour
     }
     private void OnRunClicked()
     {
-        string cSharpSource = _codeEditorWindow.Text;
+        string userCode = _codeEditorWindow.Text;
 
-        if ((_activeCSharpSource != cSharpSource || _activeScript == null) || true)//false workaround to make this run every time
+        if ((_activeCSharpSource != userCode || _userScript == null) || true)//false workaround to make this run every time
         {
             try
             {
                 // Compile code
-                var codeWithAddedDirectives = _usingStatements + "\n" + cSharpSource;
+                var userCodeWithDirectives = _usingStatements + "\n" + userCode;
 
-                ScriptType type = _domain.CompileAndLoadMainSource(codeWithAddedDirectives, ScriptSecurityMode.UseSettings, assemblyReferences);
+                ScriptType userType = _domain.CompileAndLoadMainSource(userCodeWithDirectives, ScriptSecurityMode.UseSettings, assemblyReferences);
 
 
 
                 // Check for null
-                if (type == null)
+                if (userType == null)
                 {
                     if (_domain.RoslynCompilerService.LastCompileResult.Success == false)
                     {
@@ -161,7 +178,7 @@ public class RuntimeCodeSystem : MonoBehaviour
                         return;
                     }
                 }
-                var bannedCalls = _bannedCallsDetector.GetBannedCalls(codeWithAddedDirectives);
+                var bannedCalls = _bannedCallsDetector.GetBannedCalls(userCodeWithDirectives);
                 if (bannedCalls.Count > 0)
                 {
                     for (int i = 0; i < bannedCalls.Count; i++)
@@ -173,22 +190,22 @@ public class RuntimeCodeSystem : MonoBehaviour
 
 
                 // Create an instance
-                _activeScript = type.CreateInstance();
-                _activeCSharpSource = cSharpSource;
+                _userScript = userType.CreateInstance();
+                _activeCSharpSource = userCode;
 
 
-                var syntaxTree = CSharpSyntaxTree.ParseText(codeWithAddedDirectives);
+                var userSyntaxTree = CSharpSyntaxTree.ParseText(userCodeWithDirectives);
                 var p = Path.Combine(Directory.GetParent(Application.dataPath).FullName, outputPath);
-                DebugFileSaving.SaveSyntaxTree(syntaxTree, $"{p}/{outputSyntaxTreeName}");
+                DebugFileSaving.SaveSyntaxTree(userSyntaxTree, $"{p}/{outputSyntaxTreeName}");
 
 
                 // Assuming the 'Add' method takes two integers, pass values and call it
-                //int result = (int)_activeScript.Call("Add", 5, 3);
+                //int result = (int)_userScript.Call("Add", 5, 3);
 
                 // Log the result to the console
                 var a = 5;
                 var b = 3;
-                int result = (int)_activeScript.Call("Add", a, b);
+                int result = (int)_userScript.Call("Add", a, b);
                 if (result == 8)
                 {
                     RuntimeManager.Instance.Console.WriteLine($"Add({a}, {b}) = {result}", Color.green);
@@ -200,21 +217,84 @@ public class RuntimeCodeSystem : MonoBehaviour
 
 
 
-                var codeWithCoroutineDirectives = _coroutineUsingStatements + "\n" + cSharpSource;
+                //--- GOAL SOLUTION ----
+                var solutionWithAddedDirectives = _usingStatements + "\n" + _solutionCode;
+
+
+                ScriptType solutionType = _domain.CompileAndLoadMainSource(solutionWithAddedDirectives, ScriptSecurityMode.UseSettings, assemblyReferences);
 
 
 
-                _transformedCode = _coroutineTransformer.TransformToCoroutine(codeWithCoroutineDirectives);
-                DebugFileSaving.SaveCSharp(_transformedCode, $"{p}/{outputCSFileName}");
+                // Check for null
+                if (solutionType == null)
+                {
+                    if (_domain.RoslynCompilerService.LastCompileResult.Success == false)
+                    {
+                        // Log compilation errors to the UIConsole
+                        RuntimeManager.Instance.Console.LogErrors(_domain.RoslynCompilerService.LastCompileResult.Errors);
+                        return; // Exit after logging the errors
+                    }
+                    else if (_domain.SecurityResult.IsSecurityVerified == false)
+                    {
+                        RuntimeManager.Instance.Console.LogError("SOLUTION SECURITY FAILED: " + _domain.SecurityResult.GetAllText(true));
+                        return;
+                    }
+                }
+                var solBannedCalls = _bannedCallsDetector.GetBannedCalls(solutionWithAddedDirectives);
+                if (solBannedCalls.Count > 0)
+                {
+                    for (int i = 0; i < solBannedCalls.Count; i++)
+                    {
+                        RuntimeManager.Instance.Console.LogError($"SOLUTION SECURITY FAILED: {solBannedCalls[i]}");
+                    }
+                    return;
+                }
+
+                _solutionScript = solutionType.CreateInstance();
+
+                //--- END GOAL SOLUTION -----------
+
+
+
+                //GRADING
+                var gradingResult = _codeGradingSystem.GradeSubmission(userCodeWithDirectives, _userScript, _solutionScript);
+                // Log the results
+                RuntimeManager.Instance.Console.WriteLine("=== Code Evaluation Results ===", Color.white);
+                RuntimeManager.Instance.Console.WriteLine($"Performance Score: {gradingResult.PerformanceScore:F1}%", Color.cyan);
+                RuntimeManager.Instance.Console.WriteLine($"Memory Score: {gradingResult.MemoryScore:F1}%", Color.cyan);
+                RuntimeManager.Instance.Console.WriteLine($"Naming Score: {gradingResult.NamingScore:F1}%", Color.cyan);
+                RuntimeManager.Instance.Console.WriteLine($"Total Score: {gradingResult.TotalScore:F1}%", Color.green);
+
+                if (gradingResult.Feedback.Count > 0)
+                {
+                    RuntimeManager.Instance.Console.WriteLine("\nFeedback:", Color.yellow);
+                    foreach (var feedback in gradingResult.Feedback)
+                    {
+                        RuntimeManager.Instance.Console.WriteLine($"- {feedback}", Color.yellow);
+                    }
+                }
+
+
+
+
+
+                if (_coroutineDisabled)
+                    return;
+
+
+                var userCodeWithCoroutineDirectives = _coroutineUsingStatements + "\n" + userCode;
+                _coroutineCode = _coroutineTransformer.TransformToCoroutine(userCodeWithCoroutineDirectives);
+                DebugFileSaving.SaveCSharp(_coroutineCode, $"{p}/{outputCSFileName}");
 
 
 
 
                 var refs = coroutineReferences.ToList();
                 refs.AddRange(assemblyReferences.ToList());
-                ScriptType tType = _coroutineDomain.CompileAndLoadMainSource(_transformedCode, ScriptSecurityMode.EnsureLoad, refs.ToArray());
+                ScriptType coroutineType = _coroutineDomain.CompileAndLoadMainSource(_coroutineCode, ScriptSecurityMode.EnsureLoad, refs.ToArray());
+
                 // Check for null
-                if (tType == null)
+                if (coroutineType == null)
                 {
                     if (_coroutineDomain.RoslynCompilerService.LastCompileResult.Success == false)
                     {
@@ -230,7 +310,7 @@ public class RuntimeCodeSystem : MonoBehaviour
                 }
 
 
-                var tranformedActiveScript = tType.CreateInstance();
+                var tranformedActiveScript = coroutineType.CreateInstance();
                 StartTransformedCoroutine(tranformedActiveScript, "COR_Add", 5, 3);
             }
             catch (Exception e)
@@ -247,7 +327,7 @@ public class RuntimeCodeSystem : MonoBehaviour
         {
             var a = 5;
             var b = 3;
-            int result = (int)_activeScript.Call("Add", a, b);
+            int result = (int)_userScript.Call("Add", a, b);
             if (result == 8)
             {
                 RuntimeManager.Instance.Console.WriteLine($"Add({a}, {b}) = {result}", Color.green);
@@ -258,6 +338,7 @@ public class RuntimeCodeSystem : MonoBehaviour
             }
         }
     }
+
 
     private void StartTransformedCoroutine(ScriptProxy proxy, string coroutineName, params object[] args)
     {

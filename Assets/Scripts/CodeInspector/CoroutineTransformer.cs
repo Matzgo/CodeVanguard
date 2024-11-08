@@ -246,9 +246,9 @@ public class CoroutineTransformer : MonoBehaviour
             {
                 if (returnStatement.Expression != null)
                 {
-                    var logReturnValue = SyntaxFactory.ParseStatement(
-                        $"Debug.Log($\"Line {lineNumber - _lineOffset}: RETURN \" + ({returnStatement.Expression}).ToString());");
-                    newStatements.Add(logReturnValue);
+                    //var logReturnValue = SyntaxFactory.ParseStatement(
+                    //    $"Debug.Log($\"Line {lineNumber - _lineOffset}: RETURN \" + ({returnStatement.Expression}).ToString());");
+                    //newStatements.Add(logReturnValue);
                 }
                 //newStatements.Add(statement); // add the actual return statement
             }

@@ -7,7 +7,7 @@ public class UIConsole : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI consoleText;
     private StringBuilder outputBuilder = new StringBuilder();
-
+    private bool _active;
 
     private void Awake()
     {
@@ -16,17 +16,21 @@ public class UIConsole : MonoBehaviour
 
     public void Write(string message)
     {
+        if (!_active) return;  // Early return if not active
         outputBuilder.Append(message);
         UpdateConsoleText();
     }
 
     public void WriteLine(string message)
     {
+        if (!_active) return;  // Early return if not active
         outputBuilder.AppendLine(message);
         UpdateConsoleText();
     }
+
     public void WriteLine(string message, Color color)
     {
+        if (!_active) return;  // Early return if not active
         // Convert the Color to a hex string
         string hexColor = ColorUtility.ToHtmlStringRGBA(color);
 
@@ -44,13 +48,14 @@ public class UIConsole : MonoBehaviour
 
     public void ClearConsole()
     {
+        //if (!_active) return;  // Early return if not active
         outputBuilder.Clear();
         UpdateConsoleText();
     }
 
-
     public void LogErrors(CompilationError[] errors, int lineOffset)
     {
+        if (!_active) return;  // Early return if not active
         foreach (var error in errors)
         {
             LogError(error, lineOffset);
@@ -59,6 +64,7 @@ public class UIConsole : MonoBehaviour
 
     public void LogErrors(CompilationError[] errors)
     {
+        if (!_active) return;  // Early return if not active
         foreach (var error in errors)
         {
             LogError(error);
@@ -67,6 +73,7 @@ public class UIConsole : MonoBehaviour
 
     public void LogError(CompilationError error)
     {
+        if (!_active) return;  // Early return if not active
         // Assuming CompilationError has properties for line, column, and message
         int line = error.SourceLine;      // Replace with actual property
         int column = error.SourceColumn;   // Replace with actual property
@@ -74,8 +81,10 @@ public class UIConsole : MonoBehaviour
 
         WriteLine($"<color=red>Line: {line} Col: {column}: {message}</color>");
     }
+
     public void LogError(CompilationError error, int lineOffset)
     {
+        if (!_active) return;  // Early return if not active
         // Assuming CompilationError has properties for line, column, and message
         int line = error.SourceLine;      // Replace with actual property
         int column = error.SourceColumn;   // Replace with actual property
@@ -86,9 +95,12 @@ public class UIConsole : MonoBehaviour
 
     public void LogError(string error)
     {
-
-
+        if (!_active) return;  // Early return if not active
         WriteLine($"<color=red>{error}</color>");
     }
-}
 
+    internal void SetActive(bool b)
+    {
+        _active = b;
+    }
+}

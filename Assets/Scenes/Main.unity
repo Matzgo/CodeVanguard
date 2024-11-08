@@ -757,6 +757,7 @@ GameObject:
   - component: {fileID: 484836523}
   - component: {fileID: 484836525}
   - component: {fileID: 484836526}
+  - component: {fileID: 484836527}
   m_Layer: 0
   m_Name: RuntimeCodeSystem
   m_TagString: Untagged
@@ -778,6 +779,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _coroutineTransformer: {fileID: 484836526}
   _codeEditorWindow: {fileID: 6873667156088762750}
+  _codeGradingSystem: {fileID: 484836527}
   _resetButton: {fileID: 619313575}
   _runButton: {fileID: 714581159}
   _fileNameText: {fileID: 553534635}
@@ -796,8 +798,11 @@ MonoBehaviour:
   - UnityEngine
   _gameCSFile: {fileID: 11400000, guid: 0f126f2fecb78ec4c959da3fa8032c91, type: 2}
   _bannedCallsDetector: {fileID: 484836525}
-  _transformedCode: 
+  _solutionCSFile: {fileID: 11400000, guid: c2aafcd9110737f46816ce787b82753b, type: 2}
+  _solutionCode: 
+  _coroutineCode: 
   outputPath: Debug
+  _coroutineDisabled: 1
 --- !u!4 &484836524
 Transform:
   m_ObjectHideFlags: 0
@@ -842,6 +847,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _codeRate: 0.33
+--- !u!114 &484836527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 484836522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0d79990027d53ff44ac6c65d234f7b67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxExecutionTime: 1000
+  maxMemoryUsage: 5242880
+  _testCallCount: 50000
 --- !u!1 &516763724
 GameObject:
   m_ObjectHideFlags: 0

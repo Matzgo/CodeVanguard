@@ -10,12 +10,15 @@ public class Test
 	{
 		int result = a + b;
 		Console.WriteLine(result);
-		for(int i = 0; i < 10; i++)
+		for(int i = 0; i < 100; i++)
 		{
 			result = Double(result);
+			int x = 1;
+			int y = 1;
+			int z = 1;
 		}
 		
-		return result;
+		return a + b;
 	}
 
 	private int Double(int n)
@@ -62,12 +65,15 @@ public class Test
 	{
 		int result = a + b;
 		Console.WriteLine(result);
-		for(int i = 0; i < 10; i++)
+		for(int i = 0; i < 100; i++)
 		{
 			result = Double(result);
+			int x = 1;
+			int y = 1;
+			int z = 1;
 		}
 		
-		return result;
+		return a + b;
 	}
 
 	private int Double(int n)
@@ -80,12 +86,15 @@ public class Test
 	{
 		int result = a + b;
 		Console.WriteLine(result);
-		for(int i = 0; i < 10; i++)
+		for(int i = 0; i < 100; i++)
 		{
 			result = Double(result);
+			int x = 1;
+			int y = 1;
+			int z = 1;
 		}
 		
-		return result;
+		return a + b;
 	}
             PredefinedTypeSyntax (PredefinedType)
             Code: int
@@ -103,12 +112,15 @@ public class Test
             Code: {
 		int result = a + b;
 		Console.WriteLine(result);
-		for(int i = 0; i < 10; i++)
+		for(int i = 0; i < 100; i++)
 		{
 			result = Double(result);
+			int x = 1;
+			int y = 1;
+			int z = 1;
 		}
 		
-		return result;
+		return a + b;
 	}
                 LocalDeclarationStatementSyntax (LocalDeclarationStatement)
                 Code: int result = a + b;
@@ -143,9 +155,12 @@ public class Test
                                 IdentifierNameSyntax (IdentifierName)
                                 Code: result
                 ForStatementSyntax (ForStatement)
-                Code: for(int i = 0; i < 10; i++)
+                Code: for(int i = 0; i < 100; i++)
 		{
 			result = Double(result);
+			int x = 1;
+			int y = 1;
+			int z = 1;
 		}
                     VariableDeclarationSyntax (VariableDeclaration)
                     Code: int i = 0
@@ -158,11 +173,11 @@ public class Test
                                 LiteralExpressionSyntax (NumericLiteralExpression)
                                 Code: 0
                     BinaryExpressionSyntax (LessThanExpression)
-                    Code: i < 10
+                    Code: i < 100
                         IdentifierNameSyntax (IdentifierName)
                         Code: i
                         LiteralExpressionSyntax (NumericLiteralExpression)
-                        Code: 10
+                        Code: 100
                     PostfixUnaryExpressionSyntax (PostIncrementExpression)
                     Code: i++
                         IdentifierNameSyntax (IdentifierName)
@@ -170,6 +185,9 @@ public class Test
                     BlockSyntax (Block)
                     Code: {
 			result = Double(result);
+			int x = 1;
+			int y = 1;
+			int z = 1;
 		}
                         ExpressionStatementSyntax (ExpressionStatement)
                         Code: result = Double(result);
@@ -187,10 +205,50 @@ public class Test
                                         Code: result
                                             IdentifierNameSyntax (IdentifierName)
                                             Code: result
+                        LocalDeclarationStatementSyntax (LocalDeclarationStatement)
+                        Code: int x = 1;
+                            VariableDeclarationSyntax (VariableDeclaration)
+                            Code: int x = 1
+                                PredefinedTypeSyntax (PredefinedType)
+                                Code: int
+                                VariableDeclaratorSyntax (VariableDeclarator)
+                                Code: x = 1
+                                    EqualsValueClauseSyntax (EqualsValueClause)
+                                    Code: = 1
+                                        LiteralExpressionSyntax (NumericLiteralExpression)
+                                        Code: 1
+                        LocalDeclarationStatementSyntax (LocalDeclarationStatement)
+                        Code: int y = 1;
+                            VariableDeclarationSyntax (VariableDeclaration)
+                            Code: int y = 1
+                                PredefinedTypeSyntax (PredefinedType)
+                                Code: int
+                                VariableDeclaratorSyntax (VariableDeclarator)
+                                Code: y = 1
+                                    EqualsValueClauseSyntax (EqualsValueClause)
+                                    Code: = 1
+                                        LiteralExpressionSyntax (NumericLiteralExpression)
+                                        Code: 1
+                        LocalDeclarationStatementSyntax (LocalDeclarationStatement)
+                        Code: int z = 1;
+                            VariableDeclarationSyntax (VariableDeclaration)
+                            Code: int z = 1
+                                PredefinedTypeSyntax (PredefinedType)
+                                Code: int
+                                VariableDeclaratorSyntax (VariableDeclarator)
+                                Code: z = 1
+                                    EqualsValueClauseSyntax (EqualsValueClause)
+                                    Code: = 1
+                                        LiteralExpressionSyntax (NumericLiteralExpression)
+                                        Code: 1
                 ReturnStatementSyntax (ReturnStatement)
-                Code: return result;
-                    IdentifierNameSyntax (IdentifierName)
-                    Code: result
+                Code: return a + b;
+                    BinaryExpressionSyntax (AddExpression)
+                    Code: a + b
+                        IdentifierNameSyntax (IdentifierName)
+                        Code: a
+                        IdentifierNameSyntax (IdentifierName)
+                        Code: b
         MethodDeclarationSyntax (MethodDeclaration)
         Code: private int Double(int n)
 	{

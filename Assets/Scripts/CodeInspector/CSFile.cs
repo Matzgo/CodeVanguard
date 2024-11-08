@@ -3,15 +3,15 @@ using UnityEngine;
 
 namespace Game
 {
-    [CreateAssetMenu(fileName = "GameCSFile", menuName = "Game/GameCSFile")]
-    public class GameCSFile : ScriptableObject
+    [CreateAssetMenu(fileName = "CSFile", menuName = "Game/CSFile")]
+    public class CSFile : ScriptableObject
     {
         [SerializeField]
         string _fileName;
         public string FileName => _fileName;
 
         [SerializeField]
-        List<GameCSFileCodeSegment> _codeSegments;
+        List<CSFileCodeSegment> _codeSegments;
 
 
         public string Text
@@ -36,7 +36,7 @@ namespace Game
 
 
     [System.Serializable]
-    public class GameCSFileCodeSegment
+    public class CSFileCodeSegment
     {
         [SerializeField]
         bool _isEditable;
