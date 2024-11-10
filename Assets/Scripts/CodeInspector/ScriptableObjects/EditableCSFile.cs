@@ -1,20 +1,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game
+namespace CodeInspector
 {
-    [CreateAssetMenu(fileName = "CSFile", menuName = "Game/CSFile")]
-    public class CSFile : ScriptableObject
+    [CreateAssetMenu(fileName = "EditableCSFile", menuName = "Game/EditableCSFile")]
+    public class EditableCSFile : CSFile
     {
-        [SerializeField]
-        string _fileName;
-        public string FileName => _fileName;
 
         [SerializeField]
         List<CSFileCodeSegment> _codeSegments;
 
 
-        public string Text
+
+        public override string Text
         {
             get
             {
@@ -30,20 +28,10 @@ namespace Game
                     return txt;
                 }
 
+
+
             }
+
         }
     }
-
-
-    [System.Serializable]
-    public class CSFileCodeSegment
-    {
-        [SerializeField]
-        bool _isEditable;
-        [SerializeField]
-        [TextArea(5, 10)]
-        string _text;
-        public string Text => _text;
-    }
 }
-

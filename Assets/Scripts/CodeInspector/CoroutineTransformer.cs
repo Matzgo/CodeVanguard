@@ -139,7 +139,7 @@ public class CoroutineTransformer : MonoBehaviour
 
     private static MethodDeclarationSyntax RemoveConsoleStatements(MethodDeclarationSyntax method)
     {
-        // Create a new method with the same identifier, return type, and parameters
+        // Create a new method with the same identifier, return type, and _testCaseCalls
         var newMethod = method.WithBody(RemoveConsoleFromBlock(method.Body));
 
         return newMethod;

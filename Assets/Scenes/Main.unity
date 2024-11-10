@@ -796,10 +796,9 @@ MonoBehaviour:
   - Console = Game.Console
   _coroutineDirectives:
   - UnityEngine
-  _gameCSFile: {fileID: 11400000, guid: 0f126f2fecb78ec4c959da3fa8032c91, type: 2}
   _bannedCallsDetector: {fileID: 484836525}
-  _solutionCSFile: {fileID: 11400000, guid: c2aafcd9110737f46816ce787b82753b, type: 2}
   _solutionCode: 
+  _csFileSet: {fileID: 11400000, guid: 29acf16c2797aa14a8855f5be6fb79c0, type: 2}
   _coroutineCode: 
   outputPath: Debug
   _coroutineDisabled: 1

@@ -136,16 +136,16 @@ public class CodeGradingSystem : MonoBehaviour
         feedback.Add($"USER: {averageUserTime} | SOL: {averageSolTime} | USER/SOL: {averageUserTime / averageSolTime}");
 
         // Compare with goal solution time
-        if (averageUserTime > averageSolTime * 1.3)
+        if (averageUserTime > averageSolTime * 1.4)
         {
             // Calculate the ratio of userTime to solTime
             double ratio = averageUserTime / averageSolTime;
 
             // Apply an increasing penalty based on how much larger the ratio is
-            double penalty = Math.Pow(ratio - 1.25, 2);  // Squared to increase the penalty exponentially
+            double penalty = Math.Pow(ratio - 1.4, 2) + .25;  // Squared to increase the penalty exponentially
 
             // Reduce the score based on the penalty, with a minimum score of 50%
-            score *= (float)Math.Max(0.5, 1 - penalty);
+            score *= (float)Math.Max(0, 1 - penalty);
 
             // Optionally, add feedback about the performance
             // feedback.Add($"Test case Add({testCase[0]}, {testCase[1]}) was significantly slower than optimal solution");

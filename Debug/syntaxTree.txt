@@ -10,12 +10,9 @@ public class Test
 	{
 		int result = a + b;
 		Console.WriteLine(result);
-		for(int i = 0; i < 100; i++)
+		for(int i = 0; i < 1000; i++)
 		{
 			result = Double(result);
-			int x = 1;
-			int y = 1;
-			int z = 1;
 		}
 		
 		return a + b;
@@ -65,12 +62,9 @@ public class Test
 	{
 		int result = a + b;
 		Console.WriteLine(result);
-		for(int i = 0; i < 100; i++)
+		for(int i = 0; i < 1000; i++)
 		{
 			result = Double(result);
-			int x = 1;
-			int y = 1;
-			int z = 1;
 		}
 		
 		return a + b;
@@ -86,12 +80,9 @@ public class Test
 	{
 		int result = a + b;
 		Console.WriteLine(result);
-		for(int i = 0; i < 100; i++)
+		for(int i = 0; i < 1000; i++)
 		{
 			result = Double(result);
-			int x = 1;
-			int y = 1;
-			int z = 1;
 		}
 		
 		return a + b;
@@ -112,12 +103,9 @@ public class Test
             Code: {
 		int result = a + b;
 		Console.WriteLine(result);
-		for(int i = 0; i < 100; i++)
+		for(int i = 0; i < 1000; i++)
 		{
 			result = Double(result);
-			int x = 1;
-			int y = 1;
-			int z = 1;
 		}
 		
 		return a + b;
@@ -155,12 +143,9 @@ public class Test
                                 IdentifierNameSyntax (IdentifierName)
                                 Code: result
                 ForStatementSyntax (ForStatement)
-                Code: for(int i = 0; i < 100; i++)
+                Code: for(int i = 0; i < 1000; i++)
 		{
 			result = Double(result);
-			int x = 1;
-			int y = 1;
-			int z = 1;
 		}
                     VariableDeclarationSyntax (VariableDeclaration)
                     Code: int i = 0
@@ -173,11 +158,11 @@ public class Test
                                 LiteralExpressionSyntax (NumericLiteralExpression)
                                 Code: 0
                     BinaryExpressionSyntax (LessThanExpression)
-                    Code: i < 100
+                    Code: i < 1000
                         IdentifierNameSyntax (IdentifierName)
                         Code: i
                         LiteralExpressionSyntax (NumericLiteralExpression)
-                        Code: 100
+                        Code: 1000
                     PostfixUnaryExpressionSyntax (PostIncrementExpression)
                     Code: i++
                         IdentifierNameSyntax (IdentifierName)
@@ -185,9 +170,6 @@ public class Test
                     BlockSyntax (Block)
                     Code: {
 			result = Double(result);
-			int x = 1;
-			int y = 1;
-			int z = 1;
 		}
                         ExpressionStatementSyntax (ExpressionStatement)
                         Code: result = Double(result);
@@ -205,42 +187,6 @@ public class Test
                                         Code: result
                                             IdentifierNameSyntax (IdentifierName)
                                             Code: result
-                        LocalDeclarationStatementSyntax (LocalDeclarationStatement)
-                        Code: int x = 1;
-                            VariableDeclarationSyntax (VariableDeclaration)
-                            Code: int x = 1
-                                PredefinedTypeSyntax (PredefinedType)
-                                Code: int
-                                VariableDeclaratorSyntax (VariableDeclarator)
-                                Code: x = 1
-                                    EqualsValueClauseSyntax (EqualsValueClause)
-                                    Code: = 1
-                                        LiteralExpressionSyntax (NumericLiteralExpression)
-                                        Code: 1
-                        LocalDeclarationStatementSyntax (LocalDeclarationStatement)
-                        Code: int y = 1;
-                            VariableDeclarationSyntax (VariableDeclaration)
-                            Code: int y = 1
-                                PredefinedTypeSyntax (PredefinedType)
-                                Code: int
-                                VariableDeclaratorSyntax (VariableDeclarator)
-                                Code: y = 1
-                                    EqualsValueClauseSyntax (EqualsValueClause)
-                                    Code: = 1
-                                        LiteralExpressionSyntax (NumericLiteralExpression)
-                                        Code: 1
-                        LocalDeclarationStatementSyntax (LocalDeclarationStatement)
-                        Code: int z = 1;
-                            VariableDeclarationSyntax (VariableDeclaration)
-                            Code: int z = 1
-                                PredefinedTypeSyntax (PredefinedType)
-                                Code: int
-                                VariableDeclaratorSyntax (VariableDeclarator)
-                                Code: z = 1
-                                    EqualsValueClauseSyntax (EqualsValueClause)
-                                    Code: = 1
-                                        LiteralExpressionSyntax (NumericLiteralExpression)
-                                        Code: 1
                 ReturnStatementSyntax (ReturnStatement)
                 Code: return a + b;
                     BinaryExpressionSyntax (AddExpression)

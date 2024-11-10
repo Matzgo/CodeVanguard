@@ -1,5 +1,4 @@
 using CodeInspector;
-using Game;
 using Microsoft.CodeAnalysis.CSharp;
 using RoslynCSharp;
 using System;
@@ -51,20 +50,17 @@ public class RuntimeCodeSystem : MonoBehaviour
 
     [SerializeField]
     private List<string> _coroutineDirectives = new List<string>();
-
-    [SerializeField]
-    CSFile _gameCSFile;
     [SerializeField]
     BannedCallsDetector _bannedCallsDetector;
 
-
-    [SerializeField]
-    private CSFile _solutionCSFile;
     [SerializeField]
     private string _solutionCode;
 
     private ScriptProxy _solutionScript;
 
+
+    [SerializeField]
+    CSFileSet _csFileSet;
 
     private string _usingStatements;
     private string _coroutineUsingStatements;
@@ -90,9 +86,9 @@ public class RuntimeCodeSystem : MonoBehaviour
 
     private void OnResetClicked()
     {
-        _codeEditorWindow.Text = _gameCSFile.Text;
-        _fileNameText.text = _gameCSFile.FileName;
-        _solutionCode = _solutionCSFile.Text;
+        _codeEditorWindow.Text = _csFileSet.EntryPointFile.Text;
+        _fileNameText.text = _csFileSet.EntryPointFile.FileName + ".cs";
+        _solutionCode = _csFileSet.CSFiles[0].SolutionFile.Text;
     }
     private int GetLineCount(string code)
     {
@@ -121,9 +117,9 @@ public class RuntimeCodeSystem : MonoBehaviour
         foreach (AssemblyReferenceAsset reference in coroutineReferences)
             _coroutineDomain.RoslynCompilerService.ReferenceAssemblies.Add(reference);
 
-        _codeEditorWindow.Text = _gameCSFile.Text;
-        _fileNameText.text = _gameCSFile.FileName + ".cs";
-        _solutionCode = _solutionCSFile.Text;
+        _codeEditorWindow.Text = _csFileSet.EntryPointFile.Text;
+        _fileNameText.text = _csFileSet.EntryPointFile.FileName + ".cs";
+        _solutionCode = _csFileSet.CSFiles[0].SolutionFile.Text;
 
         _usingStatements = GenerateUsingStatements(_autoUsingDirectives);
         _coroutineUsingStatements = GenerateUsingStatements(_coroutineDirectives) + _usingStatements;
@@ -160,7 +156,6 @@ public class RuntimeCodeSystem : MonoBehaviour
                 var userCodeWithDirectives = _usingStatements + "\n" + userCode;
 
                 ScriptType userType = _domain.CompileAndLoadMainSource(userCodeWithDirectives, ScriptSecurityMode.UseSettings, assemblyReferences);
-
 
 
                 // Check for null

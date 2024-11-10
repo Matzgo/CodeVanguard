@@ -134,8 +134,8 @@
 //    public MethodDeclarationSyntax TransformToCoroutine(MethodDeclarationSyntax method)
 //    {
 //        var originalReturnType = method.ReturnType.ToString();
-//        var parameters = method.ParameterList.Parameters;
-//        var parameterList = parameters.ToList();
+//        var _testCaseCalls = method.ParameterList.Parameters;
+//        var parameterList = _testCaseCalls.ToList();
 
 //        // Add result wrapper parameter if method has return type that's not void
 //        if (_methodReturnTypes.ContainsKey(method.Identifier.Text))
