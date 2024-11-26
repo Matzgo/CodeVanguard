@@ -39,6 +39,8 @@ public class RuntimeCodeSystem : MonoBehaviour
     [SerializeField]
     private Button _runButton;
     [SerializeField]
+    private Button _approveButton;
+    [SerializeField]
     TextMeshProUGUI _fileNameText;
     [SerializeField]
     private AssemblyReferenceAsset[] assemblyReferences;
@@ -82,6 +84,7 @@ public class RuntimeCodeSystem : MonoBehaviour
     {
         _runButton.onClick.AddListener(OnRunClicked);
         _resetButton.onClick.AddListener(OnResetClicked);
+        _approveButton.onClick.AddListener(OnGradeClicked);
     }
 
     private void OnResetClicked()
@@ -152,13 +155,31 @@ public class RuntimeCodeSystem : MonoBehaviour
             {
                 CompileAndRunUserCode();
                 CompileAndRunSolutionCode();
-                EvaluateSubmission();
-                TransformAndRunCoroutine();
             }
             else
             {
                 RunSimpleAddTest();
             }
+        }
+        catch (Exception e)
+        {
+            HandleException(e);
+        }
+    }
+
+    private void OnGradeClicked()
+    {
+        try
+        {
+            // Ensure code is compiled before grading
+            if (_userScript == null || _solutionScript == null)
+            {
+                RuntimeManager.Instance.Console.LogError("Please run the code first before grading.");
+                return;
+            }
+
+            // Perform grading
+            EvaluateSubmission();
         }
         catch (Exception e)
         {
@@ -200,6 +221,7 @@ public class RuntimeCodeSystem : MonoBehaviour
 
         _solutionScript = solutionType.CreateInstance();
     }
+
 
     private ScriptType CompileCode(string codeWithDirectives, ScriptDomain domain)
     {
@@ -243,6 +265,8 @@ public class RuntimeCodeSystem : MonoBehaviour
 
     private void RunSimpleAddTest()
     {
+        RuntimeManager.Instance.Console.SetActive(true);
+
         var a = 5;
         var b = 3;
         int result = (int)_userScript.Call("Add", a, b);
@@ -253,6 +277,19 @@ public class RuntimeCodeSystem : MonoBehaviour
 
     private void EvaluateSubmission()
     {
+        // Validate scripts are not null before grading
+        if (_userScript == null)
+        {
+            RuntimeManager.Instance.Console.LogError("User script is not compiled. Run the code first.");
+            return;
+        }
+
+        if (_solutionScript == null)
+        {
+            RuntimeManager.Instance.Console.LogError("Solution script is not compiled. Run the solution first.");
+            return;
+        }
+
         var gradingResult = _codeGradingSystem.GradeSubmission(
             _usingStatements + "\n" + _codeEditorWindow.Text,
             _userScript,
@@ -362,6 +399,13 @@ public class RuntimeCodeSystem : MonoBehaviour
         }
     }
 
-
+    // Optional: If you want to add a method to reset the scripts
+    private void ResetScripts()
+    {
+        _userScript = null;
+        _solutionScript = null;
+        _activeCSharpSource = null;
+        RuntimeManager.Instance.Console.WriteLine("Scripts reset. Please run the code again.", Color.yellow);
+    }
 
 }

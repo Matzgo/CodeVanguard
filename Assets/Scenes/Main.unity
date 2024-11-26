@@ -158,7 +158,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -163.04999, y: -465.7}
+  m_AnchoredPosition: {x: -163.04997, y: -465.7}
   m_SizeDelta: {x: 105.5, y: 108.599976}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &86436527
@@ -1141,18 +1141,26 @@ MonoBehaviour:
   _codeGradingSystem: {fileID: 484836527}
   _resetButton: {fileID: 619313575}
   _runButton: {fileID: 714581159}
+  _approveButton: {fileID: 581364240}
   _fileNameText: {fileID: 553534635}
   assemblyReferences:
-  - {fileID: 0}
+  - {fileID: 11400000, guid: e26ad300bccd9a94a84da9bfbc0759f8, type: 2}
+  - {fileID: 11400000, guid: fe24fc97048e2974787cc8d5328fa171, type: 2}
   coroutineReferences:
-  - {fileID: 0}
-  _autoUsingDirectives: []
-  _coroutineDirectives: []
-  _bannedCallsDetector: {fileID: 0}
+  - {fileID: 11400000, guid: 49e9f5d6abb77204793f81ae256f8b86, type: 2}
+  - {fileID: 11400000, guid: 65d35e6a664c43d42903e94db6b24462, type: 2}
+  _autoUsingDirectives:
+  - Game
+  - System
+  - System.Collections.Generic
+  - Console = Game.Console
+  _coroutineDirectives:
+  - UnityEngine
+  _bannedCallsDetector: {fileID: 484836525}
   _solutionCode: 
-  _csFileSet: {fileID: 0}
+  _csFileSet: {fileID: 11400000, guid: 29acf16c2797aa14a8855f5be6fb79c0, type: 2}
   _coroutineCode: 
-  outputPath: 
+  outputPath: Debug
   _coroutineDisabled: 0
 --- !u!4 &484836524
 Transform:
@@ -1588,7 +1596,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 59.29997, y: 20}
+  m_AnchoredPosition: {x: 59.299957, y: 20}
   m_SizeDelta: {x: -158.60008, y: 90}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!114 &581364240
@@ -2521,7 +2529,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1683977152}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.88275856
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -2984,7 +2992,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 0
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 2141673894}
   m_PlaneDistance: 1
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -4423,7 +4431,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 693.49994, y: -0}
+  m_AnchoredPosition: {x: 693.49994, y: 0}
   m_SizeDelta: {x: 1386.9999, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1857601699
@@ -4561,7 +4569,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2063987472}
   - component: {fileID: 2063987471}
-  - component: {fileID: 2063987470}
   - component: {fileID: 2063987469}
   m_Layer: 0
   m_Name: MiniGameCamera
@@ -4614,14 +4621,6 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
---- !u!81 &2063987470
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2063987468}
-  m_Enabled: 1
 --- !u!20 &2063987471
 Camera:
   m_ObjectHideFlags: 0
@@ -5234,7 +5233,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 737.50006, y: -0}
+  m_AnchoredPosition: {x: 737.50006, y: 0}
   m_SizeDelta: {x: 1405.0001, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!224 &8500852977752830264

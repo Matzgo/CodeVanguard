@@ -99,7 +99,7 @@ public class UIConsole : MonoBehaviour
         WriteLine($"<color=red>{error}</color>");
     }
 
-    internal void SetActive(bool b)
+    public void SetActive(bool b)
     {
         _active = b;
     }
