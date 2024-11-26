@@ -53,12 +53,12 @@ public class PrimerButton : MonoBehaviour
         // Apply rotation based on toggle state
         if (isToggled)
         {
-            primerImage.transform.rotation = Quaternion.Euler(0, 0, 90); // Rotate to 90 degrees
+            primerImage.transform.localRotation = Quaternion.Euler(0, 0, 90); // Rotate to 90 degrees
             EnableApproveButton(); // Enable the approve primerButton and change color
         }
         else
         {
-            primerImage.transform.rotation = Quaternion.Euler(0, 0, 0); // Reset to 0 degrees
+            primerImage.transform.localRotation = Quaternion.Euler(0, 0, 0); // Reset to 0 degrees
             DisableApproveButton(); // Disable the approve primerButton and reset color
         }
     }

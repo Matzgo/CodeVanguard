@@ -27,7 +27,6 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
-        LockAndHideCursor();
         StartCoroutine(SubscribeInputNextFrame());
     }
 
@@ -51,17 +50,7 @@ public class PlayerController : MonoBehaviour
         HandleMovement();
         //HandleGravityAndJump();
     }
-    public void LockAndHideCursor()
-    {
-        // Hides the cursor and locks it to the center of the game window
-        Cursor.lockState = CursorLockMode.Locked; // Lock the cursor
-        Cursor.visible = false; // Hide the cursor
-    }
-    public void UnlockAndShowCursor()
-    {
-        Cursor.lockState = CursorLockMode.None; // Unlock the cursor
-        Cursor.visible = true; // Show the cursor
-    }
+
     void HandleLook()
     {
         // Handle the mouse or stick input for looking around

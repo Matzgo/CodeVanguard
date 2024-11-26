@@ -208,6 +208,8 @@ public class RuntimeCodeSystem : MonoBehaviour
 
         SaveSyntaxTree(userCodeWithDirectives);
         RunSimpleAddTest();
+
+        TransformAndRunCoroutine();
     }
 
     private void CompileAndRunSolutionCode()
