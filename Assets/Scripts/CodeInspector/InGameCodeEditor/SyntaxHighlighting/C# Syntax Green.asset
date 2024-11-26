@@ -47,7 +47,7 @@ MonoBehaviour:
     lineCommentStart: //
     blockCommentStart: /*
     blockCommentEnd: '*/'
-    highlightColor: {r: 0.5544504, g: 1, b: 0.48113203, a: 1}
+    highlightColor: {r: 0, g: 0.5018867, b: 0, a: 1}
     lineCommentHasPresedence: 1
   literalGroup:
     highlightLiterals: 1

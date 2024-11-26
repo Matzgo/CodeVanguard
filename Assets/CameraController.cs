@@ -9,11 +9,15 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float zoomLerpSpeed = 5f;        // Speed of zoom interpolation
     [SerializeField] private float maxXAngle = 80f;           // Maximum vertical rotation angle (up and down)
     [SerializeField] private float maxYAngle = 80f;           // Maximum horizontal rotation angle (left and right)
+    [SerializeField] private float rotationSmoothingSpeed = 10f; // Speed of rotation interpolation
 
     private float xRotation = 0f; // Tracks the current vertical rotation
     private float yRotation = 0f; // Tracks the current horizontal rotation
     private Camera _camera;       // Reference to the camera component
     private float targetFOV;      // Target FOV for smooth zooming
+    private Quaternion targetRotation; // Target rotation for smoothing
+    private UnityEngine.InputSystem.InputAction look;
+    private UnityEngine.InputSystem.InputAction zoom;
 
     private void Awake()
     {
@@ -21,12 +25,21 @@ public class CameraController : MonoBehaviour
         Cursor.visible = false;                  // Hides the cursor
         _camera = GetComponent<Camera>();        // Get the Camera component
         targetFOV = _camera.fieldOfView;         // Initialize target FOV
+        targetRotation = transform.localRotation; // Initialize target rotation
+
+    }
+
+    private void Start()
+    {
+        look = InputManager.Instance.Input.Player.Look;
+        zoom = InputManager.Instance.Input.Player.Zoom;
+
     }
 
     private void Update()
     {
         // Read the mouse delta from the Look action
-        Vector2 mouseDelta = InputManager.Instance.Input.Player.Look.ReadValue<Vector2>();
+        Vector2 mouseDelta = look.ReadValue<Vector2>();
 
         // Adjust rotation values based on mouse input
         yRotation += mouseDelta.x * sensitivity * Time.deltaTime;
@@ -36,11 +49,14 @@ public class CameraController : MonoBehaviour
         xRotation = Mathf.Clamp(xRotation, -maxXAngle, maxXAngle);
         yRotation = Mathf.Clamp(yRotation, -maxYAngle, maxYAngle);
 
-        // Apply the rotation
-        transform.localRotation = Quaternion.Euler(xRotation, yRotation, 0f);
+        // Calculate the target rotation
+        targetRotation = Quaternion.Euler(xRotation, yRotation, 0f);
+
+        // Smoothly interpolate the current rotation towards the target rotation
+        transform.localRotation = Quaternion.Lerp(transform.localRotation, targetRotation, rotationSmoothingSpeed * Time.deltaTime);
 
         // Read the zoom value from the Zoom action
-        var zoomInput = InputManager.Instance.Input.Player.Zoom.ReadValue<Vector2>();
+        var zoomInput = zoom.ReadValue<Vector2>();
 
         // Calculate the target FOV based on zoom input
         targetFOV -= zoomInput.y * zoomSensitivity * Time.deltaTime;

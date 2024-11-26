@@ -1,5 +1,4 @@
 ﻿using RoslynCSharp.Compiler;
-using UnityEditor.Compilation;
 using UnityEngine;
 
 namespace RoslynCSharp.Example
@@ -18,7 +17,7 @@ namespace RoslynCSharp.Example
         {
             // Create domain
             domain = ScriptDomain.CreateDomain("Example Domain");
-            
+
             // Setup output location
             domain.RoslynCompilerService.OutputDirectory = "Assemblies";    // <project_path>/Assemblies
             domain.RoslynCompilerService.OutputName = "MyAssembly";
