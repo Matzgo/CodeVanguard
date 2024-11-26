@@ -23,19 +23,19 @@ public class MazeCrawlerTest : MonoBehaviour
     public CodeEditor runCrawlerInput;
 
     /// <summary>
-    /// The run code button.
+    /// The run code primerButton.
     /// </summary>
     public Button runCrawlerButton;
     /// <summary>
-    /// The stop code button.
+    /// The stop code primerButton.
     /// </summary>
     public Button stopCrawlerButton;
     /// <summary>
-    /// The restart code button.
+    /// The restart code primerButton.
     /// </summary>
     public Button restartCrawlerButton;
     /// <summary>
-    /// The edit code button.
+    /// The edit code primerButton.
     /// </summary>
     public Button editCodeButton;
 
@@ -44,15 +44,15 @@ public class MazeCrawlerTest : MonoBehaviour
     /// </summary>
     public GameObject codeEditorWindow;
     /// <summary>
-    /// The code editor window close button.
+    /// The code editor window close primerButton.
     /// </summary>
     public Button codeEditorCloseButton;
     /// <summary>
-    /// The code editor button load template button.
+    /// The code editor primerButton load template primerButton.
     /// </summary>
     public Button codeEditorLoadTemplateButton;
     /// <summary>
-    /// The code editor button load solution button.
+    /// The code editor primerButton load solution primerButton.
     /// </summary>
     public Button codeEditorLoadSolutionButton;
 

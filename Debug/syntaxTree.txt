@@ -10,12 +10,12 @@ public class Test
 	{
 		int result = a + b;
 		Console.WriteLine(result);
-		for(int i = 0; i < 1000; i++)
+		for(int i = 0; i < 10; i++)
 		{
 			result = Double(result);
 		}
 		
-		return a + b;
+		return result;
 	}
 
 	private int Double(int n)
@@ -62,12 +62,12 @@ public class Test
 	{
 		int result = a + b;
 		Console.WriteLine(result);
-		for(int i = 0; i < 1000; i++)
+		for(int i = 0; i < 10; i++)
 		{
 			result = Double(result);
 		}
 		
-		return a + b;
+		return result;
 	}
 
 	private int Double(int n)
@@ -80,12 +80,12 @@ public class Test
 	{
 		int result = a + b;
 		Console.WriteLine(result);
-		for(int i = 0; i < 1000; i++)
+		for(int i = 0; i < 10; i++)
 		{
 			result = Double(result);
 		}
 		
-		return a + b;
+		return result;
 	}
             PredefinedTypeSyntax (PredefinedType)
             Code: int
@@ -103,12 +103,12 @@ public class Test
             Code: {
 		int result = a + b;
 		Console.WriteLine(result);
-		for(int i = 0; i < 1000; i++)
+		for(int i = 0; i < 10; i++)
 		{
 			result = Double(result);
 		}
 		
-		return a + b;
+		return result;
 	}
                 LocalDeclarationStatementSyntax (LocalDeclarationStatement)
                 Code: int result = a + b;
@@ -143,7 +143,7 @@ public class Test
                                 IdentifierNameSyntax (IdentifierName)
                                 Code: result
                 ForStatementSyntax (ForStatement)
-                Code: for(int i = 0; i < 1000; i++)
+                Code: for(int i = 0; i < 10; i++)
 		{
 			result = Double(result);
 		}
@@ -158,11 +158,11 @@ public class Test
                                 LiteralExpressionSyntax (NumericLiteralExpression)
                                 Code: 0
                     BinaryExpressionSyntax (LessThanExpression)
-                    Code: i < 1000
+                    Code: i < 10
                         IdentifierNameSyntax (IdentifierName)
                         Code: i
                         LiteralExpressionSyntax (NumericLiteralExpression)
-                        Code: 1000
+                        Code: 10
                     PostfixUnaryExpressionSyntax (PostIncrementExpression)
                     Code: i++
                         IdentifierNameSyntax (IdentifierName)
@@ -188,13 +188,9 @@ public class Test
                                             IdentifierNameSyntax (IdentifierName)
                                             Code: result
                 ReturnStatementSyntax (ReturnStatement)
-                Code: return a + b;
-                    BinaryExpressionSyntax (AddExpression)
-                    Code: a + b
-                        IdentifierNameSyntax (IdentifierName)
-                        Code: a
-                        IdentifierNameSyntax (IdentifierName)
-                        Code: b
+                Code: return result;
+                    IdentifierNameSyntax (IdentifierName)
+                    Code: result
         MethodDeclarationSyntax (MethodDeclaration)
         Code: private int Double(int n)
 	{

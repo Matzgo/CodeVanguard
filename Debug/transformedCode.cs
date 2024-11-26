@@ -9,15 +9,12 @@ public class Test
     public int Add(int a, int b)
     {
         int result = a + b;
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < 10; i++)
         {
             result = Double(result);
-            int x = 1;
-            int y = 1;
-            int z = 1;
         }
 
-        return a + b;
+        return result;
     }
 
     private int Double(int n)
@@ -28,47 +25,35 @@ public class Test
     public System.Collections.IEnumerator COR_Add(int a, int b)
     {
         CodeInspector.RuntimeManager.Instance.HighlightLine(5);
-        yield return new UnityEngine.WaitForSeconds(0.05f);
+        yield return new UnityEngine.WaitForSeconds(0.33f);
         int result = a + b;
         ;
         CodeInspector.RuntimeManager.Instance.HighlightLine(6);
-        yield return new UnityEngine.WaitForSeconds(0.05f);
+        yield return new UnityEngine.WaitForSeconds(0.33f);
         Console.WriteLine(result);
         ;
         CodeInspector.RuntimeManager.Instance.HighlightLine(7);
-        yield return new UnityEngine.WaitForSeconds(0.05f);
-        for (int i = 0; i < 100; i++)
+        yield return new UnityEngine.WaitForSeconds(0.33f);
+        for (int i = 0; i < 10; i++)
         {
             CodeInspector.RuntimeManager.Instance.HighlightLine(9);
-            yield return new UnityEngine.WaitForSeconds(0.05f);
+            yield return new UnityEngine.WaitForSeconds(0.33f);
             yield return COR_Double(result);
             result = Double(result);
-            ;
-            CodeInspector.RuntimeManager.Instance.HighlightLine(10);
-            yield return new UnityEngine.WaitForSeconds(0.05f);
-            int x = 1;
-            ;
-            CodeInspector.RuntimeManager.Instance.HighlightLine(11);
-            yield return new UnityEngine.WaitForSeconds(0.05f);
-            int y = 1;
-            ;
-            CodeInspector.RuntimeManager.Instance.HighlightLine(12);
-            yield return new UnityEngine.WaitForSeconds(0.05f);
-            int z = 1;
             ;
         }
 
         ;
-        CodeInspector.RuntimeManager.Instance.HighlightLine(15);
-        yield return new UnityEngine.WaitForSeconds(0.05f);
+        CodeInspector.RuntimeManager.Instance.HighlightLine(12);
+        yield return new UnityEngine.WaitForSeconds(0.33f);
         ;
         CodeInspector.RuntimeManager.Instance.DisableHighlightLine();
     }
 
     private System.Collections.IEnumerator COR_Double(int n)
     {
-        CodeInspector.RuntimeManager.Instance.HighlightLine(20);
-        yield return new UnityEngine.WaitForSeconds(0.05f);
+        CodeInspector.RuntimeManager.Instance.HighlightLine(17);
+        yield return new UnityEngine.WaitForSeconds(0.33f);
         ;
         CodeInspector.RuntimeManager.Instance.DisableHighlightLine();
     }
