@@ -156,11 +156,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1828392727}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -163.04999, y: 20}
-  m_SizeDelta: {x: -374.5, y: 108.6}
-  m_Pivot: {x: 0.5, y: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -163.04999, y: -465.7}
+  m_SizeDelta: {x: 105.5, y: 108.599976}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &86436527
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -256,9 +256,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   primerButton: {fileID: 86436527}
-  primerImage: {fileID: 0}
+  primerImage: {fileID: 86436525}
   approveButton: {fileID: 581364240}
-  approveImage: {fileID: 0}
+  approveImage: {fileID: 581364241}
 --- !u!1 &113840211
 GameObject:
   m_ObjectHideFlags: 0
@@ -1143,24 +1143,17 @@ MonoBehaviour:
   _runButton: {fileID: 714581159}
   _fileNameText: {fileID: 553534635}
   assemblyReferences:
-  - {fileID: 11400000, guid: e26ad300bccd9a94a84da9bfbc0759f8, type: 2}
-  - {fileID: 11400000, guid: fe24fc97048e2974787cc8d5328fa171, type: 2}
+  - {fileID: 0}
   coroutineReferences:
-  - {fileID: 11400000, guid: 49e9f5d6abb77204793f81ae256f8b86, type: 2}
-  - {fileID: 11400000, guid: 65d35e6a664c43d42903e94db6b24462, type: 2}
-  _autoUsingDirectives:
-  - Game
-  - System
-  - System.Collections.Generic
-  - Console = Game.Console
-  _coroutineDirectives:
-  - UnityEngine
-  _bannedCallsDetector: {fileID: 484836525}
+  - {fileID: 0}
+  _autoUsingDirectives: []
+  _coroutineDirectives: []
+  _bannedCallsDetector: {fileID: 0}
   _solutionCode: 
-  _csFileSet: {fileID: 11400000, guid: 29acf16c2797aa14a8855f5be6fb79c0, type: 2}
+  _csFileSet: {fileID: 0}
   _coroutineCode: 
-  outputPath: Debug
-  _coroutineDisabled: 1
+  outputPath: 
+  _coroutineDisabled: 0
 --- !u!4 &484836524
 Transform:
   m_ObjectHideFlags: 0
@@ -3487,7 +3480,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -0.000030517578}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1396272815
@@ -3787,9 +3780,9 @@ RectTransform:
   - {fileID: 553534634}
   m_Father: {fileID: 2085618489}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 200, y: -14.000004}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 400, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1522404445
