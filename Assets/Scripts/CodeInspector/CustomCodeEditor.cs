@@ -182,6 +182,7 @@ namespace CodeInspector
                     delayedRefresh = true;
 
                     inputText.ForceMeshUpdate(false);
+                    //UpdateCurrentLineNumbers();
                 }
                 else
                 {
@@ -435,7 +436,6 @@ namespace CodeInspector
         {
             // Update caret position
             UpdateCurrentLineColumnIndent();
-
             // Check for change
             if ((forceUpdate == false && lastText == newText) || string.IsNullOrEmpty(newText) == true)
             {
@@ -494,32 +494,32 @@ namespace CodeInspector
         //MTZ-Refactor
         private void UpdateCurrentLineNumbers()
         {
-            int currentLineCount = inputText.textInfo.lineCount;
+            // Count lines manually using string methods
+            int currentLineCount = inputText.text.Split('\n').Length;
+
             int currentLineNumber = 1;
+            lineBuilder.Clear();
 
-            if (currentLineCount != lineCount)
+            for (int i = 0; i < inputText.text.Length; i++)
             {
-                lineBuilder.Clear();
-
-                for (int i = 0; i < currentLineCount; i++)
+                // At the start of the text or right after a newline, add a line number
+                if (i == 0 || inputText.text[i - 1] == '\n')
                 {
-                    // Add the line number at the start of each logical line
-                    if (i == 0 || inputText.text[inputText.textInfo.lineInfo[i].firstCharacterIndex - 1] == '\n')
-                    {
-                        lineBuilder.Append(currentLineNumber);
-                        currentLineNumber++;
-                    }
-
+                    lineBuilder.Append(currentLineNumber);
+                    currentLineNumber++;
+                    // Add a newline after the line number
                     lineBuilder.Append('\n');
                 }
-
-                // Remove the last newline character
-                if (lineBuilder.Length > 0)
-                    lineBuilder.Length--;
-
-                lineText.text = lineBuilder.ToString();
-                lineCount = currentLineCount;
             }
+
+            // Remove the last newline if it exists
+            if (lineBuilder.Length > 0 && lineBuilder[lineBuilder.Length - 1] == '\n')
+                lineBuilder.Length--;
+
+            lineText.text = lineBuilder.ToString();
+
+            //Debug.Log($"Manual Line Count: {currentLineCount}, TextInfo Line Count: {inputText.textInfo.lineCount}");
+            lineCount = currentLineCount;
         }
         //Old method in case the other is actually broken
 
@@ -899,6 +899,8 @@ namespace CodeInspector
         internal void HightlightRunningLine(int lineNr)
         {
             // Check if code editor is not active or line number is invalid
+            //Debug.Log("LC:" + LineCount);
+
             if (lineNr < 1 || lineNr > LineCount)
                 return;
 

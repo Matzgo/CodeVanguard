@@ -1,11 +1,38 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 namespace CodeInspector
 {
+    public enum TaskType
+    {
+        Corruption, //Have to write missing code
+        Verification, //Have to verify if shown code does what the task describes
+    }
+
+
     [CreateAssetMenu(fileName = "FileSet", menuName = "Game/CSFileSet")]
     public class CSFileSet : ScriptableObject
     {
+
+        [SerializeField]
+        private TaskType _taskType;
+        public TaskType TaskType => _taskType;
+
+
+        [SerializeField]
+        string _title;
+        public string Title => _title;
+
+        [SerializeField]
+        [TextArea(1, 10)]
+        private string _description;
+        public string Description => _description;
+
+
+
+
         [SerializeField]
         string _fileSetName;
         public string FileSetName => _fileSetName;
@@ -27,7 +54,9 @@ namespace CodeInspector
         List<CSFileSetEntry> _csFiles;
         public List<CSFileSetEntry> CSFiles => _csFiles;
 
-
+        [SerializeField]
+        MiniGame _miniGame;
+        public MiniGame MiniGame => _miniGame;
 
         private void OnValidate()
         {
@@ -39,6 +68,21 @@ namespace CodeInspector
                 if (_csFiles[i].File != null && _csFiles[i].File is StaticCSFile)
                     _csFiles[i].SetSolutionFile(null);
             }
+        }
+
+        public string GetTaskTypeString()
+        {
+            switch (_taskType)
+            {
+                case TaskType.Corruption:
+                    return "CORRUPTION";
+                case TaskType.Verification:
+                    return "VERIFICATION";
+
+                default:
+                    return "";
+            };
+
         }
     }
 

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8868120f8a7c9c54b86eed390f8cddae, type: 3}
+  m_Name: CraneTest1
+  m_EditorClassIdentifier: 
+  _sceneName: MG_Crane
+  _whitelistedDirectives:
+  - Game.Crane
+  parameters:
+    cols: 02000000000000000000000000000000
+    craneStartPos: 0
+    targetCols: 00000000000000000000000002000000

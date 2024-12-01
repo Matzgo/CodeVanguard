@@ -3,24 +3,25 @@ Code: using Game;
 using System;
 using System.Collections.Generic;
 using Console = Game.Console;
+using Crane = Game.Crane;
 
-public class Test
+public class CraneController
 {
-	public int Add(int a, int b)
+	public void MoveItems()
 	{
-		int result = a + b;
-		Console.WriteLine(result);
-		for(int i = 0; i < 10; i++)
-		{
-			result = Double(result);
-		}
-		
-		return result;
-	}
-
-	private int Double(int n)
-	{
-		return n * 2;
+		Crane.PickUp();
+		Crane.MoveRight();
+		Crane.MoveRight();
+		Crane.MoveRight();
+		Crane.Drop();
+		Crane.MoveLeft();
+		Crane.MoveLeft();
+		Crane.MoveLeft();
+		Crane.PickUp();
+		Crane.MoveRight();
+		Crane.MoveRight();
+		Crane.MoveRight();
+		Crane.Drop();
 	}
 }
     UsingDirectiveSyntax (UsingDirective)
@@ -55,164 +56,228 @@ public class Test
             Code: Game
             IdentifierNameSyntax (IdentifierName)
             Code: Console
+    UsingDirectiveSyntax (UsingDirective)
+    Code: using Crane = Game.Crane;
+        NameEqualsSyntax (NameEquals)
+        Code: Crane =
+            IdentifierNameSyntax (IdentifierName)
+            Code: Crane
+        QualifiedNameSyntax (QualifiedName)
+        Code: Game.Crane
+            IdentifierNameSyntax (IdentifierName)
+            Code: Game
+            IdentifierNameSyntax (IdentifierName)
+            Code: Crane
     ClassDeclarationSyntax (ClassDeclaration)
-    Code: public class Test
+    Code: public class CraneController
 {
-	public int Add(int a, int b)
+	public void MoveItems()
 	{
-		int result = a + b;
-		Console.WriteLine(result);
-		for(int i = 0; i < 10; i++)
-		{
-			result = Double(result);
-		}
-		
-		return result;
-	}
-
-	private int Double(int n)
-	{
-		return n * 2;
+		Crane.PickUp();
+		Crane.MoveRight();
+		Crane.MoveRight();
+		Crane.MoveRight();
+		Crane.Drop();
+		Crane.MoveLeft();
+		Crane.MoveLeft();
+		Crane.MoveLeft();
+		Crane.PickUp();
+		Crane.MoveRight();
+		Crane.MoveRight();
+		Crane.MoveRight();
+		Crane.Drop();
 	}
 }
         MethodDeclarationSyntax (MethodDeclaration)
-        Code: public int Add(int a, int b)
+        Code: public void MoveItems()
 	{
-		int result = a + b;
-		Console.WriteLine(result);
-		for(int i = 0; i < 10; i++)
-		{
-			result = Double(result);
-		}
-		
-		return result;
+		Crane.PickUp();
+		Crane.MoveRight();
+		Crane.MoveRight();
+		Crane.MoveRight();
+		Crane.Drop();
+		Crane.MoveLeft();
+		Crane.MoveLeft();
+		Crane.MoveLeft();
+		Crane.PickUp();
+		Crane.MoveRight();
+		Crane.MoveRight();
+		Crane.MoveRight();
+		Crane.Drop();
 	}
             PredefinedTypeSyntax (PredefinedType)
-            Code: int
+            Code: void
             ParameterListSyntax (ParameterList)
-            Code: (int a, int b)
-                ParameterSyntax (Parameter)
-                Code: int a
-                    PredefinedTypeSyntax (PredefinedType)
-                    Code: int
-                ParameterSyntax (Parameter)
-                Code: int b
-                    PredefinedTypeSyntax (PredefinedType)
-                    Code: int
+            Code: ()
             BlockSyntax (Block)
             Code: {
-		int result = a + b;
-		Console.WriteLine(result);
-		for(int i = 0; i < 10; i++)
-		{
-			result = Double(result);
-		}
-		
-		return result;
+		Crane.PickUp();
+		Crane.MoveRight();
+		Crane.MoveRight();
+		Crane.MoveRight();
+		Crane.Drop();
+		Crane.MoveLeft();
+		Crane.MoveLeft();
+		Crane.MoveLeft();
+		Crane.PickUp();
+		Crane.MoveRight();
+		Crane.MoveRight();
+		Crane.MoveRight();
+		Crane.Drop();
 	}
-                LocalDeclarationStatementSyntax (LocalDeclarationStatement)
-                Code: int result = a + b;
-                    VariableDeclarationSyntax (VariableDeclaration)
-                    Code: int result = a + b
-                        PredefinedTypeSyntax (PredefinedType)
-                        Code: int
-                        VariableDeclaratorSyntax (VariableDeclarator)
-                        Code: result = a + b
-                            EqualsValueClauseSyntax (EqualsValueClause)
-                            Code: = a + b
-                                BinaryExpressionSyntax (AddExpression)
-                                Code: a + b
-                                    IdentifierNameSyntax (IdentifierName)
-                                    Code: a
-                                    IdentifierNameSyntax (IdentifierName)
-                                    Code: b
                 ExpressionStatementSyntax (ExpressionStatement)
-                Code: Console.WriteLine(result);
+                Code: Crane.PickUp();
                     InvocationExpressionSyntax (InvocationExpression)
-                    Code: Console.WriteLine(result)
+                    Code: Crane.PickUp()
                         MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
-                        Code: Console.WriteLine
+                        Code: Crane.PickUp
                             IdentifierNameSyntax (IdentifierName)
-                            Code: Console
+                            Code: Crane
                             IdentifierNameSyntax (IdentifierName)
-                            Code: WriteLine
+                            Code: PickUp
                         ArgumentListSyntax (ArgumentList)
-                        Code: (result)
-                            ArgumentSyntax (Argument)
-                            Code: result
-                                IdentifierNameSyntax (IdentifierName)
-                                Code: result
-                ForStatementSyntax (ForStatement)
-                Code: for(int i = 0; i < 10; i++)
-		{
-			result = Double(result);
-		}
-                    VariableDeclarationSyntax (VariableDeclaration)
-                    Code: int i = 0
-                        PredefinedTypeSyntax (PredefinedType)
-                        Code: int
-                        VariableDeclaratorSyntax (VariableDeclarator)
-                        Code: i = 0
-                            EqualsValueClauseSyntax (EqualsValueClause)
-                            Code: = 0
-                                LiteralExpressionSyntax (NumericLiteralExpression)
-                                Code: 0
-                    BinaryExpressionSyntax (LessThanExpression)
-                    Code: i < 10
-                        IdentifierNameSyntax (IdentifierName)
-                        Code: i
-                        LiteralExpressionSyntax (NumericLiteralExpression)
-                        Code: 10
-                    PostfixUnaryExpressionSyntax (PostIncrementExpression)
-                    Code: i++
-                        IdentifierNameSyntax (IdentifierName)
-                        Code: i
-                    BlockSyntax (Block)
-                    Code: {
-			result = Double(result);
-		}
-                        ExpressionStatementSyntax (ExpressionStatement)
-                        Code: result = Double(result);
-                            AssignmentExpressionSyntax (SimpleAssignmentExpression)
-                            Code: result = Double(result)
-                                IdentifierNameSyntax (IdentifierName)
-                                Code: result
-                                InvocationExpressionSyntax (InvocationExpression)
-                                Code: Double(result)
-                                    IdentifierNameSyntax (IdentifierName)
-                                    Code: Double
-                                    ArgumentListSyntax (ArgumentList)
-                                    Code: (result)
-                                        ArgumentSyntax (Argument)
-                                        Code: result
-                                            IdentifierNameSyntax (IdentifierName)
-                                            Code: result
-                ReturnStatementSyntax (ReturnStatement)
-                Code: return result;
-                    IdentifierNameSyntax (IdentifierName)
-                    Code: result
-        MethodDeclarationSyntax (MethodDeclaration)
-        Code: private int Double(int n)
-	{
-		return n * 2;
-	}
-            PredefinedTypeSyntax (PredefinedType)
-            Code: int
-            ParameterListSyntax (ParameterList)
-            Code: (int n)
-                ParameterSyntax (Parameter)
-                Code: int n
-                    PredefinedTypeSyntax (PredefinedType)
-                    Code: int
-            BlockSyntax (Block)
-            Code: {
-		return n * 2;
-	}
-                ReturnStatementSyntax (ReturnStatement)
-                Code: return n * 2;
-                    BinaryExpressionSyntax (MultiplyExpression)
-                    Code: n * 2
-                        IdentifierNameSyntax (IdentifierName)
-                        Code: n
-                        LiteralExpressionSyntax (NumericLiteralExpression)
-                        Code: 2
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: Crane.MoveRight();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: Crane.MoveRight()
+                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                        Code: Crane.MoveRight
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Crane
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: MoveRight
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: Crane.MoveRight();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: Crane.MoveRight()
+                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                        Code: Crane.MoveRight
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Crane
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: MoveRight
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: Crane.MoveRight();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: Crane.MoveRight()
+                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                        Code: Crane.MoveRight
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Crane
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: MoveRight
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: Crane.Drop();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: Crane.Drop()
+                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                        Code: Crane.Drop
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Crane
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Drop
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: Crane.MoveLeft();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: Crane.MoveLeft()
+                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                        Code: Crane.MoveLeft
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Crane
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: MoveLeft
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: Crane.MoveLeft();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: Crane.MoveLeft()
+                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                        Code: Crane.MoveLeft
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Crane
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: MoveLeft
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: Crane.MoveLeft();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: Crane.MoveLeft()
+                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                        Code: Crane.MoveLeft
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Crane
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: MoveLeft
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: Crane.PickUp();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: Crane.PickUp()
+                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                        Code: Crane.PickUp
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Crane
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: PickUp
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: Crane.MoveRight();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: Crane.MoveRight()
+                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                        Code: Crane.MoveRight
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Crane
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: MoveRight
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: Crane.MoveRight();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: Crane.MoveRight()
+                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                        Code: Crane.MoveRight
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Crane
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: MoveRight
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: Crane.MoveRight();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: Crane.MoveRight()
+                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                        Code: Crane.MoveRight
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Crane
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: MoveRight
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: Crane.Drop();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: Crane.Drop()
+                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                        Code: Crane.Drop
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Crane
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Drop
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()

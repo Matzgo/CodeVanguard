@@ -1,11 +1,13 @@
-﻿using Trivial.ImGUI;
-using UnityEditor;
+﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis;
-using UnityEngine;
+using System;
+using System.Linq;
+using System.Reflection;
 using Trivial.CodeSecurity;
 using Trivial.CodeSecurity.Restrictions;
-using System.Reflection;
+using Trivial.ImGUI;
+using UnityEditor;
+using UnityEngine;
 
 namespace RoslynCSharp.Editor
 {
@@ -63,7 +65,7 @@ namespace RoslynCSharp.Editor
         }
 
         protected override void OnDisable()
-        { 
+        {
             base.OnDisable();
 
             // Save settings to project
@@ -292,7 +294,7 @@ namespace RoslynCSharp.Editor
                     // Toggle
                     settings.SecurityCheckCode = ImGUILayout.Toggle(settings.SecurityCheckCode);
                 }
-                ImGUILayout.EndLayout();                
+                ImGUILayout.EndLayout();
 
                 // Allow pInvoke
                 ImGUILayout.BeginLayout(ImGUILayoutType.Horizontal);
@@ -337,14 +339,14 @@ namespace RoslynCSharp.Editor
                         drawRect.height = height;
 
                         // Draw the tree view
-                        if(drawer.DrawAssemblyRestrictionTreeView(assemblyRestriction, elementDrawer, drawRect, Vector2.zero) == true)
+                        if (drawer.DrawAssemblyRestrictionTreeView(assemblyRestriction, elementDrawer, drawRect, Vector2.zero) == true)
                         {
                             deleteRestriction = assemblyRestriction;
                         }
                     }
 
                     // Check for delete
-                    if(deleteRestriction != null)
+                    if (deleteRestriction != null)
                     {
                         // Remove from settings
                         settings.SecurityRestrictions.AssemblyRestrictions.Remove(deleteRestriction);
@@ -391,7 +393,40 @@ namespace RoslynCSharp.Editor
                         EditorUtility.SetDirty(settings);
                     });
                 }
+                if (GUILayout.Button("Remove Loaded Assembly", GUILayout.Height(30)) == true)
+                {
 
+                    // Get the settings and the restrictions object
+                    CodeRestrictions restrictions = RoslynCSharp.Settings.SecurityRestrictions;
+
+                    // Define the name of the assembly to remove
+                    string assemblyNameToRemove = "Game";
+
+                    // Find and remove the assembly restriction
+                    var restrictionToRemove = restrictions.AssemblyRestrictions
+                        .FirstOrDefault(r => r.AssemblyName.Equals(assemblyNameToRemove, StringComparison.OrdinalIgnoreCase));
+
+                    if (restrictionToRemove != null)
+                    {
+                        // Remove the restriction
+                        restrictions.AssemblyRestrictions.Remove(restrictionToRemove);
+
+                        // Clear cached allowed assemblies to ensure they're rebuilt
+                        typeof(CodeRestrictions)
+                            .GetField("allowedAssemblies", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)
+                            ?.SetValue(restrictions, null);
+
+                        // Mark settings as dirty to ensure changes are saved
+                        EditorUtility.SetDirty(RoslynCSharp.Settings);
+
+                        Debug.Log($"Successfully removed assembly restriction for: {assemblyNameToRemove}");
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Assembly restriction for '{assemblyNameToRemove}' not found.");
+                    }
+
+                }
                 // Reset button
                 if (GUILayout.Button("Reset Security Restrictions", GUILayout.Height(30)) == true)
                 {
@@ -666,81 +701,81 @@ namespace RoslynCSharp.Editor
                 //ImGUILayout.EndLayout();
                 ImGUILayout.Space(10);
 
-                    //securityDrawer.OnDrawSettings();
+                //securityDrawer.OnDrawSettings();
 
-                    // Illegal namespaces
-                    //selectedIllegalNamespace = ImGUILayout.Listbox<string>("Namespaces", settings.SecurityRestrictions.Namespaces, selectedIllegalNamespace, () => 
-                    //{
-                    //    // Get input from the user
-                    //    InputDialog.ShowDialog("Add Namespace", "Enter the name of the illegal namespace. Wildcards can be used to also exclude child namespaces, For example: 'System.IO.*'", (string input) =>
-                    //    {
-                    //        // Add the new reference
-                    //        settings.SecurityRestrictions.AddNamespace(input);
-                    //        Repaint();
-                    //    });
+                // Illegal namespaces
+                //selectedIllegalNamespace = ImGUILayout.Listbox<string>("Namespaces", settings.SecurityRestrictions.Namespaces, selectedIllegalNamespace, () => 
+                //{
+                //    // Get input from the user
+                //    InputDialog.ShowDialog("Add Namespace", "Enter the name of the illegal namespace. Wildcards can be used to also exclude child namespaces, For example: 'System.IO.*'", (string input) =>
+                //    {
+                //        // Add the new reference
+                //        settings.SecurityRestrictions.AddNamespace(input);
+                //        Repaint();
+                //    });
 
-                    //    // Dont add item by default
-                    //    return null;
-                    //}, OnListItemImGUI);
+                //    // Dont add item by default
+                //    return null;
+                //}, OnListItemImGUI);
 
-                    //// Move under list
-                    //ImGUILayout.Space(-negativeVerticalSpaceSize);
+                //// Move under list
+                //ImGUILayout.Space(-negativeVerticalSpaceSize);
 
-                    //ImGUI.SetNextWidth(Screen.width - 100);
-                    //ImGUILayout.BeginLayout(ImGUILayoutType.Horizontal);
-                    //{
-                    //    // Small indent
-                    //    ImGUILayout.Space(5);
+                //ImGUI.SetNextWidth(Screen.width - 100);
+                //ImGUILayout.BeginLayout(ImGUILayoutType.Horizontal);
+                //{
+                //    // Small indent
+                //    ImGUILayout.Space(5);
 
-                    //    // Label
-                    //    ImGUI.SetNextTooltip("Blacklist mode will ensure that all namespaces are not used whereas whitelist mode will only allow the use of the specified namespaces");
-                    //    ImGUILayout.Label("Restriction Type:");
+                //    // Label
+                //    ImGUI.SetNextTooltip("Blacklist mode will ensure that all namespaces are not used whereas whitelist mode will only allow the use of the specified namespaces");
+                //    ImGUILayout.Label("Restriction Type:");
 
-                    //    // Popup
-                    //    settings.SecurityRestrictions.NamespacesMode = (SecurityRestrictions.SecurityRestrictionMode)ImGUILayout.EnumPopup(settings.SecurityRestrictions.NamespacesMode);
-                    //}
-                    //ImGUILayout.EndLayout();
-                    //ImGUILayout.Space(10);
-
-
+                //    // Popup
+                //    settings.SecurityRestrictions.NamespacesMode = (SecurityRestrictions.SecurityRestrictionMode)ImGUILayout.EnumPopup(settings.SecurityRestrictions.NamespacesMode);
+                //}
+                //ImGUILayout.EndLayout();
+                //ImGUILayout.Space(10);
 
 
-                    // Illegal references
-                    //selectedIllegalType = ImGUILayout.Listbox<string>("Types", settings.SecurityRestrictions.TypeNames, selectedIllegalType, () =>
-                    //{
-                    //    // Get input from the user
-                    //    InputDialog.ShowDialog("Add Type", "Enter the name of the illegal type. Assembly qualified type names are preferred however you may be able to use the full type name including namespace, For example: 'System.AppDomain'", (string input) =>
-                    //    {
-                    //        // Add the new reference
-                    //        settings.SecurityRestrictions.AddType(input);
-                    //        Repaint();
-                    //    });
 
-                    //    // Dont add item by default
-                    //    return null;
-                    //}, OnListItemImGUI);
 
-                    //// Move under list
-                    //ImGUILayout.Space(-negativeVerticalSpaceSize);
+                // Illegal references
+                //selectedIllegalType = ImGUILayout.Listbox<string>("Types", settings.SecurityRestrictions.TypeNames, selectedIllegalType, () =>
+                //{
+                //    // Get input from the user
+                //    InputDialog.ShowDialog("Add Type", "Enter the name of the illegal type. Assembly qualified type names are preferred however you may be able to use the full type name including namespace, For example: 'System.AppDomain'", (string input) =>
+                //    {
+                //        // Add the new reference
+                //        settings.SecurityRestrictions.AddType(input);
+                //        Repaint();
+                //    });
 
-                    //ImGUI.SetNextWidth(Screen.width - 100);
-                    //ImGUILayout.BeginLayout(ImGUILayoutType.Horizontal);
-                    //{
-                    //    // Small indent
-                    //    ImGUILayout.Space(5);
+                //    // Dont add item by default
+                //    return null;
+                //}, OnListItemImGUI);
 
-                    //    // Label
-                    //    ImGUI.SetNextTooltip("Blacklist mode will ensure that all types are not used whereas whitelist mode will only allow the use of the specified types");
-                    //    ImGUILayout.Label("Restriction Type:");
+                //// Move under list
+                //ImGUILayout.Space(-negativeVerticalSpaceSize);
 
-                    //    // Popup
-                    //    settings.SecurityRestrictions.TypesMode = (SecurityRestrictions.SecurityRestrictionMode)ImGUILayout.EnumPopup(settings.SecurityRestrictions.TypesMode);
-                    //}
-                    //ImGUILayout.EndLayout();
+                //ImGUI.SetNextWidth(Screen.width - 100);
+                //ImGUILayout.BeginLayout(ImGUILayoutType.Horizontal);
+                //{
+                //    // Small indent
+                //    ImGUILayout.Space(5);
+
+                //    // Label
+                //    ImGUI.SetNextTooltip("Blacklist mode will ensure that all types are not used whereas whitelist mode will only allow the use of the specified types");
+                //    ImGUILayout.Label("Restriction Type:");
+
+                //    // Popup
+                //    settings.SecurityRestrictions.TypesMode = (SecurityRestrictions.SecurityRestrictionMode)ImGUILayout.EnumPopup(settings.SecurityRestrictions.TypesMode);
+                //}
+                //ImGUILayout.EndLayout();
                 //}
                 //ImGUI.PopVisualState();
             }
-            else if(selectedTab == 2)
+            else if (selectedTab == 2)
             {
                 // Enable hot reloading
                 ImGUILayout.BeginLayout(ImGUILayoutType.Horizontal);
@@ -754,7 +789,7 @@ namespace RoslynCSharp.Editor
                 }
                 ImGUILayout.EndLayout();
 
-                if(settings.AllowHotReloading == true)
+                if (settings.AllowHotReloading == true)
                 {
                     ImGUILayout.HelpBox("Hot reloading is a runtime feature that can auto-compile and load scripts that are edited while in play mode. It is useful for quick iteration on detached components and is fully automatic. It is highly recommmended that you disable 'Auto-Refresh' in the Unity editor if you use this feature");
                 }

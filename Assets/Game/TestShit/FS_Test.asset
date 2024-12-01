@@ -12,6 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b539acad177ac245b86051f55621890, type: 3}
   m_Name: FS_Test
   m_EditorClassIdentifier: 
+  _taskType: 0
+  _title: Simple Methods
+  _description: 'Make a method called
+
+    Add(int x, int y)
+
+    that returns the
+    sum of two integers'
   _fileSetName: TestSet
   _entryPointFile: {fileID: 11400000, guid: 0f126f2fecb78ec4c959da3fa8032c91, type: 2}
   _entryPoint: Add(5,3);

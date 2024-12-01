@@ -17284,6 +17284,17 @@ MonoBehaviour:
           - MemberName: WriteLine()
             MemberAllowed: 0
           TypeAllowed: 0
+        - TypeName: Crane
+          MemberRestrictions:
+          - MemberName: Drop()
+            MemberAllowed: 0
+          - MemberName: MoveLeft()
+            MemberAllowed: 0
+          - MemberName: MoveRight()
+            MemberAllowed: 0
+          - MemberName: PickUp()
+            MemberAllowed: 0
+          TypeAllowed: 0
         NamespaceAllowed: 0
       RootTypeRestrictions: []
       AssemblyAllowed: 0

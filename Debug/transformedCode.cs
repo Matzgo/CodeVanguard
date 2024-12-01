@@ -3,57 +3,80 @@ using Game;
 using System;
 using System.Collections.Generic;
 using Console = Game.Console;
+using Crane = Game.Crane;
 
-public class Test
+public class CraneController
 {
-    public int Add(int a, int b)
+    public void MoveItems()
     {
-        int result = a + b;
-        for (int i = 0; i < 10; i++)
-        {
-            result = Double(result);
-        }
-
-        return result;
+        Crane.PickUp();
+        Crane.MoveRight();
+        Crane.MoveRight();
+        Crane.MoveRight();
+        Crane.Drop();
+        Crane.MoveLeft();
+        Crane.MoveLeft();
+        Crane.MoveLeft();
+        Crane.PickUp();
+        Crane.MoveRight();
+        Crane.MoveRight();
+        Crane.MoveRight();
+        Crane.Drop();
     }
 
-    private int Double(int n)
-    {
-        return n * 2;
-    }
-
-    public System.Collections.IEnumerator COR_Add(int a, int b)
+    public System.Collections.IEnumerator COR_MoveItems()
     {
         CodeInspector.RuntimeManager.Instance.HighlightLine(5);
         yield return new UnityEngine.WaitForSeconds(0.33f);
-        int result = a + b;
+        Crane.PickUp();
         ;
         CodeInspector.RuntimeManager.Instance.HighlightLine(6);
         yield return new UnityEngine.WaitForSeconds(0.33f);
-        Console.WriteLine(result);
+        Crane.MoveRight();
         ;
         CodeInspector.RuntimeManager.Instance.HighlightLine(7);
         yield return new UnityEngine.WaitForSeconds(0.33f);
-        for (int i = 0; i < 10; i++)
-        {
-            CodeInspector.RuntimeManager.Instance.HighlightLine(9);
-            yield return new UnityEngine.WaitForSeconds(0.33f);
-            yield return COR_Double(result);
-            result = Double(result);
-            ;
-        }
-
+        Crane.MoveRight();
+        ;
+        CodeInspector.RuntimeManager.Instance.HighlightLine(8);
+        yield return new UnityEngine.WaitForSeconds(0.33f);
+        Crane.MoveRight();
+        ;
+        CodeInspector.RuntimeManager.Instance.HighlightLine(9);
+        yield return new UnityEngine.WaitForSeconds(0.33f);
+        Crane.Drop();
+        ;
+        CodeInspector.RuntimeManager.Instance.HighlightLine(10);
+        yield return new UnityEngine.WaitForSeconds(0.33f);
+        Crane.MoveLeft();
+        ;
+        CodeInspector.RuntimeManager.Instance.HighlightLine(11);
+        yield return new UnityEngine.WaitForSeconds(0.33f);
+        Crane.MoveLeft();
         ;
         CodeInspector.RuntimeManager.Instance.HighlightLine(12);
         yield return new UnityEngine.WaitForSeconds(0.33f);
+        Crane.MoveLeft();
         ;
-        CodeInspector.RuntimeManager.Instance.DisableHighlightLine();
-    }
-
-    private System.Collections.IEnumerator COR_Double(int n)
-    {
+        CodeInspector.RuntimeManager.Instance.HighlightLine(13);
+        yield return new UnityEngine.WaitForSeconds(0.33f);
+        Crane.PickUp();
+        ;
+        CodeInspector.RuntimeManager.Instance.HighlightLine(14);
+        yield return new UnityEngine.WaitForSeconds(0.33f);
+        Crane.MoveRight();
+        ;
+        CodeInspector.RuntimeManager.Instance.HighlightLine(15);
+        yield return new UnityEngine.WaitForSeconds(0.33f);
+        Crane.MoveRight();
+        ;
+        CodeInspector.RuntimeManager.Instance.HighlightLine(16);
+        yield return new UnityEngine.WaitForSeconds(0.33f);
+        Crane.MoveRight();
+        ;
         CodeInspector.RuntimeManager.Instance.HighlightLine(17);
         yield return new UnityEngine.WaitForSeconds(0.33f);
+        Crane.Drop();
         ;
         CodeInspector.RuntimeManager.Instance.DisableHighlightLine();
     }

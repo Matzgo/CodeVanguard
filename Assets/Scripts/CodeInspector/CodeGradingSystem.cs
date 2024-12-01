@@ -8,19 +8,20 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using UnityEngine;
+[System.Serializable]
+public class GradingResult
+{
+    public bool Correct { get; set; }
+    public float PerformanceScore { get; set; }
+    public float MemoryScore { get; set; }
+    public float NamingScore { get; set; }
+    public List<string> Feedback { get; set; }
+    public float TotalScore => (PerformanceScore + MemoryScore + NamingScore) / 3;
 
+}
 public class CodeGradingSystem : MonoBehaviour
 {
-    [System.Serializable]
-    public class GradingResult
-    {
-        public float PerformanceScore { get; set; }
-        public float MemoryScore { get; set; }
-        public float NamingScore { get; set; }
-        public List<string> Feedback { get; set; }
-        public float TotalScore => (PerformanceScore + MemoryScore + NamingScore) / 3;
 
-    }
 
     [SerializeField] private int maxExecutionTime = 1000; // milliseconds
     [SerializeField] private long maxMemoryUsage = 5242880; // bytes
@@ -39,7 +40,21 @@ public class CodeGradingSystem : MonoBehaviour
         {
             Feedback = new List<string>()
         };
-
+        // Correctness grading
+        var (correctnessScore, correctnessFeedback) = GradeCorrectness(userScriptProxy, goalScriptProxy);
+        result.Feedback.AddRange(correctnessFeedback);
+        if (correctnessScore == false) // If correctness fails, skip performance and memory grading
+        {
+            result.Correct = false;
+            result.PerformanceScore = 0;
+            result.MemoryScore = 0;
+            result.NamingScore = 0;
+            return result;
+        }
+        else
+        {
+            result.Correct = true;
+        }
 
         // Performance grading
         var (performanceScore, performanceFeedback, avg) = GradePerformance(userScriptProxy, goalScriptProxy);
@@ -59,7 +74,46 @@ public class CodeGradingSystem : MonoBehaviour
 
         return result;
     }
+    private (bool correct, List<string> feedback) GradeCorrectness(ScriptProxy userProxy, ScriptProxy goalProxy)
+    {
+        var feedback = new List<string>();
+        bool isCorrect = true;
 
+        try
+        {
+            // Test cases for the Add method
+            object[][] testCases = new object[][]
+            {
+                new object[] { 5, 3 },
+                new object[] { 10, 20 },
+                new object[] { 0, 0 },
+                new object[] { -5, 5 },
+                new object[] { 1000, 1000 },
+                new object[] { -1000, -1000 }
+            };
+
+            foreach (var testCase in testCases)
+            {
+                var userResult = userProxy.Call("Add", testCase[0], testCase[1]);
+                var goalResult = goalProxy.Call("Add", testCase[0], testCase[1]);
+
+                // Compare results
+                if (!userResult.Equals(goalResult))
+                {
+                    isCorrect = false;
+                    feedback.Add($"Test case Add({testCase[0]}, {testCase[1]}) produced incorrect result: {userResult} (expected {goalResult})");
+                    return (isCorrect, feedback);
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            isCorrect = false;
+            feedback.Add($"Runtime error during correctness testing: {e.Message}");
+        }
+
+        return (isCorrect, feedback);
+    }
     private (float score, List<string> feedback, double avgTime) GradePerformance(ScriptProxy userProxy, ScriptProxy goalProxy)
     {
         RuntimeManager.Instance.Console.SetActive(false);
@@ -103,12 +157,6 @@ public class CodeGradingSystem : MonoBehaviour
                     var goalTime = sw.ElapsedTicks;
                     totalGoalTime += goalTime;
 
-                    // Compare results
-                    if (!userResult.Equals(goalResult))
-                    {
-                        score = 0;
-                        //feedback.Add($"Test case Add({testCase[0]}, {testCase[1]}) produced incorrect result: {userResult} (expected {goalResult})");
-                    }
 
                     // Check execution time
                     if (userTimeMS > maxExecutionTime)
@@ -116,8 +164,6 @@ public class CodeGradingSystem : MonoBehaviour
                         feedback.Add($"Exceeded max Execution time: {userTimeMS}/{maxExecutionTime}");
                         RuntimeManager.Instance.Console.SetActive(true);
                         return (0, feedback, maxExecutionTime);
-                        score *= 0.8f;
-                        //feedback.Add($"Test case Add({testCase[0]}, {testCase[1]}) exceeded time limit: {userTime}ms > {maxExecutionTime}ms");
                     }
 
 
@@ -255,7 +301,7 @@ public class CodeGradingSystem : MonoBehaviour
                 string name = variable.Identifier.Text;
 
                 // Check for single-letter variables (except loop counters)
-                if (name.Length == 1 && name != "i" && name != "j" && name != "k")
+                if (name.Length == 1 && name != "i" && name != "j" && name != "k" && name != "x" && name != "y" && name != "z" && name != "a" && name != "b" && name != "c" && name != "d")
                 {
                     score *= 0.95f;
                     feedback.Add($"Variable '{name}' should have a more descriptive name");

@@ -61,8 +61,7 @@ public class RuntimeCodeSystem : MonoBehaviour
     private ScriptProxy _solutionScript;
 
 
-    [SerializeField]
-    CSFileSet _csFileSet;
+    CSFileSet _currentTask;
 
     private string _usingStatements;
     private string _coroutineUsingStatements;
@@ -89,9 +88,9 @@ public class RuntimeCodeSystem : MonoBehaviour
 
     private void OnResetClicked()
     {
-        _codeEditorWindow.Text = _csFileSet.EntryPointFile.Text;
-        _fileNameText.text = _csFileSet.EntryPointFile.FileName + ".cs";
-        _solutionCode = _csFileSet.CSFiles[0].SolutionFile.Text;
+        _codeEditorWindow.Text = _currentTask.EntryPointFile.Text;
+        _fileNameText.text = _currentTask.EntryPointFile.FileName + ".cs";
+        _solutionCode = _currentTask.CSFiles[0].SolutionFile.Text;
     }
     private int GetLineCount(string code)
     {
@@ -120,9 +119,6 @@ public class RuntimeCodeSystem : MonoBehaviour
         foreach (AssemblyReferenceAsset reference in coroutineReferences)
             _coroutineDomain.RoslynCompilerService.ReferenceAssemblies.Add(reference);
 
-        _codeEditorWindow.Text = _csFileSet.EntryPointFile.Text;
-        _fileNameText.text = _csFileSet.EntryPointFile.FileName + ".cs";
-        _solutionCode = _csFileSet.CSFiles[0].SolutionFile.Text;
 
         _usingStatements = GenerateUsingStatements(_autoUsingDirectives);
         _coroutineUsingStatements = GenerateUsingStatements(_coroutineDirectives) + _usingStatements;
@@ -130,6 +126,16 @@ public class RuntimeCodeSystem : MonoBehaviour
         _couroutineLineOffset = GetLineCount(_coroutineUsingStatements);
         _coroutineTransformer.Initialize(_couroutineLineOffset);
     }
+
+    internal void LoadTask(CSFileSet task)
+    {
+        _currentTask = task;
+        _codeEditorWindow.Text = task.EntryPointFile.Text;
+        _fileNameText.text = task.EntryPointFile.FileName + ".cs";
+        _solutionCode = task.CSFiles[0].SolutionFile.Text;
+
+    }
+
 
     private string GenerateUsingStatements(List<string> directives)
     {
@@ -158,7 +164,8 @@ public class RuntimeCodeSystem : MonoBehaviour
             }
             else
             {
-                RunSimpleAddTest();
+                RuntimeManager.Instance.ResetMiniGame();
+                RunSimpleCraneTest();
             }
         }
         catch (Exception e)
@@ -171,15 +178,17 @@ public class RuntimeCodeSystem : MonoBehaviour
     {
         try
         {
-            // Ensure code is compiled before grading
-            if (_userScript == null || _solutionScript == null)
-            {
-                RuntimeManager.Instance.Console.LogError("Please run the code first before grading.");
-                return;
-            }
+            RuntimeManager.Instance.Console.SetActive(false);
+            _coroutineDisabled = true;
+            OnRunClicked();
+            _coroutineDisabled = false;
+            RuntimeManager.Instance.Console.SetActive(true);
 
-            // Perform grading
-            EvaluateSubmission();
+            GradingResult res = null;
+            if (_userScript != null)
+                res = EvaluateSubmission();
+
+            CodeVanguardManager.Instance.EndTask(res);
         }
         catch (Exception e)
         {
@@ -195,6 +204,7 @@ public class RuntimeCodeSystem : MonoBehaviour
 
     private void CompileAndRunUserCode()
     {
+        RuntimeManager.Instance.Console.SetActive(true);
         string userCode = _codeEditorWindow.Text;
         string userCodeWithDirectives = _usingStatements + "\n" + userCode;
 
@@ -207,7 +217,10 @@ public class RuntimeCodeSystem : MonoBehaviour
         _activeCSharpSource = userCode;
 
         SaveSyntaxTree(userCodeWithDirectives);
-        RunSimpleAddTest();
+
+        RuntimeManager.Instance.ResetMiniGame();
+
+        RunSimpleCraneTest();
 
         TransformAndRunCoroutine();
     }
@@ -265,6 +278,17 @@ public class RuntimeCodeSystem : MonoBehaviour
         DebugFileSaving.SaveSyntaxTree(userSyntaxTree, $"{p}/{outputSyntaxTreeName}");
     }
 
+    private void RunSimpleCraneTest()
+    {
+        RuntimeManager.Instance.Disable();
+        RuntimeManager.Instance.Console.SetActive(false);
+
+        _userScript.Call("MoveItems");
+        RuntimeManager.Instance.Enable();
+        RuntimeManager.Instance.Console.SetActive(true);
+
+    }
+
     private void RunSimpleAddTest()
     {
         RuntimeManager.Instance.Console.SetActive(true);
@@ -277,19 +301,19 @@ public class RuntimeCodeSystem : MonoBehaviour
         RuntimeManager.Instance.Console.WriteLine($"Add({a}, {b}) = {result}", resultColor);
     }
 
-    private void EvaluateSubmission()
+    private GradingResult EvaluateSubmission()
     {
         // Validate scripts are not null before grading
         if (_userScript == null)
         {
             RuntimeManager.Instance.Console.LogError("User script is not compiled. Run the code first.");
-            return;
+            return null;
         }
 
         if (_solutionScript == null)
         {
             RuntimeManager.Instance.Console.LogError("Solution script is not compiled. Run the solution first.");
-            return;
+            return null;
         }
 
         var gradingResult = _codeGradingSystem.GradeSubmission(
@@ -299,9 +323,10 @@ public class RuntimeCodeSystem : MonoBehaviour
         );
 
         LogGradingResults(gradingResult);
+        return gradingResult;
     }
 
-    private void LogGradingResults(CodeGradingSystem.GradingResult gradingResult)
+    private void LogGradingResults(GradingResult gradingResult)
     {
         RuntimeManager.Instance.Console.WriteLine("=== Code Evaluation Results ===", Color.green);
         RuntimeManager.Instance.Console.WriteLine($"Performance Score: {gradingResult.PerformanceScore:F1}%", Color.green);
@@ -334,7 +359,8 @@ public class RuntimeCodeSystem : MonoBehaviour
         if (coroutineType == null) return;
 
         var transformedActiveScript = coroutineType.CreateInstance();
-        StartTransformedCoroutine(transformedActiveScript, "COR_Add", 5, 3);
+        //StartTransformedCoroutine(transformedActiveScript, "COR_Add", 5, 3);
+        StartTransformedCoroutine(transformedActiveScript, "COR_MoveItems");
     }
 
     private void SaveCoroutineCode(string coroutineCode)

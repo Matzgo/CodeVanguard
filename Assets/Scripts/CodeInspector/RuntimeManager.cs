@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace CodeInspector
@@ -13,17 +14,32 @@ namespace CodeInspector
         [SerializeField]
         CustomCodeEditor _customCodeEditor;
 
+        public Action<string> GameEvent;
+        public Action MiniGameReset;
+
+        private bool _active;
+
         private void Awake()
         {
             if (Instance == null)
             {
                 Instance = this;
-                //SubscribeToConsoleEvents();  // Subscribe to the _console events
             }
             else
             {
                 Destroy(gameObject);
             }
+        }
+
+        public void ResetMiniGame()
+        {
+            MiniGameReset?.Invoke();
+        }
+
+        public void Trigger(string key)
+        {
+            if (_active)
+                GameEvent?.Invoke(key);
         }
 
         public void HighlightLine(int lineNr)
@@ -37,5 +53,15 @@ namespace CodeInspector
             _customCodeEditor.DisableRunningLine();
         }
 
+        public void Disable()
+        {
+            _active = false;
+        }
+
+        public void Enable()
+        {
+            _active = true;
+
+        }
     }
 }
