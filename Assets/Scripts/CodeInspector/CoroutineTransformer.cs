@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 //               ___====-_  _-====___
@@ -31,10 +32,16 @@ using UnityEngine;
 
 public class CoroutineTransformer : MonoBehaviour
 {
+    private float _codeRate;
     [SerializeField]
-    private float _codeRate = .2f;
+    Slider _slider;
+
     private int _lineOffset;
     private HashSet<string> _methodsToTransform = new HashSet<string>();
+    [SerializeField]
+    private float _minCodeRate;
+    [SerializeField]
+    private float _maxCodeRate;
 
     public void Initialize(int lineOffset)
     {
@@ -80,6 +87,8 @@ public class CoroutineTransformer : MonoBehaviour
 
     public string TransformToCoroutine(string sourceCode)
     {
+        _codeRate = Mathf.Lerp(_minCodeRate, _maxCodeRate, (1 - _slider.value));
+
         var syntaxTree = CSharpSyntaxTree.ParseText(sourceCode);
         var root = syntaxTree.GetRoot();
 
@@ -130,7 +139,7 @@ public class CoroutineTransformer : MonoBehaviour
 
         // Add the RunCoroutineMethod to the class
         modifiedClass = AddRunCoroutineMethod(modifiedClass);
-
+        modifiedClass = AddStopCoroutinesMethod(modifiedClass);
         // Replace the modified class in the root syntax tree
         var newRoot = root.ReplaceNode(parentClass, modifiedClass);
 
@@ -338,6 +347,8 @@ public class CoroutineTransformer : MonoBehaviour
         return classDeclaration.AddMembers(runCoroutineMethod);
     }
 
+
+
     private MethodDeclarationSyntax GenerateRunCoroutineMethod()
     {
         var runCoroutineMethodCode = @"
@@ -346,7 +357,7 @@ public class CoroutineTransformer : MonoBehaviour
             var method = this.GetType().GetMethod(methodName);
             if (method != null)
             {
-                CodeInspector.RuntimeManager.Instance.StartCoroutine((System.Collections.IEnumerator)method.Invoke(this, args));
+                CodeInspector.RuntimeManager.Instance.CoroutineRunner.StartCoroutine((System.Collections.IEnumerator)method.Invoke(this, args));
             }
             else
             {
@@ -356,6 +367,26 @@ public class CoroutineTransformer : MonoBehaviour
 
         return SyntaxFactory.ParseMemberDeclaration(runCoroutineMethodCode) as MethodDeclarationSyntax;
     }
+
+    public ClassDeclarationSyntax AddStopCoroutinesMethod(ClassDeclarationSyntax classDeclaration)
+    {
+        var stopCoroutinesMethod = GenerateStopCoroutinesMethod();
+        return classDeclaration.AddMembers(stopCoroutinesMethod);
+    }
+
+    private MethodDeclarationSyntax GenerateStopCoroutinesMethod()
+    {
+        var runCoroutineMethodCode = @"
+        public void StopCoroutinesMethod()
+        {
+
+                CodeInspector.RuntimeManager.Instance.CoroutineRunner.StopAllCoroutines();
+
+        }";
+
+        return SyntaxFactory.ParseMemberDeclaration(runCoroutineMethodCode) as MethodDeclarationSyntax;
+    }
+
 }
 
 // Syntax rewriter to transform method invocations into coroutine calls

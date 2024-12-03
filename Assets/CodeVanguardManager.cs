@@ -100,9 +100,9 @@ public class CodeVanguardManager : MonoBehaviour
     public void EndTask(GradingResult res)
     {
         _screenManager.TurnOffAllScreens();
+        _task.MiniGame.UnloadScene();
 
         _screenManager.LoadResult(res);
-        _task.MiniGame.UnloadScene();
 
         _screenManager.TurnOn(ScreenType.Main);
         _screenManager.Main.ShowPostTaskWindow();

@@ -9,10 +9,12 @@ public class CraneMiniGame : MonoBehaviour
     CraneMiniGameParameters _parameters;
 
     int[] _cols;
-    int _craneCol = 0;
+    int _currentCraneCol = 0;
 
     [SerializeField]
     GameObject _crane;
+    [SerializeField]
+    GameObject _craneCarryItem;
     bool _craneCarryingItem;
     [SerializeField]
     CraneItem _craneItemPrefab;
@@ -21,6 +23,11 @@ public class CraneMiniGame : MonoBehaviour
 
     [SerializeField]
     CraneMiniGameParameters _awakeParams;
+
+
+
+    [SerializeField]
+    List<GameObject> _colPositions;
 
     private void Awake()
     {
@@ -41,17 +48,19 @@ public class CraneMiniGame : MonoBehaviour
     {
         _parameters = parameters;
         _cols = (int[])parameters.cols.Clone();
-        _craneCol = parameters.craneStartPos;
+        _currentCraneCol = parameters.craneStartPos;
         _craneItems = new List<CraneItem>();
+        _craneCarryItem.SetActive(false);
         for (int i = 0; i < _cols.Length; i++)
         {
             _craneItems.Add(Instantiate(_craneItemPrefab, transform));
-            var v = new Vector3((i - _cols.Length / 2f) * 4f, 0, 0);
-            _craneItems[i].transform.position = v;
+            Vector3 pos = new Vector3(_colPositions[i].transform.position.x, -2.04f, 0);
+            _craneItems[i].transform.position = pos;
             _craneItems[i].SetCount(_cols[i]);
         }
 
-        _crane.transform.position = new Vector3((_craneCol - _cols.Length / 2f) * 4f, 9, 0);
+        Vector3 position = new Vector3(_colPositions[_currentCraneCol].transform.position.x, 9, 0);
+        _crane.transform.position = position;
 
         UpdateCraneItems();
     }
@@ -81,7 +90,7 @@ public class CraneMiniGame : MonoBehaviour
             if (_cols[i] != _parameters.targetCols[i])
             {
                 const string Message = "Incorrect: Columns do not match the target configuration.";
-                Debug.LogError(Message);
+                Debug.Log(Message);
                 feedback.Add(Message);
                 return (false, feedback);
             }
@@ -93,14 +102,16 @@ public class CraneMiniGame : MonoBehaviour
 
     public void MoveRight()
     {
-        _craneCol = Mathf.Clamp(_craneCol + 1, 0, _cols.Length - 1);
-        _crane.transform.position = new Vector3((_craneCol - _cols.Length / 2f) * 4f, 9, 0);
+        _currentCraneCol = Mathf.Clamp(_currentCraneCol + 1, 0, _cols.Length - 1);
+        Vector3 position = new Vector3(_colPositions[_currentCraneCol].transform.position.x, 9, 0);
+        _crane.transform.position = position;
     }
 
     public void MoveLeft()
     {
-        _craneCol = Mathf.Clamp(_craneCol - 1, 0, _cols.Length - 1);
-        _crane.transform.position = new Vector3((_craneCol - _cols.Length / 2f) * 4f, 9, 0);
+        _currentCraneCol = Mathf.Clamp(_currentCraneCol - 1, 0, _cols.Length - 1);
+        Vector3 position = new Vector3(_colPositions[_currentCraneCol].transform.position.x, 9, 0);
+        _crane.transform.position = position;
     }
 
     public void UpdateCraneItems()
@@ -116,7 +127,9 @@ public class CraneMiniGame : MonoBehaviour
         if (!_craneCarryingItem)
         {
             _craneCarryingItem = true;
-            _cols[_craneCol] = _cols[_craneCol] - 1;
+            _cols[_currentCraneCol] = _cols[_currentCraneCol] - 1;
+            _craneCarryItem.SetActive(true);
+
         }
         UpdateCraneItems();
 
@@ -127,7 +140,9 @@ public class CraneMiniGame : MonoBehaviour
         if (_craneCarryingItem)
         {
             _craneCarryingItem = false;
-            _cols[_craneCol] = _cols[_craneCol] + 1;
+            _cols[_currentCraneCol] = _cols[_currentCraneCol] + 1;
+            _craneCarryItem.SetActive(false);
+
         }
         UpdateCraneItems();
 

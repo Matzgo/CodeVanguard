@@ -315,12 +315,20 @@ public class RuntimeCodeSystem : MonoBehaviour
             RuntimeManager.Instance.Console.LogError("Solution script is not compiled. Run the solution first.");
             return null;
         }
+        RuntimeManager.Instance.ResetMiniGame();
+        RuntimeManager.Instance.Enable();
+        _userScript.Call("MoveItems");
+        (bool correct, var feedback) = FindObjectOfType<CraneMiniGame>().CheckCorrectness();
+        RuntimeManager.Instance.Disable();
 
         var gradingResult = _codeGradingSystem.GradeSubmission(
             _usingStatements + "\n" + _codeEditorWindow.Text,
             _userScript,
             _solutionScript
         );
+
+        gradingResult.Correct = correct;
+        gradingResult.Feedback.AddRange(feedback);
 
         LogGradingResults(gradingResult);
         return gradingResult;
@@ -415,8 +423,22 @@ public class RuntimeCodeSystem : MonoBehaviour
     }
 
 
+    private void StopCoroutines(ScriptProxy proxy)
+    {
+        try
+        {
+            proxy.Call("StopCoroutinesMethod");
+        }
+        catch (Exception e)
+        {
+            RuntimeManager.Instance.Console.LogError("Failed to stop coroutines: " + e.Message);
+        }
+    }
+
     private void StartTransformedCoroutine(ScriptProxy proxy, string coroutineName, params object[] args)
     {
+        StopCoroutines(proxy);
+
         try
         {
             proxy.Call("RunCoroutineMethod", coroutineName, args);

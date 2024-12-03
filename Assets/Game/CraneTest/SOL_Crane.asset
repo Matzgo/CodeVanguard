@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: SOL_Crane
   m_EditorClassIdentifier: 
   _fileName: 
-  _text: "public class CraneController\n{\n\tpublic void MoveItems()\n\t{\n\t\tCrane.PickUp();\n\t\tCrane.MoveRight();\n\t\tCrane.MoveRight();\n\t\tCrane.MoveRight();\n\t\tCrane.Drop();\n\t\tCrane.MoveLeft();\n\t\tCrane.MoveLeft();\n\t\tCrane.MoveLeft();\n\t\tCrane.PickUp();\n\t\tCrane.MoveRight();\n\t\tCrane.MoveRight();\n\t\tCrane.MoveRight();\n\t\tCrane.Drop();\n\t}\n}"
+  _text: "public class CraneController\n{\n\tpublic void MoveItems()\n\t{\n\t\tfor(int
+    i = 0; i < 10; i++)\n\t\t{\n\t\t\tCrane.PickUp();\n\t\t\tCrane.MoveRight();\n\t\t\tCrane.MoveRight();\n\t\t\tCrane.MoveRight();\n\t\t\tCrane.Drop();\n\t\t\tCrane.MoveLeft();\n\t\t\tCrane.MoveLeft();\n\t\t\tCrane.MoveLeft();\n\t\t}\n\t}\n}"

@@ -27,55 +27,55 @@ public class CraneController
     public System.Collections.IEnumerator COR_MoveItems()
     {
         CodeInspector.RuntimeManager.Instance.HighlightLine(5);
-        yield return new UnityEngine.WaitForSeconds(0.33f);
+        yield return new UnityEngine.WaitForSeconds(0.02f);
         Crane.PickUp();
         ;
         CodeInspector.RuntimeManager.Instance.HighlightLine(6);
-        yield return new UnityEngine.WaitForSeconds(0.33f);
+        yield return new UnityEngine.WaitForSeconds(0.02f);
         Crane.MoveRight();
         ;
         CodeInspector.RuntimeManager.Instance.HighlightLine(7);
-        yield return new UnityEngine.WaitForSeconds(0.33f);
+        yield return new UnityEngine.WaitForSeconds(0.02f);
         Crane.MoveRight();
         ;
         CodeInspector.RuntimeManager.Instance.HighlightLine(8);
-        yield return new UnityEngine.WaitForSeconds(0.33f);
+        yield return new UnityEngine.WaitForSeconds(0.02f);
         Crane.MoveRight();
         ;
         CodeInspector.RuntimeManager.Instance.HighlightLine(9);
-        yield return new UnityEngine.WaitForSeconds(0.33f);
+        yield return new UnityEngine.WaitForSeconds(0.02f);
         Crane.Drop();
         ;
         CodeInspector.RuntimeManager.Instance.HighlightLine(10);
-        yield return new UnityEngine.WaitForSeconds(0.33f);
+        yield return new UnityEngine.WaitForSeconds(0.02f);
         Crane.MoveLeft();
         ;
         CodeInspector.RuntimeManager.Instance.HighlightLine(11);
-        yield return new UnityEngine.WaitForSeconds(0.33f);
+        yield return new UnityEngine.WaitForSeconds(0.02f);
         Crane.MoveLeft();
         ;
         CodeInspector.RuntimeManager.Instance.HighlightLine(12);
-        yield return new UnityEngine.WaitForSeconds(0.33f);
+        yield return new UnityEngine.WaitForSeconds(0.02f);
         Crane.MoveLeft();
         ;
         CodeInspector.RuntimeManager.Instance.HighlightLine(13);
-        yield return new UnityEngine.WaitForSeconds(0.33f);
+        yield return new UnityEngine.WaitForSeconds(0.02f);
         Crane.PickUp();
         ;
         CodeInspector.RuntimeManager.Instance.HighlightLine(14);
-        yield return new UnityEngine.WaitForSeconds(0.33f);
+        yield return new UnityEngine.WaitForSeconds(0.02f);
         Crane.MoveRight();
         ;
         CodeInspector.RuntimeManager.Instance.HighlightLine(15);
-        yield return new UnityEngine.WaitForSeconds(0.33f);
+        yield return new UnityEngine.WaitForSeconds(0.02f);
         Crane.MoveRight();
         ;
         CodeInspector.RuntimeManager.Instance.HighlightLine(16);
-        yield return new UnityEngine.WaitForSeconds(0.33f);
+        yield return new UnityEngine.WaitForSeconds(0.02f);
         Crane.MoveRight();
         ;
         CodeInspector.RuntimeManager.Instance.HighlightLine(17);
-        yield return new UnityEngine.WaitForSeconds(0.33f);
+        yield return new UnityEngine.WaitForSeconds(0.02f);
         Crane.Drop();
         ;
         CodeInspector.RuntimeManager.Instance.DisableHighlightLine();
@@ -86,11 +86,16 @@ public class CraneController
         var method = this.GetType().GetMethod(methodName);
         if (method != null)
         {
-            CodeInspector.RuntimeManager.Instance.StartCoroutine((System.Collections.IEnumerator)method.Invoke(this, args));
+            CodeInspector.RuntimeManager.Instance.CoroutineRunner.StartCoroutine((System.Collections.IEnumerator)method.Invoke(this, args));
         }
         else
         {
             throw new System.Exception($"Coroutine '{methodName}' not found.");
         }
+    }
+
+    public void StopCoroutinesMethod()
+    {
+        CodeInspector.RuntimeManager.Instance.CoroutineRunner.StopAllCoroutines();
     }
 }

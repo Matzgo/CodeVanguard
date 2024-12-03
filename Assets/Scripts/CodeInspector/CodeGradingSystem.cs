@@ -41,20 +41,20 @@ public class CodeGradingSystem : MonoBehaviour
             Feedback = new List<string>()
         };
         // Correctness grading
-        var (correctnessScore, correctnessFeedback) = GradeCorrectness(userScriptProxy, goalScriptProxy);
-        result.Feedback.AddRange(correctnessFeedback);
-        if (correctnessScore == false) // If correctness fails, skip performance and memory grading
-        {
-            result.Correct = false;
-            result.PerformanceScore = 0;
-            result.MemoryScore = 0;
-            result.NamingScore = 0;
-            return result;
-        }
-        else
-        {
-            result.Correct = true;
-        }
+        //var (correctnessScore, correctnessFeedback) = GradeCorrectness(userScriptProxy, goalScriptProxy);
+        //result.Feedback.AddRange(correctnessFeedback);
+        //if (correctnessScore == false) // If correctness fails, skip performance and memory grading
+        //{
+        //    result.Correct = false;
+        //    result.PerformanceScore = 0;
+        //    result.MemoryScore = 0;
+        //    result.NamingScore = 0;
+        //    return result;
+        //}
+        //else
+        //{
+        //    result.Correct = true;
+        //}
 
         // Performance grading
         var (performanceScore, performanceFeedback, avg) = GradePerformance(userScriptProxy, goalScriptProxy);
@@ -74,46 +74,46 @@ public class CodeGradingSystem : MonoBehaviour
 
         return result;
     }
-    private (bool correct, List<string> feedback) GradeCorrectness(ScriptProxy userProxy, ScriptProxy goalProxy)
-    {
-        var feedback = new List<string>();
-        bool isCorrect = true;
+    //private (bool correct, List<string> feedback) GradeCorrectness(ScriptProxy userProxy, ScriptProxy goalProxy)
+    //{
+    //    var feedback = new List<string>();
+    //    bool isCorrect = true;
 
-        try
-        {
-            // Test cases for the Add method
-            object[][] testCases = new object[][]
-            {
-                new object[] { 5, 3 },
-                new object[] { 10, 20 },
-                new object[] { 0, 0 },
-                new object[] { -5, 5 },
-                new object[] { 1000, 1000 },
-                new object[] { -1000, -1000 }
-            };
+    //    try
+    //    {
+    //        // Test cases for the Add method
+    //        object[][] testCases = new object[][]
+    //        {
+    //            new object[] { 5, 3 },
+    //            new object[] { 10, 20 },
+    //            new object[] { 0, 0 },
+    //            new object[] { -5, 5 },
+    //            new object[] { 1000, 1000 },
+    //            new object[] { -1000, -1000 }
+    //        };
 
-            foreach (var testCase in testCases)
-            {
-                var userResult = userProxy.Call("Add", testCase[0], testCase[1]);
-                var goalResult = goalProxy.Call("Add", testCase[0], testCase[1]);
+    //        foreach (var testCase in testCases)
+    //        {
+    //            var userResult = userProxy.Call("Add", testCase[0], testCase[1]);
+    //            var goalResult = goalProxy.Call("Add", testCase[0], testCase[1]);
 
-                // Compare results
-                if (!userResult.Equals(goalResult))
-                {
-                    isCorrect = false;
-                    feedback.Add($"Test case Add({testCase[0]}, {testCase[1]}) produced incorrect result: {userResult} (expected {goalResult})");
-                    return (isCorrect, feedback);
-                }
-            }
-        }
-        catch (Exception e)
-        {
-            isCorrect = false;
-            feedback.Add($"Runtime error during correctness testing: {e.Message}");
-        }
+    //            // Compare results
+    //            if (!userResult.Equals(goalResult))
+    //            {
+    //                isCorrect = false;
+    //                feedback.Add($"Test case Add({testCase[0]}, {testCase[1]}) produced incorrect result: {userResult} (expected {goalResult})");
+    //                return (isCorrect, feedback);
+    //            }
+    //        }
+    //    }
+    //    catch (Exception e)
+    //    {
+    //        isCorrect = false;
+    //        feedback.Add($"Runtime error during correctness testing: {e.Message}");
+    //    }
 
-        return (isCorrect, feedback);
-    }
+    //    return (isCorrect, feedback);
+    //}
     private (float score, List<string> feedback, double avgTime) GradePerformance(ScriptProxy userProxy, ScriptProxy goalProxy)
     {
         RuntimeManager.Instance.Console.SetActive(false);
@@ -125,49 +125,53 @@ public class CodeGradingSystem : MonoBehaviour
         int testCaseCount = 0;
 
         //warmup calls
-        userProxy.Call("Add", 1, 1);
-        goalProxy.Call("Add", 1, 1);
+        //userProxy.Call("Add", 1, 1);
+        //goalProxy.Call("Add", 1, 1);
+
+        userProxy.Call("MoveItems");
+        goalProxy.Call("MoveItems");
 
         try
         {
             // Test cases for the Add method
-            object[][] testCases = new object[][]
-            {
-            new object[] { 5, 3 },
-            new object[] { 10, 20 },
-            new object[] { 0, 0 },
-            new object[] { -5, 5 },
-            new object[] { 1000, 1000 },
-            new object[] { -1000, -1000 }
-            };
+            //object[][] testCases = new object[][]
+            //{
+            //new object[] { 5, 3 },
+            //new object[] { 10, 20 },
+            //new object[] { 0, 0 },
+            //new object[] { -5, 5 },
+            //new object[] { 1000, 1000 },
+            //new object[] { -1000, -1000 }
+            //};
 
             for (int i = 0; i < _testCallCount; i++)
             {
 
-                foreach (var testCase in testCases)
+                //foreach (var testCase in testCases)
+                //{
+                testCaseCount++;
+                var sw = Stopwatch.StartNew();
+                //var userResult = userProxy.Call("Add", testCase[0], testCase[1]);
+                var userResult = userProxy.Call("MoveItems");
+                var userTime = sw.ElapsedTicks;
+                var userTimeMS = sw.ElapsedMilliseconds;
+                totalUserTime += userTime;
+                sw.Restart();
+                var goalResult = goalProxy.Call("MoveItems");
+                var goalTime = sw.ElapsedTicks;
+                totalGoalTime += goalTime;
+
+
+                // Check execution time
+                if (userTimeMS > maxExecutionTime)
                 {
-                    testCaseCount++;
-                    var sw = Stopwatch.StartNew();
-                    var userResult = userProxy.Call("Add", testCase[0], testCase[1]);
-                    var userTime = sw.ElapsedTicks;
-                    var userTimeMS = sw.ElapsedMilliseconds;
-                    totalUserTime += userTime;
-                    sw.Restart();
-                    var goalResult = goalProxy.Call("Add", testCase[0], testCase[1]);
-                    var goalTime = sw.ElapsedTicks;
-                    totalGoalTime += goalTime;
-
-
-                    // Check execution time
-                    if (userTimeMS > maxExecutionTime)
-                    {
-                        feedback.Add($"Exceeded max Execution time: {userTimeMS}/{maxExecutionTime}");
-                        RuntimeManager.Instance.Console.SetActive(true);
-                        return (0, feedback, maxExecutionTime);
-                    }
-
-
+                    feedback.Add($"Exceeded max Execution time: {userTimeMS}/{maxExecutionTime}");
+                    RuntimeManager.Instance.Console.SetActive(true);
+                    return (0, feedback, maxExecutionTime);
                 }
+
+
+                //}
             }
         }
         catch (System.Exception e)
@@ -329,7 +333,7 @@ public class CodeGradingSystem : MonoBehaviour
             foreach (var method in methods)
             {
                 string name = method.Identifier.Text;
-                if (name != "Add" && !char.IsUpper(name[0]))
+                if (!char.IsUpper(name[0]))
                 {
                     score *= 0.95f;
                     feedback.Add($"Method '{name}' should start with uppercase letter");

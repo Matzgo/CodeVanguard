@@ -17,6 +17,11 @@ namespace CodeInspector
         public Action<string> GameEvent;
         public Action MiniGameReset;
 
+
+        //All UserCode Coroutines run on the CoroutineRunner
+        CoroutineRunner _coroutineRunner;
+        public CoroutineRunner CoroutineRunner;
+
         private bool _active;
 
         private void Awake()
