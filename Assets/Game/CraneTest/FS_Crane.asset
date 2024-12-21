@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: FS_Crane
   m_EditorClassIdentifier: 
   _taskType: 0
-  _title: Loops
+  _title: Crane
   _description: Move all Items to Column 4
   _fileSetName: TestSet
   _entryPointFile: {fileID: 11400000, guid: 73680b57ec3c2584aa1390c2e1e52b91, type: 2}
-  _entryPoint: MoveItems();
+  _entryPoint: MoveItems
   _testCaseCalls:
   - MoveItems();
   _csFiles:

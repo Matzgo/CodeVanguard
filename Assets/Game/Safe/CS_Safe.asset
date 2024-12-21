@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ff3ad1ee0faded43aa9eef123648fa6, type: 3}
+  m_Name: CS_Safe
+  m_EditorClassIdentifier: 
+  _fileName: SafeSecurity
+  _codeSegments:
+  - _isEditable: 1
+    _text: "public class SafeSecurity\n{\n\tpublic void OpenSafeButton()\n\t{\n\t\tbool
+      locked = Safe.Locked;\n\t\tif(locked)\n\t\t{\n\t\t\tSafe.Alarm();\n\t\t}\n\t\telse\n\t\t{\n\t\t\tSafe.Open();\n\t\t}\n\t}\n}"

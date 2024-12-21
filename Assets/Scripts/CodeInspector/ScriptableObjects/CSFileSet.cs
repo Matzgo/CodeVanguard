@@ -45,6 +45,9 @@ namespace CodeInspector
         [TextArea(1, 15)]
 
         string _entryPoint;
+        public string EntryPoint => _entryPoint;
+
+
         [SerializeField]
         [TextArea(1, 15)]
         List<string> _testCaseCalls;

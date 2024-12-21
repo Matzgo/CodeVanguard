@@ -48,7 +48,7 @@ public class UIConsole : MonoBehaviour
 
     public void ClearConsole()
     {
-        //if (!_active) return;  // Early return if not active
+        //if (!_activeMiniGame) return;  // Early return if not active
         outputBuilder.Clear();
         UpdateConsoleText();
     }

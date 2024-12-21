@@ -209,7 +209,7 @@ namespace InGameCodeEditor
                 // Check for line numbers
                 if (lineNumbers == true)
                 {
-                    // Enable line numbers
+                    // EnableMiniGame line numbers
                     lineNumberBackground.gameObject.SetActive(true);
                     lineText.gameObject.SetActive(true);
 
@@ -219,7 +219,7 @@ namespace InGameCodeEditor
                 }
                 else
                 {
-                    // Disable line numbers
+                    // DisableMiniGame line numbers
                     lineNumberBackground.gameObject.SetActive(false);
                     lineText.gameObject.SetActive(false);
 

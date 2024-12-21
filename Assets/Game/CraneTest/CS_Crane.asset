@@ -15,4 +15,4 @@ MonoBehaviour:
   _fileName: CraneController
   _codeSegments:
   - _isEditable: 1
-    _text: "public class CraneController\n{\n\tpublic void MoveItems()\n\t{\n\t\tCrane.PickUp();\n\t\tCrane.MoveRight();\n\t\tCrane.MoveRight();\n\t\tCrane.MoveRight();\n\t\tCrane.Drop();\n\t\tCrane.MoveLeft();\n\t\tCrane.MoveLeft();\n\t\tCrane.MoveLeft();\n\t\tCrane.PickUp();\n\t\tCrane.MoveRight();\n\t\tCrane.MoveRight();\n\t\tCrane.MoveRight();\n\t\tCrane.Drop();\n\t}\n}"
+    _text: "public class CraneController\n{\n\tpublic void MoveItems()\n\t{\n\n\t}\n}"

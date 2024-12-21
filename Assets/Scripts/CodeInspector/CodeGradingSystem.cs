@@ -30,12 +30,16 @@ public class CodeGradingSystem : MonoBehaviour
 
     [SerializeField]
     private int _testCallCount;
+    private string _entryPointMethodName;
 
     public GradingResult GradeSubmission(
         string userCode,
         ScriptProxy userScriptProxy,
-        ScriptProxy goalScriptProxy)
+        ScriptProxy goalScriptProxy,
+        string entryPointMethodName)
     {
+
+        _entryPointMethodName = entryPointMethodName;
         var result = new GradingResult
         {
             Feedback = new List<string>()
@@ -128,8 +132,8 @@ public class CodeGradingSystem : MonoBehaviour
         //userProxy.Call("Add", 1, 1);
         //goalProxy.Call("Add", 1, 1);
 
-        userProxy.Call("MoveItems");
-        goalProxy.Call("MoveItems");
+        userProxy.Call(_entryPointMethodName);
+        goalProxy.Call(_entryPointMethodName);
 
         try
         {
@@ -152,12 +156,12 @@ public class CodeGradingSystem : MonoBehaviour
                 testCaseCount++;
                 var sw = Stopwatch.StartNew();
                 //var userResult = userProxy.Call("Add", testCase[0], testCase[1]);
-                var userResult = userProxy.Call("MoveItems");
+                var userResult = userProxy.Call(_entryPointMethodName);
                 var userTime = sw.ElapsedTicks;
                 var userTimeMS = sw.ElapsedMilliseconds;
                 totalUserTime += userTime;
                 sw.Restart();
-                var goalResult = goalProxy.Call("MoveItems");
+                var goalResult = goalProxy.Call(_entryPointMethodName);
                 var goalTime = sw.ElapsedTicks;
                 totalGoalTime += goalTime;
 

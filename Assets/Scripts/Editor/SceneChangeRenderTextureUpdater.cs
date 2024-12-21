@@ -5,7 +5,7 @@ using UnityEngine;
 public class RenderTextureAutoUpdater
 {
     private static float lastUpdateTime;
-
+    const bool disabled = true;
     static RenderTextureAutoUpdater()
     {
         // Subscribe to the update event
@@ -15,19 +15,24 @@ public class RenderTextureAutoUpdater
 
     private static void UpdateRenderTexture()
     {
+        if (disabled)
+            return;
+
         // Skip updates during play mode
         if (EditorApplication.isPlayingOrWillChangePlaymode || Application.isPlaying)
             return;
 
         // Check if one second has passed
         float currentTime = Time.realtimeSinceStartup;
-        if (currentTime - lastUpdateTime < 1f)
+        if (currentTime - lastUpdateTime < 15f)
             return; // Wait until 1 second has elapsed
 
         lastUpdateTime = currentTime; // Reset the timer
 
         // Find all Render Textures in the project
         var renderTextures = Resources.FindObjectsOfTypeAll<RenderTexture>();
+        if (renderTextures == null || renderTextures.Length == 0)
+            return;
 
         foreach (var rt in renderTextures)
         {

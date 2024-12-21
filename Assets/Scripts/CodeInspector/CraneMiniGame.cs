@@ -149,13 +149,3 @@ public class CraneMiniGame : MonoBehaviour
     }
 
 }
-
-[System.Serializable]
-public struct CraneMiniGameParameters
-{
-    public int[] cols;
-    public int craneStartPos;
-
-    public int[] targetCols;
-
-}

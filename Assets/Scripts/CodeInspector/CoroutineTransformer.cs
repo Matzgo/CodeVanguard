@@ -180,7 +180,7 @@ public class CoroutineTransformer : MonoBehaviour
         // Transform all statements, including nested blocks
         var transformedStatements = TransformStatements(originalStatements);
 
-        // Disable highlight line after all statements
+        // DisableMiniGame highlight line after all statements
         var disableRunningLine = SyntaxFactory.ParseStatement($"CodeInspector.RuntimeManager.Instance.DisableHighlightLine();");
         transformedStatements.Add(disableRunningLine);
 

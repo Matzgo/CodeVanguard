@@ -14,15 +14,19 @@ namespace CodeInspector
         [SerializeField]
         CustomCodeEditor _customCodeEditor;
 
-        public Action<string> GameEvent;
+        public Action<string> MiniGameEvent;
         public Action MiniGameReset;
+
+        public Action<string> WorldGameEvent;
+        public Action WorldGameReset;
 
 
         //All UserCode Coroutines run on the CoroutineRunner
         CoroutineRunner _coroutineRunner;
         public CoroutineRunner CoroutineRunner;
 
-        private bool _active;
+        private bool _activeMiniGame;
+        private bool _activeWorld = true;
 
         private void Awake()
         {
@@ -41,10 +45,18 @@ namespace CodeInspector
             MiniGameReset?.Invoke();
         }
 
+        public void ResetWorld()
+        {
+            WorldGameReset?.Invoke();
+        }
+
         public void Trigger(string key)
         {
-            if (_active)
-                GameEvent?.Invoke(key);
+            if (_activeMiniGame)
+                MiniGameEvent?.Invoke(key);
+
+            if (_activeWorld)
+                WorldGameEvent?.Invoke(key);
         }
 
         public void HighlightLine(int lineNr)
@@ -58,14 +70,26 @@ namespace CodeInspector
             _customCodeEditor.DisableRunningLine();
         }
 
-        public void Disable()
+
+        public void DisableWorldGame()
         {
-            _active = false;
+            _activeWorld = false;
         }
 
-        public void Enable()
+        public void EnableWorldGame()
         {
-            _active = true;
+            _activeWorld = true;
+
+        }
+
+        public void DisableMiniGame()
+        {
+            _activeMiniGame = false;
+        }
+
+        public void EnableMiniGame()
+        {
+            _activeMiniGame = true;
 
         }
     }

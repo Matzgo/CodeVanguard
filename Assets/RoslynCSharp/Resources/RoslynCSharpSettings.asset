@@ -17295,6 +17295,15 @@ MonoBehaviour:
           - MemberName: PickUp()
             MemberAllowed: 0
           TypeAllowed: 0
+        - TypeName: Safe
+          MemberRestrictions:
+          - MemberName: Alarm()
+            MemberAllowed: 0
+          - MemberName: Locked
+            MemberAllowed: 0
+          - MemberName: Open()
+            MemberAllowed: 0
+          TypeAllowed: 0
         NamespaceAllowed: 0
       RootTypeRestrictions: []
       AssemblyAllowed: 0

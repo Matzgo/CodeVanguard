@@ -5,78 +5,44 @@ using System.Collections.Generic;
 using Console = Game.Console;
 using Crane = Game.Crane;
 
-public class CraneController
+public class SafeSecurity
 {
-    public void MoveItems()
+    public void OpenSafeButton()
     {
-        Crane.PickUp();
-        Crane.MoveRight();
-        Crane.MoveRight();
-        Crane.MoveRight();
-        Crane.Drop();
-        Crane.MoveLeft();
-        Crane.MoveLeft();
-        Crane.MoveLeft();
-        Crane.PickUp();
-        Crane.MoveRight();
-        Crane.MoveRight();
-        Crane.MoveRight();
-        Crane.Drop();
+        bool locked = Safe.Locked;
+        if (!locked)
+        {
+            Safe.Alarm();
+        }
+        else
+        {
+            Safe.Open();
+        }
     }
 
-    public System.Collections.IEnumerator COR_MoveItems()
+    public System.Collections.IEnumerator COR_OpenSafeButton()
     {
         CodeInspector.RuntimeManager.Instance.HighlightLine(5);
-        yield return new UnityEngine.WaitForSeconds(0.02f);
-        Crane.PickUp();
+        yield return new UnityEngine.WaitForSeconds(0.26f);
+        bool locked = Safe.Locked;
         ;
         CodeInspector.RuntimeManager.Instance.HighlightLine(6);
-        yield return new UnityEngine.WaitForSeconds(0.02f);
-        Crane.MoveRight();
-        ;
-        CodeInspector.RuntimeManager.Instance.HighlightLine(7);
-        yield return new UnityEngine.WaitForSeconds(0.02f);
-        Crane.MoveRight();
-        ;
-        CodeInspector.RuntimeManager.Instance.HighlightLine(8);
-        yield return new UnityEngine.WaitForSeconds(0.02f);
-        Crane.MoveRight();
-        ;
-        CodeInspector.RuntimeManager.Instance.HighlightLine(9);
-        yield return new UnityEngine.WaitForSeconds(0.02f);
-        Crane.Drop();
-        ;
-        CodeInspector.RuntimeManager.Instance.HighlightLine(10);
-        yield return new UnityEngine.WaitForSeconds(0.02f);
-        Crane.MoveLeft();
-        ;
-        CodeInspector.RuntimeManager.Instance.HighlightLine(11);
-        yield return new UnityEngine.WaitForSeconds(0.02f);
-        Crane.MoveLeft();
-        ;
-        CodeInspector.RuntimeManager.Instance.HighlightLine(12);
-        yield return new UnityEngine.WaitForSeconds(0.02f);
-        Crane.MoveLeft();
-        ;
-        CodeInspector.RuntimeManager.Instance.HighlightLine(13);
-        yield return new UnityEngine.WaitForSeconds(0.02f);
-        Crane.PickUp();
-        ;
-        CodeInspector.RuntimeManager.Instance.HighlightLine(14);
-        yield return new UnityEngine.WaitForSeconds(0.02f);
-        Crane.MoveRight();
-        ;
-        CodeInspector.RuntimeManager.Instance.HighlightLine(15);
-        yield return new UnityEngine.WaitForSeconds(0.02f);
-        Crane.MoveRight();
-        ;
-        CodeInspector.RuntimeManager.Instance.HighlightLine(16);
-        yield return new UnityEngine.WaitForSeconds(0.02f);
-        Crane.MoveRight();
-        ;
-        CodeInspector.RuntimeManager.Instance.HighlightLine(17);
-        yield return new UnityEngine.WaitForSeconds(0.02f);
-        Crane.Drop();
+        yield return new UnityEngine.WaitForSeconds(0.26f);
+        if (!locked)
+        {
+            CodeInspector.RuntimeManager.Instance.HighlightLine(8);
+            yield return new UnityEngine.WaitForSeconds(0.26f);
+            Safe.Alarm();
+            ;
+        }
+        else
+        {
+            CodeInspector.RuntimeManager.Instance.HighlightLine(12);
+            yield return new UnityEngine.WaitForSeconds(0.26f);
+            Safe.Open();
+            ;
+        }
+
         ;
         CodeInspector.RuntimeManager.Instance.DisableHighlightLine();
     }

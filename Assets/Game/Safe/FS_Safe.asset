@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b539acad177ac245b86051f55621890, type: 3}
+  m_Name: FS_Safe
+  m_EditorClassIdentifier: 
+  _taskType: 0
+  _title: Safe
+  _description: Change the code to open the safe
+  _fileSetName: Safe
+  _entryPointFile: {fileID: 11400000, guid: 763334f5804992a4cb5c7046a2b6a18e, type: 2}
+  _entryPoint: OpenSafeButton
+  _testCaseCalls: []
+  _csFiles:
+  - _file: {fileID: 11400000, guid: 763334f5804992a4cb5c7046a2b6a18e, type: 2}
+    _solutionFile: {fileID: 11400000, guid: cba2aa629829d904594410fad4e51ca8, type: 2}
+  _miniGame: {fileID: 0}
