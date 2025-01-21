@@ -14,6 +14,7 @@ public class PlayerCarry : MonoBehaviour
 
     [SerializeField] private Vector3 holdOffset = new Vector3(0, -0.5f, 1.5f); // Offset from camera
     [SerializeField] private float _lerpSpeed = 10f;
+    [SerializeField] private Camera _camera;
 
     private void Update()
     {
@@ -68,7 +69,7 @@ public class PlayerCarry : MonoBehaviour
         if (_currentRigidbody)
         {
             // Get the camera's forward direction
-            Transform cameraTransform = Camera.main.transform;
+            Transform cameraTransform = _camera.transform;
 
             // Adjust the throwing direction by modifying the x-rotation
             Quaternion adjustedRotation = Quaternion.Euler(cameraTransform.eulerAngles.x - 20, cameraTransform.eulerAngles.y, cameraTransform.eulerAngles.z);

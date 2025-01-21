@@ -22,6 +22,10 @@ namespace CodeInspector
 
 
         [SerializeField]
+        ScenarioType _scenarioType;
+        public ScenarioType ScenarioType => _scenarioType;
+
+        [SerializeField]
         string _title;
         public string Title => _title;
 
@@ -57,9 +61,6 @@ namespace CodeInspector
         List<CSFileSetEntry> _csFiles;
         public List<CSFileSetEntry> CSFiles => _csFiles;
 
-        [SerializeField]
-        MiniGame _miniGame;
-        public MiniGame MiniGame => _miniGame;
 
         private void OnValidate()
         {

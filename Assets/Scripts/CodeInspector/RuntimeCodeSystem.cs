@@ -37,9 +37,9 @@ public class RuntimeCodeSystem : MonoBehaviour
     [SerializeField]
     private Button _resetButton;
     [SerializeField]
-    private Button _runButton;
+    private Button _simulateButton;
     [SerializeField]
-    private Button _approveButton;
+    private Button _runButton;
     [SerializeField]
     TextMeshProUGUI _fileNameText;
     [SerializeField]
@@ -62,7 +62,7 @@ public class RuntimeCodeSystem : MonoBehaviour
 
 
     CSFileSet _currentTask;
-
+    private Scenario _scenario;
     private string _usingStatements;
     private string _coroutineUsingStatements;
     private int _lineOffsetCount;
@@ -78,12 +78,13 @@ public class RuntimeCodeSystem : MonoBehaviour
     string outputSyntaxTreeName = "syntaxTree.txt";
     [SerializeField]
     private bool _coroutineDisabled;
+    private bool _codeRunning;
 
     private void Awake()
     {
-        _runButton.onClick.AddListener(OnRunClicked);
+        _simulateButton.onClick.AddListener(OnSimulateClicked);
         _resetButton.onClick.AddListener(OnResetClicked);
-        _approveButton.onClick.AddListener(OnGradeClicked);
+        //_runButton.onClick.AddListener(OnRunClicked);
     }
 
     private void OnResetClicked()
@@ -130,6 +131,12 @@ public class RuntimeCodeSystem : MonoBehaviour
     internal void LoadTask(CSFileSet task)
     {
         _currentTask = task;
+        if (_scenario != null)
+            _scenario.RunButton.ClearRegisteredAction();
+        _scenario = ScenarioManager.Instance.GetScenario(task.ScenarioType);
+
+        _scenario.RunButton.RegisterAction(OnRunClicked);
+
         _codeEditorWindow.Text = task.EntryPointFile.Text;
         _fileNameText.text = task.EntryPointFile.FileName + ".cs";
         _solutionCode = task.CSFiles[0].SolutionFile.Text;
@@ -155,7 +162,17 @@ public class RuntimeCodeSystem : MonoBehaviour
 
         return sb.ToString();
     }
-    private void OnRunClicked()
+
+
+    private void OnSimulateClicked()
+    {
+        RuntimeManager.Instance.DisableWorldGame();
+        CompileAndRun();
+
+    }
+
+
+    private void CompileAndRun()
     {
         try
         {
@@ -166,7 +183,7 @@ public class RuntimeCodeSystem : MonoBehaviour
             }
             else
             {
-                RuntimeManager.Instance.ResetMiniGame();
+                //RuntimeManager.Instance.ResetMiniGame();
                 RuntimeManager.Instance.ResetWorld();
                 RunVoidMethodTest();
             }
@@ -177,21 +194,47 @@ public class RuntimeCodeSystem : MonoBehaviour
         }
     }
 
-    private void OnGradeClicked()
+    public void OnRunCompleted()
+    {
+        GradingResult res = null;
+        if (_userScript != null)
+            res = EvaluateSubmission();
+
+        CodeVanguardManager.Instance.EndTask(res);
+
+        _codeRunning = false;
+
+        RuntimeManager.Instance.CoroutineRunner.OnCoroutineFinshed -= OnRunCompleted;
+
+    }
+
+    private void OnRunClicked()
     {
         try
         {
             RuntimeManager.Instance.Console.SetActive(false);
             _coroutineDisabled = true;
-            OnRunClicked();
+            RuntimeManager.Instance.DisableWorldGame();
+            CompileAndRun();
+            RuntimeManager.Instance.EnableWorldGame();
             _coroutineDisabled = false;
             RuntimeManager.Instance.Console.SetActive(true);
+            RuntimeManager.Instance.ResetWorld();
 
-            GradingResult res = null;
-            if (_userScript != null)
-                res = EvaluateSubmission();
+            RuntimeManager.Instance.CoroutineRunner.OnCoroutineFinshed += OnRunCompleted;
+            TransformAndRunCoroutine(true);
 
-            CodeVanguardManager.Instance.EndTask(res);
+            _codeRunning = true;
+
+            //After code done:
+
+            //GradingResult res = null;
+            //if (_userScript != null)
+            //    res = EvaluateSubmission();
+
+            //CodeVanguardManager.Instance.EndTask(res);
+
+
         }
         catch (Exception e)
         {
@@ -221,12 +264,12 @@ public class RuntimeCodeSystem : MonoBehaviour
 
         SaveSyntaxTree(userCodeWithDirectives);
 
-        RuntimeManager.Instance.ResetMiniGame();
+        //RuntimeManager.Instance.ResetMiniGame();
         RuntimeManager.Instance.ResetWorld();
-
         RunVoidMethodTest();
-
-        TransformAndRunCoroutine();
+        Debug.Log(RuntimeManager.Instance.IsWorldGameOn);
+        Debug.Log(RuntimeManager.Instance.IsSimOn);
+        TransformAndRunCoroutine(false);
     }
 
     private void CompileAndRunSolutionCode()
@@ -284,13 +327,17 @@ public class RuntimeCodeSystem : MonoBehaviour
 
     private void RunVoidMethodTest()
     {
-        RuntimeManager.Instance.DisableMiniGame();
+        var p = RuntimeManager.Instance.IsWorldGameOn;
+
+        //RuntimeManager.Instance.DisableMiniGame();
         RuntimeManager.Instance.DisableWorldGame();
         RuntimeManager.Instance.Console.SetActive(false);
 
         _userScript.Call(_entryPointMethodName);
-        RuntimeManager.Instance.EnableMiniGame();
-        RuntimeManager.Instance.EnableWorldGame();
+        //RuntimeManager.Instance.EnableMiniGame();
+        if (p)
+            RuntimeManager.Instance.EnableWorldGame();
+
 
         RuntimeManager.Instance.Console.SetActive(true);
 
@@ -321,17 +368,21 @@ public class RuntimeCodeSystem : MonoBehaviour
             RuntimeManager.Instance.Console.LogError("Solution script is not compiled. Run the solution first.");
             return null;
         }
-        RuntimeManager.Instance.ResetMiniGame();
-        RuntimeManager.Instance.EnableMiniGame();
+        RuntimeManager.Instance.ResetWorld();
+        RuntimeManager.Instance.EnableWorldGame();
+        RuntimeManager.Instance.EnableWorldSimulator();
         _userScript.Call(_entryPointMethodName);
-        (bool correct, var feedback) = FindObjectOfType<CraneMiniGame>().CheckCorrectness();
-        RuntimeManager.Instance.DisableMiniGame();
+        (bool correct, var feedback) = _scenario.CheckCorrectness();
+
+
 
         var gradingResult = _codeGradingSystem.GradeSubmission(
             _usingStatements + "\n" + _codeEditorWindow.Text,
             _userScript,
             _solutionScript, _entryPointMethodName
         );
+        RuntimeManager.Instance.DisableWorldSimulator();
+
 
         gradingResult.Correct = correct;
         gradingResult.Feedback.AddRange(feedback);
@@ -358,7 +409,7 @@ public class RuntimeCodeSystem : MonoBehaviour
         }
     }
 
-    private void TransformAndRunCoroutine()
+    private void TransformAndRunCoroutine(bool useScenarioTickTime)
     {
         if (_coroutineDisabled)
             return;
@@ -366,7 +417,16 @@ public class RuntimeCodeSystem : MonoBehaviour
         var userCode = _codeEditorWindow.Text;
         var userCodeWithCoroutineDirectives = _coroutineUsingStatements + "\n" + userCode;
 
-        _coroutineCode = _coroutineTransformer.TransformToCoroutine(userCodeWithCoroutineDirectives);
+        if (useScenarioTickTime)
+        {
+            _coroutineCode = _coroutineTransformer.TransformToCoroutine(userCodeWithCoroutineDirectives, _scenario.ScenarioTickTime);
+
+        }
+        else
+        {
+            _coroutineCode = _coroutineTransformer.TransformToCoroutine(userCodeWithCoroutineDirectives);
+
+        }
         SaveCoroutineCode(_coroutineCode);
 
         ScriptType coroutineType = CompileCoroutine(_coroutineCode);
@@ -422,6 +482,8 @@ public class RuntimeCodeSystem : MonoBehaviour
 
     private void HandleException(Exception e)
     {
+        if (e == null)
+            return;
         Debug.LogError(e.ToString());
         var exc = e.InnerException ?? e;
         RuntimeManager.Instance.Console.LogError($"{exc.Message}");
@@ -431,6 +493,7 @@ public class RuntimeCodeSystem : MonoBehaviour
 
     private void StopCoroutines(ScriptProxy proxy)
     {
+
         try
         {
             proxy.Call("StopCoroutinesMethod");

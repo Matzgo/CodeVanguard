@@ -72,7 +72,6 @@ public class CodeVanguardManager : MonoBehaviour
         _screenManager.TurnOffAllScreens();
         _screenManager.TurnOn(ScreenType.Main);
         _screenManager.Main.ShowPreTaskWindow();
-        _screenManager.TurnOn(ScreenType.Docs);
         //_screenManager.TurnOn(ScreenType.Console);
         _screenManager.TurnOn(ScreenType.Task);
         // _screenManager.TurnOn(ScreenType.Visual);
@@ -84,16 +83,9 @@ public class CodeVanguardManager : MonoBehaviour
         _screenManager.TurnOffAllScreens();
 
         RuntimeManager.Instance.Console.ClearConsole();
-        if (_task.MiniGame != null)
-        {
-            _task.MiniGame.LoadScene();
-            _screenManager.TurnOn(ScreenType.Visual);
-
-        }
         _screenManager.Main.ShowCodeWindow();
         _screenManager.TurnOn(ScreenType.Main);
         _screenManager.TurnOn(ScreenType.Task);
-        _screenManager.TurnOn(ScreenType.Docs);
         _screenManager.TurnOn(ScreenType.Console);
         _screenManager.TurnOn(ScreenType.TaskAction);
 
@@ -116,11 +108,6 @@ public class CodeVanguardManager : MonoBehaviour
         _screenManager.TurnOffAllScreens();
 
 
-        if (_task.MiniGame != null)
-        {
-            _task.MiniGame.UnloadScene();
-        }
-
 
 
         _screenManager.LoadResult(res);
@@ -128,17 +115,11 @@ public class CodeVanguardManager : MonoBehaviour
         _screenManager.TurnOn(ScreenType.Main);
         _screenManager.Main.ShowPostTaskWindow();
         _screenManager.TurnOn(ScreenType.Console);
-        _screenManager.TurnOn(ScreenType.Visual);
         _screenManager.TurnOn(ScreenType.Task);
     }
 
     internal void Unplug()
     {
-        if (_task != null && _task.MiniGame != null)
-        {
-            _task.MiniGame.UnloadScene();
-        }
-
         _screenManager.TurnOffAllScreens();
         _screenManager.TurnOn(ScreenType.Main);
         _screenManager.Main.ShowLogInWindow();

@@ -85,9 +85,17 @@ public class CoroutineTransformer : MonoBehaviour
         return statement; // Return the original if no method calls were found
     }
 
-    public string TransformToCoroutine(string sourceCode)
+    public string TransformToCoroutine(string sourceCode, float scenarioTickTime = float.MaxValue)
     {
-        _codeRate = Mathf.Lerp(_minCodeRate, _maxCodeRate, (1 - _slider.value));
+        if (scenarioTickTime != float.MaxValue)
+        {
+            _codeRate = scenarioTickTime;
+        }
+        else
+        {
+            _codeRate = Mathf.Lerp(_minCodeRate, _maxCodeRate, (1 - _slider.value));
+        }
+
 
         var syntaxTree = CSharpSyntaxTree.ParseText(sourceCode);
         var root = syntaxTree.GetRoot();
@@ -140,6 +148,7 @@ public class CoroutineTransformer : MonoBehaviour
         // Add the RunCoroutineMethod to the class
         modifiedClass = AddRunCoroutineMethod(modifiedClass);
         modifiedClass = AddStopCoroutinesMethod(modifiedClass);
+        modifiedClass = AddWrapperMethod(modifiedClass);
         // Replace the modified class in the root syntax tree
         var newRoot = root.ReplaceNode(parentClass, modifiedClass);
 
@@ -346,8 +355,28 @@ public class CoroutineTransformer : MonoBehaviour
         var runCoroutineMethod = GenerateRunCoroutineMethod();
         return classDeclaration.AddMembers(runCoroutineMethod);
     }
+    public ClassDeclarationSyntax AddWrapperMethod(ClassDeclarationSyntax classDeclaration)
+    {
+        var wrapperMethod = GenerateWrapperMethod();
+        return classDeclaration.AddMembers(wrapperMethod);
+    }
 
+    private MethodDeclarationSyntax GenerateWrapperMethod()
+    {
+        var wrapperMethodCode = @"
+        private System.Collections.IEnumerator WrapCoroutine(System.Collections.IEnumerator coroutine)
+        {
+            while (coroutine.MoveNext())
+            {
+                yield return coroutine.Current;
+            }
+            
+            // Signal completion to RuntimeManager
+            CodeInspector.RuntimeManager.Instance.CoroutineRunner.OnCoroutineComplete();
+        }";
 
+        return SyntaxFactory.ParseMemberDeclaration(wrapperMethodCode) as MethodDeclarationSyntax;
+    }
 
     private MethodDeclarationSyntax GenerateRunCoroutineMethod()
     {
@@ -357,7 +386,8 @@ public class CoroutineTransformer : MonoBehaviour
             var method = this.GetType().GetMethod(methodName);
             if (method != null)
             {
-                CodeInspector.RuntimeManager.Instance.CoroutineRunner.StartCoroutine((System.Collections.IEnumerator)method.Invoke(this, args));
+                var coroutine = (System.Collections.IEnumerator)method.Invoke(this, args);
+                CodeInspector.RuntimeManager.Instance.CoroutineRunner.StartCoroutine(WrapCoroutine(coroutine));
             }
             else
             {

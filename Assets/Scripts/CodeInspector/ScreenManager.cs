@@ -7,8 +7,6 @@ public enum ScreenType
     Console,
     Task,
     TaskAction,
-    Visual,
-    Docs,
 }
 
 public class ScreenManager : MonoBehaviour
@@ -59,14 +57,8 @@ public class ScreenManager : MonoBehaviour
             case ScreenType.Task:
                 _taskScreen.SetActive(true);
                 break;
-            case ScreenType.Visual:
-                _visualScreen.SetActive(true);
-                break;
             case ScreenType.TaskAction:
                 _taskActionScreen.SetActive(true);
-                break;
-            case ScreenType.Docs:
-                _docsScreen.SetActive(true);
                 break;
         }
     }
@@ -84,14 +76,8 @@ public class ScreenManager : MonoBehaviour
             case ScreenType.Task:
                 _taskScreen.SetActive(false);
                 break;
-            case ScreenType.Visual:
-                _visualScreen.SetActive(false);
-                break;
             case ScreenType.TaskAction:
                 _taskActionScreen.SetActive(false);
-                break;
-            case ScreenType.Docs:
-                _docsScreen.SetActive(false);
                 break;
         }
     }

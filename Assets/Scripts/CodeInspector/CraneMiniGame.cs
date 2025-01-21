@@ -67,6 +67,7 @@ public class CraneMiniGame : MonoBehaviour
 
     public (bool b, List<string> feedback) CheckCorrectness()
     {
+
         var feedback = new List<string>();
         if (_parameters.targetCols == null)
         {

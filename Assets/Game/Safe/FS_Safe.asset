@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: FS_Safe
   m_EditorClassIdentifier: 
   _taskType: 0
+  _scenarioType: 1
   _title: Safe
   _description: Change the code to open the safe
   _fileSetName: Safe
@@ -22,4 +23,3 @@ MonoBehaviour:
   _csFiles:
   - _file: {fileID: 11400000, guid: 763334f5804992a4cb5c7046a2b6a18e, type: 2}
     _solutionFile: {fileID: 11400000, guid: cba2aa629829d904594410fad4e51ca8, type: 2}
-  _miniGame: {fileID: 0}

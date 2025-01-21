@@ -11,6 +11,10 @@ namespace CodeInspector
         UIConsole _console;
         public UIConsole Console => _console;
 
+        public bool IsWorldGameOn => _activeWorld;
+
+        public bool IsSimOn => _simMode;
+
         [SerializeField]
         CustomCodeEditor _customCodeEditor;
 
@@ -18,6 +22,7 @@ namespace CodeInspector
         public Action MiniGameReset;
 
         public Action<string> WorldGameEvent;
+        public Action<bool> WorldGameSimulation;
         public Action WorldGameReset;
 
 
@@ -27,6 +32,7 @@ namespace CodeInspector
 
         private bool _activeMiniGame;
         private bool _activeWorld = true;
+        private bool _simMode;
 
         private void Awake()
         {
@@ -70,6 +76,18 @@ namespace CodeInspector
             _customCodeEditor.DisableRunningLine();
         }
 
+        internal void EnableWorldSimulator()
+        {
+            _simMode = true;
+            WorldGameSimulation?.Invoke(true);
+        }
+
+        internal void DisableWorldSimulator()
+        {
+            _simMode = false;
+            WorldGameSimulation?.Invoke(false);
+
+        }
 
         public void DisableWorldGame()
         {
@@ -92,5 +110,6 @@ namespace CodeInspector
             _activeMiniGame = true;
 
         }
+
     }
 }

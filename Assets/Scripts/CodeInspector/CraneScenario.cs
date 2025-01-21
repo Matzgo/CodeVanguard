@@ -1,8 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CraneScenario : MonoBehaviour
+public class CraneScenario : Scenario
 {
+    CraneScenarioSimulator _sim;
 
     CraneMiniGameParameters _parameters;
 
@@ -31,9 +32,17 @@ public class CraneScenario : MonoBehaviour
     float _itemHeight;
     [SerializeField]
     float _craneHeight;
-    private void Awake()
+
+
+    protected override void Start()
     {
+        base.Start();
         Initialize(_awakeParams);
+    }
+
+    protected override void ResetSimulator()
+    {
+        _sim.Reset(_parameters);
     }
 
     public void ResetScenario()
@@ -49,6 +58,9 @@ public class CraneScenario : MonoBehaviour
     public void Initialize(CraneMiniGameParameters parameters)
     {
         _parameters = parameters;
+        _sim = new CraneScenarioSimulator();
+        _sim.Initialize(_parameters);
+
         _cols = (int[])parameters.cols.Clone();
         Debug.Log("RESETTING");
         _currentCraneCol = parameters.craneStartPos;
@@ -68,43 +80,53 @@ public class CraneScenario : MonoBehaviour
         UpdateCraneItems();
     }
 
-    public (bool b, List<string> feedback) CheckCorrectness()
+    public override (bool b, List<string> feedback) CheckCorrectness()
     {
-        var feedback = new List<string>();
-        if (_parameters.targetCols == null)
-        {
-            const string Message = "Parameters or targetCols are not set.";
-            Debug.LogError(Message);
-            feedback.Add(Message);
-            return (false, feedback);
-        }
+        return _sim.CheckCorrectness(_parameters);
 
-        if (_cols.Length != _parameters.targetCols.Length)
-        {
-            const string Message = "Incorrect: Columns do not match the target length.";
-            Debug.LogError(Message);
-            feedback.Add(Message);
-            return (false, feedback);
+        //var feedback = new List<string>();
+        //if (_parameters.targetCols == null)
+        //{
+        //    const string Message = "Parameters or targetCols are not set.";
+        //    Debug.LogError(Message);
+        //    feedback.Add(Message);
+        //    return (false, feedback);
+        //}
 
-        }
+        //if (_cols.Length != _parameters.targetCols.Length)
+        //{
+        //    const string Message = "Incorrect: Columns do not match the target length.";
+        //    Debug.LogError(Message);
+        //    feedback.Add(Message);
+        //    return (false, feedback);
 
-        for (int i = 0; i < _cols.Length; i++)
-        {
-            if (_cols[i] != _parameters.targetCols[i])
-            {
-                const string Message = "Incorrect: Columns do not match the target configuration.";
-                Debug.Log(Message);
-                feedback.Add(Message);
-                return (false, feedback);
-            }
-        }
+        //}
 
-        return (true, feedback);
+        //for (int i = 0; i < _cols.Length; i++)
+        //{
+        //    if (_cols[i] != _parameters.targetCols[i])
+        //    {
+        //        const string Message = "Incorrect: Columns do not match the target configuration.";
+        //        Debug.Log(Message);
+        //        feedback.Add(Message);
+        //        return (false, feedback);
+        //    }
+        //}
+
+        //return (true, feedback);
     }
+
+
 
 
     public void MoveRight()
     {
+        if (_simulate)
+        {
+            _sim.MoveRight();
+            return;
+        }
+
         _currentCraneCol = Mathf.Clamp(_currentCraneCol + 1, 0, _cols.Length - 1);
         Vector3 position = new Vector3(_colPositions[_currentCraneCol].transform.position.x, _craneHeight, _colPositions[_currentCraneCol].transform.position.z);
         _crane.transform.position = position;
@@ -112,6 +134,12 @@ public class CraneScenario : MonoBehaviour
 
     public void MoveLeft()
     {
+        if (_simulate)
+        {
+            _sim.MoveLeft();
+            return;
+        }
+
         _currentCraneCol = Mathf.Clamp(_currentCraneCol - 1, 0, _cols.Length - 1);
         Vector3 position = new Vector3(_colPositions[_currentCraneCol].transform.position.x, _craneHeight, _colPositions[_currentCraneCol].transform.position.z);
         _crane.transform.position = position;
@@ -127,6 +155,12 @@ public class CraneScenario : MonoBehaviour
 
     public void PickUp()
     {
+        if (_simulate)
+        {
+            _sim.PickUp();
+            return;
+        }
+
         if (!_craneCarryingItem)
         {
             _craneCarryingItem = true;
@@ -140,6 +174,12 @@ public class CraneScenario : MonoBehaviour
 
     public void Drop()
     {
+        if (_simulate)
+        {
+            _sim.Drop();
+            return;
+        }
+
         if (_craneCarryingItem)
         {
             _craneCarryingItem = false;

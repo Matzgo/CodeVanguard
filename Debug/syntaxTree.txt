@@ -9,8 +9,8 @@ public class SafeSecurity
 {
 	public void OpenSafeButton()
 	{
-		bool locked = Safe.Locked;
-		if(!locked)
+		bool LOBK = Safe.Locked;
+		if(false)
 		{
 			Safe.Alarm();
 		}
@@ -69,8 +69,8 @@ public class SafeSecurity
 {
 	public void OpenSafeButton()
 	{
-		bool locked = Safe.Locked;
-		if(!locked)
+		bool LOBK = Safe.Locked;
+		if(false)
 		{
 			Safe.Alarm();
 		}
@@ -83,8 +83,8 @@ public class SafeSecurity
         MethodDeclarationSyntax (MethodDeclaration)
         Code: public void OpenSafeButton()
 	{
-		bool locked = Safe.Locked;
-		if(!locked)
+		bool LOBK = Safe.Locked;
+		if(false)
 		{
 			Safe.Alarm();
 		}
@@ -99,8 +99,8 @@ public class SafeSecurity
             Code: ()
             BlockSyntax (Block)
             Code: {
-		bool locked = Safe.Locked;
-		if(!locked)
+		bool LOBK = Safe.Locked;
+		if(false)
 		{
 			Safe.Alarm();
 		}
@@ -110,13 +110,13 @@ public class SafeSecurity
 		}
 	}
                 LocalDeclarationStatementSyntax (LocalDeclarationStatement)
-                Code: bool locked = Safe.Locked;
+                Code: bool LOBK = Safe.Locked;
                     VariableDeclarationSyntax (VariableDeclaration)
-                    Code: bool locked = Safe.Locked
+                    Code: bool LOBK = Safe.Locked
                         PredefinedTypeSyntax (PredefinedType)
                         Code: bool
                         VariableDeclaratorSyntax (VariableDeclarator)
-                        Code: locked = Safe.Locked
+                        Code: LOBK = Safe.Locked
                             EqualsValueClauseSyntax (EqualsValueClause)
                             Code: = Safe.Locked
                                 MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
@@ -126,7 +126,7 @@ public class SafeSecurity
                                     IdentifierNameSyntax (IdentifierName)
                                     Code: Locked
                 IfStatementSyntax (IfStatement)
-                Code: if(!locked)
+                Code: if(false)
 		{
 			Safe.Alarm();
 		}
@@ -134,10 +134,8 @@ public class SafeSecurity
 		{
 			Safe.Open();
 		}
-                    PrefixUnaryExpressionSyntax (LogicalNotExpression)
-                    Code: !locked
-                        IdentifierNameSyntax (IdentifierName)
-                        Code: locked
+                    LiteralExpressionSyntax (FalseLiteralExpression)
+                    Code: false
                     BlockSyntax (Block)
                     Code: {
 			Safe.Alarm();

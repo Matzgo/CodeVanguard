@@ -9,8 +9,8 @@ public class SafeSecurity
 {
     public void OpenSafeButton()
     {
-        bool locked = Safe.Locked;
-        if (!locked)
+        bool LOBK = Safe.Locked;
+        if (false)
         {
             Safe.Alarm();
         }
@@ -23,22 +23,22 @@ public class SafeSecurity
     public System.Collections.IEnumerator COR_OpenSafeButton()
     {
         CodeInspector.RuntimeManager.Instance.HighlightLine(5);
-        yield return new UnityEngine.WaitForSeconds(0.26f);
-        bool locked = Safe.Locked;
+        yield return new UnityEngine.WaitForSeconds(2f);
+        bool LOBK = Safe.Locked;
         ;
         CodeInspector.RuntimeManager.Instance.HighlightLine(6);
-        yield return new UnityEngine.WaitForSeconds(0.26f);
-        if (!locked)
+        yield return new UnityEngine.WaitForSeconds(2f);
+        if (false)
         {
             CodeInspector.RuntimeManager.Instance.HighlightLine(8);
-            yield return new UnityEngine.WaitForSeconds(0.26f);
+            yield return new UnityEngine.WaitForSeconds(2f);
             Safe.Alarm();
             ;
         }
         else
         {
             CodeInspector.RuntimeManager.Instance.HighlightLine(12);
-            yield return new UnityEngine.WaitForSeconds(0.26f);
+            yield return new UnityEngine.WaitForSeconds(2f);
             Safe.Open();
             ;
         }
@@ -52,7 +52,8 @@ public class SafeSecurity
         var method = this.GetType().GetMethod(methodName);
         if (method != null)
         {
-            CodeInspector.RuntimeManager.Instance.CoroutineRunner.StartCoroutine((System.Collections.IEnumerator)method.Invoke(this, args));
+            var coroutine = (System.Collections.IEnumerator)method.Invoke(this, args);
+            CodeInspector.RuntimeManager.Instance.CoroutineRunner.StartCoroutine(WrapCoroutine(coroutine));
         }
         else
         {
@@ -63,5 +64,16 @@ public class SafeSecurity
     public void StopCoroutinesMethod()
     {
         CodeInspector.RuntimeManager.Instance.CoroutineRunner.StopAllCoroutines();
+    }
+
+    private System.Collections.IEnumerator WrapCoroutine(System.Collections.IEnumerator coroutine)
+    {
+        while (coroutine.MoveNext())
+        {
+            yield return coroutine.Current;
+        }
+
+        // Signal completion to RuntimeManager
+        CodeInspector.RuntimeManager.Instance.CoroutineRunner.OnCoroutineComplete();
     }
 }
