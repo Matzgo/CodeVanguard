@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class PlayerCarry : MonoBehaviour
 {
+    [SerializeField]
+    private float throwStrength = 5f;
     [SerializeField] private Transform holdPoint; // Position in front of the camera where item is held
 
     private bool _isCarrying = false;
@@ -11,14 +13,26 @@ public class PlayerCarry : MonoBehaviour
     private Rigidbody _currentRigidbody;
 
     [SerializeField] private Vector3 holdOffset = new Vector3(0, -0.5f, 1.5f); // Offset from camera
+    [SerializeField] private float _lerpSpeed = 10f;
 
     private void Update()
     {
         // Keep the carried item at the hold point while carrying
         if (_isCarrying && _currentCarry != null)
         {
-            _currentCarry.transform.position = holdPoint.position + holdOffset;
-            _currentCarry.transform.rotation = holdPoint.rotation;
+            // Calculate target position and rotation
+            Vector3 targetPosition = holdPoint.position + holdOffset;
+            Quaternion targetRotation = holdPoint.rotation;
+
+            // Smoothly interpolate the position and rotation
+            _currentCarry.transform.position = Vector3.Lerp(_currentCarry.transform.position, targetPosition, Time.deltaTime * _lerpSpeed); // Adjust the speed multiplier as needed
+            _currentCarry.transform.rotation = Quaternion.Slerp(_currentCarry.transform.rotation, targetRotation, Time.deltaTime * _lerpSpeed); // Adjust the speed multiplier as needed
+
+            if (_currentCarry.IsBeyondMaxLength())
+            {
+                Drop();
+                //_currentCarry.GetComponent<Rigidbody>().velocity = _currentCarry.
+            }
         }
     }
 
@@ -53,8 +67,17 @@ public class PlayerCarry : MonoBehaviour
         // Re-enable Rigidbody physics
         if (_currentRigidbody)
         {
+            // Get the camera's forward direction
+            Transform cameraTransform = Camera.main.transform;
+
+            // Adjust the throwing direction by modifying the x-rotation
+            Quaternion adjustedRotation = Quaternion.Euler(cameraTransform.eulerAngles.x - 20, cameraTransform.eulerAngles.y, cameraTransform.eulerAngles.z);
+
+            // Calculate the adjusted forward direction
+            Vector3 throwDirection = adjustedRotation * Vector3.forward;
+
             _currentRigidbody.isKinematic = false;
-            _currentRigidbody.velocity = Vector3.zero;
+            _currentRigidbody.velocity = throwDirection * throwStrength;
             _currentRigidbody.detectCollisions = true;
         }
 

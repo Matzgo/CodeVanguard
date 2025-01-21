@@ -59,7 +59,7 @@ public class PlayerController : MonoBehaviour
 
         if (_playerCarry.IsCarrying)
         {
-            if (Physics.Raycast(_camera.transform.position, _camera.transform.forward, out RaycastHit socketHit, 4f, _interactLayerMask))
+            if (Physics.Raycast(_camera.transform.position, _camera.transform.forward, out RaycastHit socketHit, 2f, _interactLayerMask))
             {
                 if (socketHit.collider.TryGetComponent<CableSocket>(out var socket))
                 {

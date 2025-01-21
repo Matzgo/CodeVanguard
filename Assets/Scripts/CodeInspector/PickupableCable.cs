@@ -7,8 +7,13 @@ public class PickupableCable : MonoBehaviour
     CSFileSet _task;
     [SerializeField]
     CodeVanguardManager _codeVanguardManager;
+    [SerializeField]
+    Rope _rope;
 
     CableSocket _socket;
+    private int _forceCooldown = 2;
+    private float _lastForceTime;
+
     public void Unplug()
     {
         if (_socket == null)
@@ -25,5 +30,26 @@ public class PickupableCable : MonoBehaviour
         socket.Occupy(this);
         _socket = socket;
         _codeVanguardManager.PlugIn(_task);
+    }
+
+    internal bool IsBeyondMaxLength()
+    {
+        if (_rope.CurrentRopeLength > _rope.InitialRopeLength + .5f + _rope.InitialRopeLength * .01f)
+            return true;
+
+        return false;
+    }
+
+    private void FixedUpdate()
+    {
+        if (IsBeyondMaxLength())
+        {
+            // Check if enough time has passed since the last force application
+            //if (Time.time - _lastForceTime >= _forceCooldown)
+            //{
+            GetComponent<Rigidbody>().AddForce(_rope.EndDirection * 70f);
+            _lastForceTime = Time.time; // Update the last force time
+            //}
+        }
     }
 }
