@@ -9,7 +9,7 @@ public class SafeSecurity
 {
     public void OpenSafeButton()
     {
-        bool locked = Safe.Locked;
+        bool locked = false;
         if (locked)
         {
             Safe.Alarm();
@@ -24,7 +24,7 @@ public class SafeSecurity
     {
         CodeInspector.RuntimeManager.Instance.HighlightLine(5);
         yield return new UnityEngine.WaitForSeconds(2f);
-        bool locked = Safe.Locked;
+        bool locked = false;
         ;
         CodeInspector.RuntimeManager.Instance.HighlightLine(6);
         yield return new UnityEngine.WaitForSeconds(2f);

@@ -89,7 +89,12 @@ public class RuntimeCodeSystem : MonoBehaviour
 
     private void OnResetClicked()
     {
-        _codeEditorWindow.Text = _currentTask.EntryPointFile.Text;
+        var before = (_currentTask.EntryPointFile as EditableCSFile).BeforeText;
+        var after = (_currentTask.EntryPointFile as EditableCSFile).AfterText;
+        var input = (_currentTask.EntryPointFile as EditableCSFile).Input;
+        _codeEditorWindow.SetText(before, input, after);
+
+
         _fileNameText.text = _currentTask.EntryPointFile.FileName + ".cs";
         _solutionCode = _currentTask.CSFiles[0].SolutionFile.Text;
     }
@@ -137,7 +142,10 @@ public class RuntimeCodeSystem : MonoBehaviour
 
         _scenario.RunButton.RegisterAction(OnRunClicked);
 
-        _codeEditorWindow.Text = task.EntryPointFile.Text;
+        var before = (_currentTask.EntryPointFile as EditableCSFile).BeforeText;
+        var after = (_currentTask.EntryPointFile as EditableCSFile).AfterText;
+        var input = (_currentTask.EntryPointFile as EditableCSFile).Input;
+        _codeEditorWindow.SetText(before, input, after);
         _fileNameText.text = task.EntryPointFile.FileName + ".cs";
         _solutionCode = task.CSFiles[0].SolutionFile.Text;
 

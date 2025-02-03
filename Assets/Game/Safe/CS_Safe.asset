@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: CS_Safe
   m_EditorClassIdentifier: 
   _fileName: SafeSecurity
-  _codeSegments:
-  - _isEditable: 1
-    _text: "public class SafeSecurity\n{\n\tpublic void OpenSafeButton()\n\t{\n\t\tbool
-      locked = Safe.Locked;\n\t\tif(locked)\n\t\t{\n\t\t\tSafe.Alarm();\n\t\t}\n\t\telse\n\t\t{\n\t\t\tSafe.Open();\n\t\t}\n\t}\n}"
+  _beforeText: "public class SafeSecurity\n{\n\tpublic void OpenSafeButton()\n\t{"
+  _input: "\t\tbool locked = Safe.Locked;\n\t\tif(locked)\n\t\t{\n\t\t\tSafe.Alarm();\n\t\t}\n\t\telse\n\t\t{\n\t\t\tSafe.Open();\n\t\t}"
+  _afterText: "\t}\n}"

@@ -9,7 +9,7 @@ public class SafeSecurity
 {
 	public void OpenSafeButton()
 	{
-		bool locked = Safe.Locked;
+		bool locked = false;
 		if(locked)
 		{
 			Safe.Alarm();
@@ -69,7 +69,7 @@ public class SafeSecurity
 {
 	public void OpenSafeButton()
 	{
-		bool locked = Safe.Locked;
+		bool locked = false;
 		if(locked)
 		{
 			Safe.Alarm();
@@ -83,7 +83,7 @@ public class SafeSecurity
         MethodDeclarationSyntax (MethodDeclaration)
         Code: public void OpenSafeButton()
 	{
-		bool locked = Safe.Locked;
+		bool locked = false;
 		if(locked)
 		{
 			Safe.Alarm();
@@ -99,7 +99,7 @@ public class SafeSecurity
             Code: ()
             BlockSyntax (Block)
             Code: {
-		bool locked = Safe.Locked;
+		bool locked = false;
 		if(locked)
 		{
 			Safe.Alarm();
@@ -110,21 +110,17 @@ public class SafeSecurity
 		}
 	}
                 LocalDeclarationStatementSyntax (LocalDeclarationStatement)
-                Code: bool locked = Safe.Locked;
+                Code: bool locked = false;
                     VariableDeclarationSyntax (VariableDeclaration)
-                    Code: bool locked = Safe.Locked
+                    Code: bool locked = false
                         PredefinedTypeSyntax (PredefinedType)
                         Code: bool
                         VariableDeclaratorSyntax (VariableDeclarator)
-                        Code: locked = Safe.Locked
+                        Code: locked = false
                             EqualsValueClauseSyntax (EqualsValueClause)
-                            Code: = Safe.Locked
-                                MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
-                                Code: Safe.Locked
-                                    IdentifierNameSyntax (IdentifierName)
-                                    Code: Safe
-                                    IdentifierNameSyntax (IdentifierName)
-                                    Code: Locked
+                            Code: = false
+                                LiteralExpressionSyntax (FalseLiteralExpression)
+                                Code: false
                 IfStatementSyntax (IfStatement)
                 Code: if(locked)
 		{

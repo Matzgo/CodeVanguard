@@ -1,6 +1,5 @@
 ﻿using InGameCodeEditor;
 using InGameCodeEditor.Lexer;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 using TMPro;
@@ -57,6 +56,17 @@ namespace CodeInspector
         private Image scrollbar;
         [SerializeField]
         private Scrollbar _verticalScrollbar;
+
+        [Header("Text Sections")]
+        [SerializeField]
+        private TextMeshProUGUI beforeInputText;
+        [SerializeField]
+        private TextMeshProUGUI beforeInputHighlightText;
+        [SerializeField]
+        private TextMeshProUGUI afterInputText;
+        [SerializeField]
+        private TextMeshProUGUI afterInputHighlightText;
+
 
         [Header("Themes")]
         [SerializeField]
@@ -154,42 +164,37 @@ namespace CodeInspector
         /// </summary>
         public string Text
         {
-            get { return inputField.text; }
+            get { return beforeText + '\n' + inputField.text + '\n' + afterText; }
+        }
+
+
+        private string beforeText = "";
+
+
+        private string afterText = "";
+
+        // Properties to manage the three sections
+        public string BeforeText
+        {
+            get { return beforeText; }
             set
             {
-                bool empty = string.IsNullOrEmpty(value);
+                beforeText = value ?? "";
+                beforeInputText.text = beforeText;
+                beforeInputHighlightText.text = SyntaxHighlightContent(beforeText);
+                UpdateLayout();
+            }
+        }
 
-                if (empty == false)
-                {
-                    inputField.text = value;
-                    inputHighlightText.text = value;
-
-                    // Nasty hack to force TMP to update the scroll bar because in some cases it will fail to do so.
-                    try
-                    {
-                        if (scrollBarUpdateFix == null)
-                        {
-                            scrollBarUpdateFix = typeof(TMP_InputField).GetMethod("UpdateScrollbar", BindingFlags.Instance | BindingFlags.NonPublic);
-                        }
-
-                        // Invoke the method
-                        scrollBarUpdateFix.Invoke(inputField, null);
-                    }
-                    catch { }
-
-                    //inputField.ForceLabelUpdate();
-                    //inputText.SetText(value, true);
-                    delayedRefresh = true;
-
-                    inputText.ForceMeshUpdate(false);
-                    //UpdateCurrentLineNumbers();
-                }
-                else
-                {
-                    inputField.text = string.Empty;
-                    inputHighlightText.text = string.Empty;
-                    inputText.ForceMeshUpdate(false);
-                }
+        public string AfterText
+        {
+            get { return afterText; }
+            set
+            {
+                afterText = value ?? "";
+                afterInputText.text = afterText;
+                afterInputHighlightText.text = SyntaxHighlightContent(afterText);
+                UpdateLayout();
             }
         }
 
@@ -304,6 +309,74 @@ namespace CodeInspector
             // Apply the theme
             ApplyTheme();
             ApplyLanguage();
+
+            inputField.onValueChanged.AddListener(ValidateBrackets);
+        }
+        private void ValidateBrackets(string newText)
+        {
+            if (_disableClosingBracketPrevention)
+                return;
+
+            int openCount = 0;
+            int closeCount = 0;
+
+            foreach (char c in newText)
+            {
+                if (c == '{') openCount++;
+                if (c == '}') closeCount++;
+            }
+
+            // Prevent input if closing brackets exceed opening brackets
+            if (closeCount > openCount)
+            {
+                // Revert to previous valid text state
+                inputField.text = RemoveExcessClosingBrackets(newText);
+                inputField.caretPosition = inputField.text.Length; // Maintain cursor position
+            }
+        }
+
+        private string RemoveExcessClosingBrackets(string text)
+        {
+            int openCount = 0, closeCount = 0;
+            char[] characters = text.ToCharArray();
+
+            for (int i = 0; i < characters.Length; i++)
+            {
+                if (characters[i] == '{') openCount++;
+                if (characters[i] == '}')
+                {
+                    closeCount++;
+                    if (closeCount > openCount)
+                    {
+                        characters[i] = '\0'; // Mark for removal
+                        closeCount--; // Revert the invalid count
+                    }
+                }
+            }
+
+            return new string(characters).Replace("\0", ""); // Remove invalid characters
+        }
+        public void SetText(string before, string input, string after)
+        {
+            BeforeText = before;
+            inputField.text = input;
+            AfterText = after;
+            delayedRefresh = true;
+            UpdateLayout();
+        }
+
+
+        private void UpdateLayout()
+        {
+            // We no longer need to manually position elements since the Vertical Layout Group handles that
+            // Just make sure everything is properly marked for rebuild
+            LayoutRebuilder.MarkLayoutForRebuild(beforeInputText.rectTransform);
+            LayoutRebuilder.MarkLayoutForRebuild(inputText.rectTransform);
+            LayoutRebuilder.MarkLayoutForRebuild(afterInputText.rectTransform);
+
+            // Update line numbers and highlighting
+            UpdateCurrentLineNumbers();
+            UpdateCurrentLineHighlight();
         }
 
         /// <summary>
@@ -494,31 +567,37 @@ namespace CodeInspector
         //MTZ-Refactor
         private void UpdateCurrentLineNumbers()
         {
-            // Count lines manually using string methods
-            int currentLineCount = inputText.text.Split('\n').Length;
-
-            int currentLineNumber = 1;
+            // Count total lines across all sections
+            string fullText = Text;
+            int currentLineCount = fullText.Split('\n').Length;
             lineBuilder.Clear();
+            int currentLineNumber = 1;
 
-            for (int i = 0; i < inputText.text.Length; i++)
+            // Handle empty text case
+            if (string.IsNullOrEmpty(fullText))
             {
-                // At the start of the text or right after a newline, add a line number
-                if (i == 0 || inputText.text[i - 1] == '\n')
+                lineText.text = "1";
+                lineCount = 1;
+                return;
+            }
+
+            for (int i = 0; i < fullText.Length; i++)
+            {
+                // Add line number at start of text or after newline
+                if (i == 0 || fullText[i - 1] == '\n')
                 {
                     lineBuilder.Append(currentLineNumber);
-                    currentLineNumber++;
-                    // Add a newline after the line number
                     lineBuilder.Append('\n');
+                    currentLineNumber++;
                 }
             }
 
-            // Remove the last newline if it exists
-            if (lineBuilder.Length > 0 && lineBuilder[lineBuilder.Length - 1] == '\n')
-                lineBuilder.Length--;
+            // Always add the last line number if we haven't already
+
+            //lineBuilder.Append(currentLineNumber);
+
 
             lineText.text = lineBuilder.ToString();
-
-            //Debug.Log($"Manual Line Count: {currentLineCount}, TextInfo Line Count: {inputText.textInfo.lineCount}");
             lineCount = currentLineCount;
         }
         //Old method in case the other is actually broken
@@ -575,44 +654,46 @@ namespace CodeInspector
         //    }
         //}
 
+        // Override the caret position calculation to account for _beforeText
         private void UpdateCurrentLineColumnIndent()
         {
-            var l = new List<int>();
-            // Get the current line number
-            currentLine = inputText.textInfo.characterInfo[InputField.caretPosition].lineNumber;
+            // Calculate the actual position including the _beforeText
+            int totalPosition = beforeText.Length + inputField.caretPosition;
 
-            // Get the total character count
-            int charCount = 0;
-            for (int i = 0; i < currentLine; i++)
-                charCount += inputText.textInfo.lineInfo[i].characterCount;
+            // Count lines up to this position
+            int lineCount = 0;
+            int lastNewLine = -1;
 
-            // Get the column position
-            currentColumn = inputField.caretPosition - charCount;
-
-            currentIndent = 0;
-
-            // Check for auto indent allowed
-            if (languageTheme != null && languageTheme.autoIndent.allowAutoIndent == true)
+            string fullText = Text;
+            for (int i = 0; i < totalPosition; i++)
             {
-                for (int i = 0; i < inputField.caretPosition && i < inputField.text.Length; i++)
+                if (fullText[i] == '\n')
                 {
-                    // Get the character
-                    char character = inputField.text[i];
+                    lineCount++;
+                    lastNewLine = i;
+                }
+            }
 
-                    // Check for opening indents
-                    if (character == languageTheme.autoIndent.indentIncreaseCharacter)
+            currentLine = lineCount;
+            currentColumn = totalPosition - (lastNewLine + 1);
+
+            // Update indent level if needed
+            if (languageTheme != null && languageTheme.autoIndent.allowAutoIndent)
+            {
+                currentIndent = 0;
+                for (int i = 0; i < totalPosition; i++)
+                {
+                    if (fullText[i] == languageTheme.autoIndent.indentIncreaseCharacter)
                         currentIndent++;
-
-                    // Check for closing indents
-                    if (character == languageTheme.autoIndent.indentDecreaseCharacter)
+                    if (fullText[i] == languageTheme.autoIndent.indentDecreaseCharacter)
                         currentIndent--;
                 }
 
-                // Dont allow negative indents
                 if (currentIndent < 0)
                     currentIndent = 0;
             }
         }
+
 
         private void UpdateCurrentLineHighlight()
         {
@@ -627,10 +708,18 @@ namespace CodeInspector
                 lineOffset++;
 #endif
 
+            // Compute the Y offset using beforeInputText's height
+            float beforeInputOffset = beforeInputText != null ? beforeInputText.preferredHeight : 0f;
+
             // Highlight the current line
-            lineHighlightTransform.anchoredPosition = new Vector2(5, inputText.textInfo.lineInfo[inputText.textInfo.characterInfo[0].lineNumber].lineHeight *
-                (-inputText.textInfo.characterInfo[inputField.caretPosition].lineNumber + lineOffset) - _perLineHightlightOffset +
-                inputTextTransform.anchoredPosition.y);
+            lineHighlightTransform.anchoredPosition = new Vector2(
+                5,
+                inputText.textInfo.lineInfo[inputText.textInfo.characterInfo[0].lineNumber].lineHeight *
+                (-inputText.textInfo.characterInfo[inputField.caretPosition].lineNumber + lineOffset) -
+                _perLineHightlightOffset +
+                inputTextTransform.anchoredPosition.y -
+                beforeInputOffset // Apply the Y offset
+            );
         }
 
         private string SyntaxHighlightContent(string inputText)
@@ -855,6 +944,12 @@ namespace CodeInspector
             lineText.color = editorTheme.lineNumberTextColor;
             scrollbar.color = editorTheme.scrollbarColor;
 
+            // Apply to new sections
+            beforeInputText.color = Color.clear;
+            beforeInputHighlightText.color = editorTheme.textColor;
+            afterInputText.color = Color.clear;
+            afterInputHighlightText.color = editorTheme.textColor;
+
             // Set active to null
             if (nullTheme == true)
                 editorTheme = null;
@@ -896,6 +991,10 @@ namespace CodeInspector
 
         [SerializeField]
         GameObject _lineRunningHighlight;
+        [SerializeField]
+        [Tooltip("Prevents making more '}' symbols than '{' symbols in the input field")]
+        private bool _disableClosingBracketPrevention;
+
         internal void HightlightRunningLine(int lineNr)
         {
             // Check if code editor is not active or line number is invalid

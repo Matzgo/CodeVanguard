@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace CodeInspector
@@ -6,9 +5,22 @@ namespace CodeInspector
     [CreateAssetMenu(fileName = "EditableCSFile", menuName = "Game/EditableCSFile")]
     public class EditableCSFile : CSFile
     {
-
         [SerializeField]
-        List<CSFileCodeSegment> _codeSegments;
+        [TextArea(10, 50)]
+        string _beforeText;
+        [SerializeField]
+        [TextArea(10, 50)]
+        string _input;
+        [TextArea(10, 50)]
+        [SerializeField]
+        string _afterText;
+
+        public string BeforeText => _beforeText;
+        public string Input => _input;
+        public string AfterText => _afterText;
+
+        //[SerializeField]
+        //List<CSFileCodeSegment> _codeSegments;
 
 
 
@@ -16,18 +28,7 @@ namespace CodeInspector
         {
             get
             {
-                if (_codeSegments == null || _codeSegments.Count == 0)
-                    return null;
-                else
-                {
-                    string txt = "";
-                    for (int i = 0; i < _codeSegments.Count; i++)
-                    {
-                        txt += _codeSegments[i].Text;
-                    }
-                    return txt;
-                }
-
+                return _beforeText + '\n' + _input + '\n' + _afterText;
 
 
             }
