@@ -9,7 +9,8 @@ public class ScenarioManager : MonoBehaviour
 
     [SerializeField]
     private SafeScenario _safeScenario;
-
+    [SerializeField]
+    private PowerScenario _powerScenario;
 
     private void Awake()
     {
@@ -41,7 +42,8 @@ public class ScenarioManager : MonoBehaviour
 
             case ScenarioType.Safe:
                 return _safeScenario;
-
+            case ScenarioType.Power:
+                return _powerScenario;
         }
         Debug.LogError("INVALID ScenarioType");
         return null;

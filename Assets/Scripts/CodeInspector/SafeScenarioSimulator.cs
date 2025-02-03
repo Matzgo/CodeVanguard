@@ -41,7 +41,7 @@ public class SafeScenarioSimulator
         }
         else
         {
-            feedback.Add("The safe is still closed.");
+            feedback.Add("The safe is still closed. Try to modify the code in such a way that the safe opens.");
             return (false, feedback);
         }
     }

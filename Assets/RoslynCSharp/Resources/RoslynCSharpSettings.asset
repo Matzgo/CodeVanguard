@@ -17295,6 +17295,15 @@ MonoBehaviour:
           - MemberName: PickUp()
             MemberAllowed: 0
           TypeAllowed: 0
+        - TypeName: Generator
+          MemberRestrictions:
+          - MemberName: FireBeam()
+            MemberAllowed: 0
+          - MemberName: RedirectBeam()
+            MemberAllowed: 0
+          - MemberName: Start()
+            MemberAllowed: 0
+          TypeAllowed: 0
         - TypeName: Safe
           MemberRestrictions:
           - MemberName: Alarm()

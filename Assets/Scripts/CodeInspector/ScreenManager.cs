@@ -22,8 +22,8 @@ public class ScreenManager : MonoBehaviour
     GameObject _consoleScreen;
 
     [SerializeField]
-    TaskScreen _task;
-    public TaskScreen Task => _task;
+    FeedbackBot _task;
+    public FeedbackBot Task => _task;
 
     [SerializeField]
     GameObject _taskScreen;
@@ -38,7 +38,7 @@ public class ScreenManager : MonoBehaviour
     {
         _mainScreen.SetActive(false);
         _consoleScreen.SetActive(false);
-        _taskScreen.SetActive(false);
+        //_taskScreen.SetActive(false);
         _visualScreen.SetActive(false);
         _taskActionScreen.SetActive(false);
         _docsScreen.SetActive(false);
@@ -54,9 +54,9 @@ public class ScreenManager : MonoBehaviour
             case ScreenType.Console:
                 _consoleScreen.SetActive(true);
                 break;
-            case ScreenType.Task:
-                _taskScreen.SetActive(true);
-                break;
+            //case ScreenType.Task:
+            //    _taskScreen.SetActive(true);
+            //break;
             case ScreenType.TaskAction:
                 _taskActionScreen.SetActive(true);
                 break;
@@ -73,9 +73,9 @@ public class ScreenManager : MonoBehaviour
             case ScreenType.Console:
                 _consoleScreen.SetActive(false);
                 break;
-            case ScreenType.Task:
-                _taskScreen.SetActive(false);
-                break;
+            //case ScreenType.Task:
+            //    _taskScreen.SetActive(false);
+            //    break;
             case ScreenType.TaskAction:
                 _taskActionScreen.SetActive(false);
                 break;
@@ -91,6 +91,6 @@ public class ScreenManager : MonoBehaviour
     internal void LoadResult(GradingResult res)
     {
         _main.LoadResult(res);
-        _task.LoadFeedback(res);
+        _task.QueueFeedback(res.Feedback);
     }
 }

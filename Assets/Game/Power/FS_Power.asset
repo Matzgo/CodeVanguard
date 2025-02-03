@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b539acad177ac245b86051f55621890, type: 3}
+  m_Name: FS_Power
+  m_EditorClassIdentifier: 
+  _taskType: 0
+  _scenarioType: 2
+  _title: Power
+  _description: Block every Red Beam. Starting with the second beam, every other
+    Beam is Red.
+  _fileSetName: PowerSet
+  _entryPointFile: {fileID: 11400000, guid: 701ad7169c3fef4459cb76585165408d, type: 2}
+  _entryPoint: TestBeams
+  _testCaseCalls:
+  - TestBeams();
+  _testMethod: 
+  _csFiles:
+  - _file: {fileID: 11400000, guid: 701ad7169c3fef4459cb76585165408d, type: 2}
+    _solutionFile: {fileID: 11400000, guid: cb117ecb675b8ee41b9d1c7f538fe135, type: 2}

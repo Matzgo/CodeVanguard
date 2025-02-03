@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ff3ad1ee0faded43aa9eef123648fa6, type: 3}
+  m_Name: CS_Power
+  m_EditorClassIdentifier: 
+  _fileName: Generator
+  _codeSegments:
+  - _isEditable: 1
+    _text: "public class GeneratorController\n{\n\t\n\tpublic void TestBeams()\n\t{\n\t\tGenerator.FireBeam();\n\t\tHandleBeam();\n\t\tGenerator.FireBeam();\n\t\tHandleBeam();\n\t\tGenerator.FireBeam();\n\t\tHandleBeam();\n\t\tGenerator.FireBeam();\n\t\tHandleBeam();\n\t\tGenerator.FireBeam();\n\t\tHandleBeam();\n\t\tGenerator.FireBeam();\n\t\tHandleBeam();\n\t\tGenerator.Start();\n\t}\n\t\n\tint
+      beamCount;\n\tpublic void HandleBeam()\n\t{\n\t\tGenerator.RedirectBeam();\n\t}\n}"

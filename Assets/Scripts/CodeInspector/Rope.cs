@@ -253,9 +253,15 @@ public class Rope : MonoBehaviour
 
     private void AdjustCollisions()
     {
+        int layerToExclude1 = 8;
+        int layerToExclude2 = 11;
+
+        // Create a layer mask that excludes both layers 8 and 11
+        int layerMask = ~((1 << layerToExclude1) | (1 << layerToExclude2));
+
         for (int i = 0; i < totalNodes; i++)
         {
-            int result = Physics.OverlapSphereNonAlloc(currentNodePositions[i], nodeColliderRadius + 0.01f, colliderHitBuffer, ~(1 << 8));
+            int result = Physics.OverlapSphereNonAlloc(currentNodePositions[i], nodeColliderRadius + 0.01f, colliderHitBuffer, layerMask);
 
             if (result > 0)
             {

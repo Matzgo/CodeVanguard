@@ -9,8 +9,8 @@ public class SafeSecurity
 {
 	public void OpenSafeButton()
 	{
-		bool LOBK = Safe.Locked;
-		if(false)
+		bool locked = Safe.Locked;
+		if(locked)
 		{
 			Safe.Alarm();
 		}
@@ -69,8 +69,8 @@ public class SafeSecurity
 {
 	public void OpenSafeButton()
 	{
-		bool LOBK = Safe.Locked;
-		if(false)
+		bool locked = Safe.Locked;
+		if(locked)
 		{
 			Safe.Alarm();
 		}
@@ -83,8 +83,8 @@ public class SafeSecurity
         MethodDeclarationSyntax (MethodDeclaration)
         Code: public void OpenSafeButton()
 	{
-		bool LOBK = Safe.Locked;
-		if(false)
+		bool locked = Safe.Locked;
+		if(locked)
 		{
 			Safe.Alarm();
 		}
@@ -99,8 +99,8 @@ public class SafeSecurity
             Code: ()
             BlockSyntax (Block)
             Code: {
-		bool LOBK = Safe.Locked;
-		if(false)
+		bool locked = Safe.Locked;
+		if(locked)
 		{
 			Safe.Alarm();
 		}
@@ -110,13 +110,13 @@ public class SafeSecurity
 		}
 	}
                 LocalDeclarationStatementSyntax (LocalDeclarationStatement)
-                Code: bool LOBK = Safe.Locked;
+                Code: bool locked = Safe.Locked;
                     VariableDeclarationSyntax (VariableDeclaration)
-                    Code: bool LOBK = Safe.Locked
+                    Code: bool locked = Safe.Locked
                         PredefinedTypeSyntax (PredefinedType)
                         Code: bool
                         VariableDeclaratorSyntax (VariableDeclarator)
-                        Code: LOBK = Safe.Locked
+                        Code: locked = Safe.Locked
                             EqualsValueClauseSyntax (EqualsValueClause)
                             Code: = Safe.Locked
                                 MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
@@ -126,7 +126,7 @@ public class SafeSecurity
                                     IdentifierNameSyntax (IdentifierName)
                                     Code: Locked
                 IfStatementSyntax (IfStatement)
-                Code: if(false)
+                Code: if(locked)
 		{
 			Safe.Alarm();
 		}
@@ -134,8 +134,8 @@ public class SafeSecurity
 		{
 			Safe.Open();
 		}
-                    LiteralExpressionSyntax (FalseLiteralExpression)
-                    Code: false
+                    IdentifierNameSyntax (IdentifierName)
+                    Code: locked
                     BlockSyntax (Block)
                     Code: {
 			Safe.Alarm();

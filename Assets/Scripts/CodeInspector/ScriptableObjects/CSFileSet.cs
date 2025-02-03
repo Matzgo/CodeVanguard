@@ -58,6 +58,11 @@ namespace CodeInspector
 
 
         [SerializeField]
+        [TextArea(10, 20)]
+        private string _testMethod;
+        public string TestMethod => _testMethod;
+
+        [SerializeField]
         List<CSFileSetEntry> _csFiles;
         public List<CSFileSetEntry> CSFiles => _csFiles;
 

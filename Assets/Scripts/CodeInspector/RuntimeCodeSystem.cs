@@ -379,7 +379,7 @@ public class RuntimeCodeSystem : MonoBehaviour
         var gradingResult = _codeGradingSystem.GradeSubmission(
             _usingStatements + "\n" + _codeEditorWindow.Text,
             _userScript,
-            _solutionScript, _entryPointMethodName
+            _solutionScript, _entryPointMethodName, _currentTask.ScenarioType
         );
         RuntimeManager.Instance.DisableWorldSimulator();
 
