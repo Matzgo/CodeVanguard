@@ -1,42 +1,117 @@
-using System;
 using System.Collections.Generic;
 
 public class PowerScenarioSimulator
 {
-    internal void BlockBeam()
+    private int cntr;
+    private bool _wasBeamRedirected;
+    private bool _valid;
+    private int _redirectCounter;
+    private bool _isFirstBeam;
+    private int _nonRedirectCounter;
+
+    public PowerScenarioSimulator()
     {
-        throw new NotImplementedException();
+        Reset();
     }
 
-    internal (bool b, List<string> feedback) CheckCorrectness()
+    public void Reset()
     {
-        throw new NotImplementedException();
+        cntr = 0;
+        _wasBeamRedirected = false;
+        _valid = true;
+        _redirectCounter = 0;
+        _isFirstBeam = true;
+        _nonRedirectCounter = 0;
     }
 
-    internal void FireBeam()
+    public void FireBeam()
     {
-        throw new NotImplementedException();
+        // Invalid if two consecutive beam redirections 
+        if (_redirectCounter > 1)
+        {
+            _valid = false;
+        }
+
+        // Invalid if more than two consecutive non-redirected beams
+        if (_nonRedirectCounter > 1)
+        {
+            _valid = false;
+        }
+
+        if (!_isFirstBeam)
+        {
+            // Reset counters based on previous beam state
+            if (_wasBeamRedirected)
+            {
+                _nonRedirectCounter = 0;
+                _redirectCounter++;
+            }
+            else
+            {
+                _nonRedirectCounter++;
+                _redirectCounter = 0;
+            }
+
+        }
+        _isFirstBeam = false;
+
+        // Reset redirect state for the new beam
+        _wasBeamRedirected = false;
+        cntr++;
     }
 
-    internal void GeneratorStart()
+    public void RedirectBeam()
     {
-        throw new NotImplementedException();
+        // Mark the current beam as redirected
+        _wasBeamRedirected = true;
     }
 
-    internal void Reset()
+    public void GeneratorStart()
     {
-        //throw new NotImplementedException();
+        // Invalid if two consecutive beam redirections 
+        if (_redirectCounter > 1)
+        {
+            _valid = false;
+        }
+
+        // Invalid if more than two consecutive non-redirected beams
+        if (_nonRedirectCounter > 1)
+        {
+            _valid = false;
+        }
+
+        // Ensure pattern was valid before allowing generator to start
+        if (!_valid)
+        {
+            // Generator stall logic
+        }
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public (bool b, List<string> feedback, List<string> feedbackKey) CheckCorrectness()
     {
+        var feedback = new List<string>();
+        var feedbackKey = new List<string>();
+        //Debug.Log($"{_redirectCounter}|{_nonRedirectCounter}|{_valid.ToString()}");
 
-    }
+        if (!_valid)
+        {
+            feedbackKey.Add("POW_Invalid");
+            if (_redirectCounter > 1)
+            {
+                feedback.Add("More than one consecutive redirected beam");
+            }
 
-    // Update is called once per frame
-    void Update()
-    {
+            if (_nonRedirectCounter > 1)
+            {
+                feedback.Add("More than two consecutive non-redirected beams");
 
+            }
+        }
+        else
+        {
+            feedbackKey.Add("POW_Valid");
+        }
+
+        return (_valid, feedback, feedbackKey);
     }
 }

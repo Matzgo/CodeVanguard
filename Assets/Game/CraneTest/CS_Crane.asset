@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: CS_Crane
   m_EditorClassIdentifier: 
   _fileName: CraneController
-  _codeSegments:
-  - _isEditable: 1
-    _text: "public class CraneController\n{\n\tpublic void MoveItems()\n\t{\n\n\t}\n}"
+  _beforeText: "public class CraneController\n{\n\tpublic void MoveItems()\n\t{"
+  _input: "\t\t\tCrane.PickUp();\n\t\t\tCrane.MoveRight();\n\t\t\tCrane.MoveRight();\n\t\t\tCrane.MoveLeft();\n\t\t\tCrane.Drop();\n\t\t\tCrane.MoveLeft();"
+  _afterText: "\n\t\t\n\t}\n}"

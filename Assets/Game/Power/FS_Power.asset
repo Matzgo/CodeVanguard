@@ -12,11 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b539acad177ac245b86051f55621890, type: 3}
   m_Name: FS_Power
   m_EditorClassIdentifier: 
+  _taskId: POWER
+  _structureFeedbackTypes: 4
+  _onPluggedInFeedbackKey: POW_Start
   _taskType: 0
   _scenarioType: 2
   _title: Power
-  _description: Block every Red Beam. Starting with the second beam, every other
-    Beam is Red.
+  _description: The Generator only turns on when every other Beam is redirected.
   _fileSetName: PowerSet
   _entryPointFile: {fileID: 11400000, guid: 701ad7169c3fef4459cb76585165408d, type: 2}
   _entryPoint: TestBeams

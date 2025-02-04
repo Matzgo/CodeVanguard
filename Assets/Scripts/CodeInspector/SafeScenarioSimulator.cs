@@ -31,18 +31,21 @@ public class SafeScenarioSimulator
 
 
 
-    public (bool b, List<string> feedback) CheckCorrectness()
+    public (bool b, List<string> feedback, List<string> feedbackKey) CheckCorrectness()
     {
         var feedback = new List<string>();
+        var feedbackKey = new List<string>();
 
         if (_isOpen)
         {
-            return (true, feedback);
+            feedbackKey.Add("SAFE_Unlocked");
+            return (true, feedback, feedbackKey);
         }
         else
         {
+            feedbackKey.Add("SAFE_Locked");
             feedback.Add("The safe is still closed. Try to modify the code in such a way that the safe opens.");
-            return (false, feedback);
+            return (false, feedback, feedbackKey);
         }
     }
 }

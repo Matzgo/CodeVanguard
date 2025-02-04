@@ -13,8 +13,8 @@ public static class ScenarioCodeCalls
                 userScript.Call("OpenSafeButton");
                 break;
             case ScenarioType.Power:
-                userScript.Call("TestBeams", false);
-                userScript.Call("TestBeams", true);
+                userScript.Call("TestBeams");
+                //userScript.Call("TestBeams");
                 break;
         }
     }

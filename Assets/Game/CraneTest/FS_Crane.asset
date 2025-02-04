@@ -12,15 +12,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b539acad177ac245b86051f55621890, type: 3}
   m_Name: FS_Crane
   m_EditorClassIdentifier: 
+  _taskId: CRANE
+  _structureFeedbackTypes: 1
+  _onPluggedInFeedbackKey: CRANE_Start
   _taskType: 0
+  _scenarioType: 0
   _title: Crane
-  _description: Move all Items to Column 4
+  _description: Move all 10 Fuel Crates to the Fuel Burner at Column 4
   _fileSetName: TestSet
   _entryPointFile: {fileID: 11400000, guid: 73680b57ec3c2584aa1390c2e1e52b91, type: 2}
   _entryPoint: MoveItems
   _testCaseCalls:
   - MoveItems();
+  _testMethod: 
   _csFiles:
   - _file: {fileID: 11400000, guid: 73680b57ec3c2584aa1390c2e1e52b91, type: 2}
     _solutionFile: {fileID: 11400000, guid: fa585468ba49edf44b881328b4ac582f, type: 2}
-  _miniGame: {fileID: 11400000, guid: 0c102b574c8e6bd40becabd8c6ec669c, type: 2}

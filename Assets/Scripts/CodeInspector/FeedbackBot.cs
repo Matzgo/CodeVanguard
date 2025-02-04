@@ -1,175 +1,92 @@
-using CodeInspector;
+using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.AI;
 
-public class FeedbackBot : MonoBehaviour, IInteractable
+public class FeedbackBot : MonoBehaviour
 {
-    [SerializeField] private GameObject _player; // The player GameObject to follow
-    [SerializeField] private float stopDistance = 1f; // Distance to stop from the player
-    private NavMeshAgent _agent; // Reference to the NavMeshAgent
-
-
-    List<List<string>> _feedbackQueue;
-
-    bool _isShowingFeedback;
+    [SerializeField]
+    FeedbackDatabase _feedbackDb;
+    [SerializeField]
+    AudioSource _audioSource;
+    [SerializeField]
+    GameObject _dialogueBox;
+    [SerializeField]
+    TMPro.TextMeshProUGUI _dialogueText;
 
     [SerializeField]
-    CSFileSet _currentTask;
+    List<string> _onStartMessages;
+
+    private Queue<List<string>> _feedbackQueue = new Queue<List<string>>();
+    private bool _isPlayingFeedback = false;
 
     [SerializeField]
-    TextMeshProUGUI _taskType;
+    bool _tutorialPlayback = true;
 
-    [SerializeField]
-    TextMeshProUGUI _taskDescription;
-
-    [SerializeField]
-    GameObject _robotFace;
-
-
-    [SerializeField]
-    GameObject _taskInfo;
-    private bool _isShowingTask;
-    [SerializeField]
-    private GameObject _feedbackIndicator;
-    [SerializeField]
-    AudioSource _audio;
-    public void LoadTask(CSFileSet task)
+    private void Awake()
     {
-        _currentTask = task;
-        _feedbackIndicator.SetActive(true);
-        _audio.Play();
+        _dialogueBox.SetActive(false);
+    }
+    private void Start()
+    {
+        if (_tutorialPlayback)
+            StartCoroutine(LoadWelcomeAfterDelay(3f));
+    }
+
+    private IEnumerator LoadWelcomeAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        LoadFeedback(_onStartMessages);
     }
 
 
-
-
-    void Start()
+    // Call this method to load feedback
+    public void LoadFeedback(List<string> feedbackKey)
     {
-        _feedbackIndicator.SetActive(false);
-        _feedbackQueue = new List<List<string>>();
-        // Get the NavMeshAgent component on this GameObject
-        _agent = GetComponent<NavMeshAgent>();
-        if (_agent == null)
+        _feedbackQueue.Enqueue(feedbackKey);
+        if (!_isPlayingFeedback)
         {
-            Debug.LogError("No NavMeshAgent component found on the FeedbackBot!");
-        }
-
-        if (_player == null)
-        {
-            Debug.LogError("Player GameObject not assigned in the inspector!");
+            StartCoroutine(PlayFeedback());
         }
     }
 
-    public void QueueFeedback(List<string> feedback)
+    private IEnumerator PlayFeedback()
     {
-        _feedbackIndicator.SetActive(true);
-        _feedbackQueue.Add(feedback);
-        _audio.Play();
+        _isPlayingFeedback = true;
 
-    }
-
-    public void OnInteract()
-    {
-        if (_feedbackQueue.Count > 0)
+        while (_feedbackQueue.Count > 0)
         {
+            List<string> feedback = _feedbackQueue.Dequeue();
 
-            if (!_isShowingFeedback)
+            foreach (string key in feedback)
             {
-                ShowNextFeedback();
-                _isShowingFeedback = true;
+                FeedbackData feedbackData = _feedbackDb.GetFeedback(key);
+                if (feedbackData != null)
+                {
+                    // Set the dialogue text
+                    _dialogueText.text = feedbackData.feedbackText;
+
+                    // Play the audio clip
+                    if (feedbackData.audioClip != null)
+                    {
+                        _audioSource.PlayOneShot(feedbackData.audioClip);
+                    }
+
+                    // Show the dialogue box
+                    _dialogueBox.SetActive(true);
+
+                    // Wait for the audio to finish playing
+                    yield return new WaitForSeconds(feedbackData.audioClip.length + feedbackData.postDelay + .25f); // Wait for the clip duration plus extra seconds
+
+                    // Hide the dialogue box
+                    _dialogueBox.SetActive(false);
+                }
+                else
+                {
+                    Debug.LogWarning($"No feedback entry found for key: {key}");
+                }
             }
-            else
-            {
-                HideFeedback();
-                ShowNextFeedback();
-                _isShowingFeedback = true;
-            }
         }
-        else if (_isShowingFeedback)
-        {
-            HideFeedback();
-            _isShowingFeedback = false;
-        }
-        else if (_isShowingTask)
-        {
-            HideTask();
-            _isShowingTask = false;
-        }
-        else if (_currentTask != null)
-        {
-            ShowTask();
-            _isShowingTask = true;
-        }
-        _feedbackIndicator.SetActive(false);
 
+        _isPlayingFeedback = false;
     }
-
-    private void ShowTask()
-    {
-        _taskType.text = "OBJECTIVE";
-        _taskDescription.text = _currentTask.Description;
-        _taskInfo.SetActive(true);
-        _robotFace.SetActive(false);
-    }
-
-    private void HideTask()
-    {
-        _taskInfo.SetActive(false);
-        _robotFace.SetActive(true);
-    }
-
-    private void HideFeedback()
-    {
-        _taskInfo.SetActive(false);
-        _robotFace.SetActive(true);
-    }
-
-    private void ShowNextFeedback()
-    {
-        if (_feedbackQueue.Count == 0)
-            return;
-
-
-        _taskInfo.SetActive(true);
-        _robotFace.SetActive(false);
-
-        var feedback = _feedbackQueue[0];
-        _taskType.text = "FEEDBACK";
-        if (feedback.Count > 0)
-        {
-            // Join feedback strings with double newlines
-            string feedbackText = string.Join("\n\n", feedback);
-            // Update the task description with feedback
-            _taskDescription.text = feedbackText;
-        }
-        else
-        {
-            // Handle case where there is no feedback
-            _taskDescription.text = "No feedback provided.";
-        }
-        _feedbackQueue.RemoveAt(0);
-    }
-
-    void Update()
-    {
-        if (_player == null || _agent == null) return;
-
-        // Calculate the distance to the player
-        float distanceToPlayer = Vector3.Distance(transform.position, _player.transform.position);
-
-        if (distanceToPlayer > stopDistance)
-        {
-            // Move towards the player
-            _agent.SetDestination(_player.transform.position);
-        }
-        else
-        {
-            // Stop moving
-            _agent.ResetPath();
-        }
-    }
-
-
 }

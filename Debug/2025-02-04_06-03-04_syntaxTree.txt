@@ -1,0 +1,147 @@
+CompilationUnitSyntax (CompilationUnit)
+Code: using Game;
+using System;
+using System.Collections.Generic;
+using Console = Game.Console;
+using Crane = Game.Crane;
+
+public class CraneController
+{
+	public void MoveItems()
+	{
+			Crane.PickUp();
+			Crane.MoveRight();
+			Crane.Drop();
+			Crane.MoveLeft();
+
+		
+	}
+}
+    UsingDirectiveSyntax (UsingDirective)
+    Code: using Game;
+        IdentifierNameSyntax (IdentifierName)
+        Code: Game
+    UsingDirectiveSyntax (UsingDirective)
+    Code: using System;
+        IdentifierNameSyntax (IdentifierName)
+        Code: System
+    UsingDirectiveSyntax (UsingDirective)
+    Code: using System.Collections.Generic;
+        QualifiedNameSyntax (QualifiedName)
+        Code: System.Collections.Generic
+            QualifiedNameSyntax (QualifiedName)
+            Code: System.Collections
+                IdentifierNameSyntax (IdentifierName)
+                Code: System
+                IdentifierNameSyntax (IdentifierName)
+                Code: Collections
+            IdentifierNameSyntax (IdentifierName)
+            Code: Generic
+    UsingDirectiveSyntax (UsingDirective)
+    Code: using Console = Game.Console;
+        NameEqualsSyntax (NameEquals)
+        Code: Console =
+            IdentifierNameSyntax (IdentifierName)
+            Code: Console
+        QualifiedNameSyntax (QualifiedName)
+        Code: Game.Console
+            IdentifierNameSyntax (IdentifierName)
+            Code: Game
+            IdentifierNameSyntax (IdentifierName)
+            Code: Console
+    UsingDirectiveSyntax (UsingDirective)
+    Code: using Crane = Game.Crane;
+        NameEqualsSyntax (NameEquals)
+        Code: Crane =
+            IdentifierNameSyntax (IdentifierName)
+            Code: Crane
+        QualifiedNameSyntax (QualifiedName)
+        Code: Game.Crane
+            IdentifierNameSyntax (IdentifierName)
+            Code: Game
+            IdentifierNameSyntax (IdentifierName)
+            Code: Crane
+    ClassDeclarationSyntax (ClassDeclaration)
+    Code: public class CraneController
+{
+	public void MoveItems()
+	{
+			Crane.PickUp();
+			Crane.MoveRight();
+			Crane.Drop();
+			Crane.MoveLeft();
+
+		
+	}
+}
+        MethodDeclarationSyntax (MethodDeclaration)
+        Code: public void MoveItems()
+	{
+			Crane.PickUp();
+			Crane.MoveRight();
+			Crane.Drop();
+			Crane.MoveLeft();
+
+		
+	}
+            PredefinedTypeSyntax (PredefinedType)
+            Code: void
+            ParameterListSyntax (ParameterList)
+            Code: ()
+            BlockSyntax (Block)
+            Code: {
+			Crane.PickUp();
+			Crane.MoveRight();
+			Crane.Drop();
+			Crane.MoveLeft();
+
+		
+	}
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: Crane.PickUp();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: Crane.PickUp()
+                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                        Code: Crane.PickUp
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Crane
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: PickUp
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: Crane.MoveRight();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: Crane.MoveRight()
+                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                        Code: Crane.MoveRight
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Crane
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: MoveRight
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: Crane.Drop();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: Crane.Drop()
+                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                        Code: Crane.Drop
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Crane
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Drop
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: Crane.MoveLeft();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: Crane.MoveLeft()
+                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                        Code: Crane.MoveLeft
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Crane
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: MoveLeft
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()

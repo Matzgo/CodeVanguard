@@ -1,4 +1,4 @@
-using CodeInspector;
+﻿using CodeInspector;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -16,6 +16,8 @@ public class GradingResult
     public float MemoryScore { get; set; }
     public float NamingScore { get; set; }
     public List<string> Feedback { get; set; }
+
+    public List<string> FeedbackKeys { get; set; }
     public float TotalScore => (PerformanceScore + MemoryScore + NamingScore) / 3;
 
 }
@@ -34,7 +36,9 @@ public class CodeGradingSystem : MonoBehaviour
     private string _entryPointMethodName;
 
     public GradingResult GradeSubmission(
+        bool correct,
         string userCode,
+        string solutionCode,
         ScriptProxy userScriptProxy,
         ScriptProxy goalScriptProxy,
         string entryPointMethodName, ScenarioType scenario)
@@ -45,38 +49,42 @@ public class CodeGradingSystem : MonoBehaviour
         var result = new GradingResult
         {
             Feedback = new List<string>()
+
         };
-        // Correctness grading
-        //var (correctnessScore, correctnessFeedback) = GradeCorrectness(userScriptProxy, goalScriptProxy);
-        //result.Feedback.AddRange(correctnessFeedback);
-        //if (correctnessScore == false) // If correctness fails, skip performance and memory grading
-        //{
-        //    result.Correct = false;
-        //    result.PerformanceScore = 0;
-        //    result.MemoryScore = 0;
-        //    result.NamingScore = 0;
-        //    return result;
-        //}
-        //else
-        //{
-        //    result.Correct = true;
-        //}
+        result.FeedbackKeys = new List<string>();
+
+
+        //Correctness grading
+        if (correct == false) // If correctness fails, skip performance and memory grading
+        {
+            result.Correct = false;
+            result.PerformanceScore = 0;
+            result.MemoryScore = 0;
+            result.NamingScore = 0;
+            return result;
+        }
+        else
+        {
+            result.Correct = true;
+        }
 
         // Performance grading
-        var (performanceScore, performanceFeedback, avg) = GradePerformance(userScriptProxy, goalScriptProxy);
+        var (performanceScore, performanceFeedback, performanceFeedbackKeys, avg) = GradePerformance(userScriptProxy, goalScriptProxy);
         result.PerformanceScore = performanceScore;
-        result.Feedback.Add($"Average runtime: {avg}");
+        //result.Feedback.Add($"Average runtime: {avg}");
         result.Feedback.AddRange(performanceFeedback);
-
+        result.FeedbackKeys.AddRange(performanceFeedbackKeys);
         // Memory grading
-        var (memoryScore, memoryFeedback) = GradeMemory(userCode);
+        var (memoryScore, memoryFeedback, memoryFeedbackKeys) = GradeMemory(userCode, solutionCode);
         result.MemoryScore = memoryScore;
         result.Feedback.AddRange(memoryFeedback);
+        result.FeedbackKeys.AddRange(memoryFeedbackKeys);
 
         // Naming convention grading
-        var (namingScore, namingFeedback) = GradeNaming(userCode);
+        var (namingScore, namingFeedback, namingFeedbackKeys) = GradeNaming(userCode, solutionCode);
         result.NamingScore = namingScore;
         result.Feedback.AddRange(namingFeedback);
+        result.FeedbackKeys.AddRange(namingFeedbackKeys);
 
         return result;
     }
@@ -120,11 +128,12 @@ public class CodeGradingSystem : MonoBehaviour
 
     //    return (isCorrect, feedback);
     //}
-    private (float score, List<string> feedback, double avgTime) GradePerformance(ScriptProxy userProxy, ScriptProxy goalProxy)
+    private (float score, List<string> feedback, List<string> feedbackKeys, double avgTime) GradePerformance(ScriptProxy userProxy, ScriptProxy goalProxy)
     {
         RuntimeManager.Instance.Console.SetActive(false);
 
         var feedback = new List<string>();
+        var feedbackKeys = new List<string>();
         float score = 100;
         double totalUserTime = 0;
         double totalGoalTime = 0;
@@ -172,7 +181,7 @@ public class CodeGradingSystem : MonoBehaviour
                 {
                     feedback.Add($"Exceeded max Execution time: {userTimeMS}/{maxExecutionTime}");
                     RuntimeManager.Instance.Console.SetActive(true);
-                    return (0, feedback, maxExecutionTime);
+                    return (0, feedback, feedbackKeys, maxExecutionTime);
                 }
 
 
@@ -188,7 +197,9 @@ public class CodeGradingSystem : MonoBehaviour
         // Calculate the average time for the user's method
         double averageUserTime = totalUserTime / testCaseCount; /// testCaseCount;
         double averageSolTime = totalGoalTime / testCaseCount; /// testCaseCount;
-        feedback.Add($"USER: {averageUserTime} | SOL: {averageSolTime} | USER/SOL: {averageUserTime / averageSolTime}");
+        //feedback.Add($"USER: {averageUserTime} | SOL: {averageSolTime} | USER/SOL: {averageUserTime / averageSolTime}");
+        feedback.Add($"Current: {averageUserTime}ms | Expected: {averageSolTime}ms");
+        feedback.Add($"Current Code is {averageSolTime / averageUserTime} as performant as expected");
 
         // Compare with goal solution time
         if (averageUserTime > averageSolTime * 1.4)
@@ -205,95 +216,176 @@ public class CodeGradingSystem : MonoBehaviour
             // Optionally, add feedback about the performance
             // feedback.Add($"Test case Add({testCase[0]}, {testCase[1]}) was significantly slower than optimal solution");
         }
+
+        if (score < 100f)
+        {
+            feedbackKeys.Add("PERF_Subopt");
+            feedback.Add("Performance Suboptimal!");
+
+        }
+        else
+        {
+            feedbackKeys.Add("PERF_Opt");
+            feedback.Add("Optimal Performance!");
+        }
+
+
         RuntimeManager.Instance.Console.SetActive(true);
 
-        return (score, feedback, averageUserTime);
+
+
+
+        return (score, feedback, feedbackKeys, averageUserTime);
     }
 
-    private (float score, List<string> feedback) GradeMemory(string userCode)
+    private (float score, List<string> feedback, List<string> feedbackKeys) GradeMemory(string userCode, string solutionCode)
     {
         var feedback = new List<string>();
-        float score = 100;
+        var feedbackKeys = new List<string>();
+        float score = 100f;
 
         try
         {
-            var tree = CSharpSyntaxTree.ParseText(userCode);
-            var root = tree.GetRoot();
+            // Parse both user and solution code
+            var userTree = CSharpSyntaxTree.ParseText(userCode);
+            var solutionTree = CSharpSyntaxTree.ParseText(solutionCode);
 
-            // Check for unnecessary variables
-            var variables = root.DescendantNodes()
-                .OfType<VariableDeclarationSyntax>();
+            // Count various memory allocation types
+            // Count allocation types separately
+            int CountObjectCreations(SyntaxTree tree) =>
+                tree.GetRoot().DescendantNodes().OfType<ObjectCreationExpressionSyntax>().Count();
 
-            int unusedVarCount = 0;
-            foreach (var variable in variables)
+            int CountArrayCreations(SyntaxTree tree) =>
+                tree.GetRoot().DescendantNodes().OfType<ArrayCreationExpressionSyntax>().Count();
+
+            int CountVariableAllocations(SyntaxTree tree) =>
+                tree.GetRoot().DescendantNodes()
+                    .OfType<VariableDeclarationSyntax>()
+                    .SelectMany(v => v.Variables)
+                    .Count(v => v.Initializer != null);
+
+            // Get allocation counts
+            int userObjects = CountObjectCreations(userTree);
+            int solutionObjects = CountObjectCreations(solutionTree);
+            int userArrays = CountArrayCreations(userTree);
+            int solutionArrays = CountArrayCreations(solutionTree);
+            int userVars = CountVariableAllocations(userTree);
+            int solutionVars = CountVariableAllocations(solutionTree);
+
+            int userAllocations = userObjects + userArrays + userVars;
+            int solutionAllocations = solutionObjects + solutionArrays + solutionVars;
+
+
+
+
+            if (solutionAllocations == 0) // Check if the solution code has zero allocations
             {
-                foreach (var declarator in variable.Variables)
+                if (userAllocations == 0) // If the user's code also has zero allocations
                 {
-                    // Get the variable name
-                    var variableName = declarator.Identifier.Text;
+                    score = 100f; // Perfect score for matching the solution
+                    feedbackKeys.Add("MEM_EQUAL");
+                    feedback.Add("Memory usage matches expected pattern.");
+                    //feedback.Add("No allocations detected. Matches expected behavior.");
+                }
+                else // User's code has allocations while the solution does not
+                {
+                    feedbackKeys.Add("MEM_Subopt");
 
-                    // Check if the variable is used
-                    var references = root.DescendantNodes()
-                        .OfType<IdentifierNameSyntax>()
-                        .Where(id => id.Identifier.Text == variableName)
-                        .ToList();
-
-                    // If only declared and referenced once in a return statement, consider it "used"
-                    if (references.Count == 1)
-                    {
-                        var parentStatement = references.First().Parent;
-                        if (parentStatement is ReturnStatementSyntax)
-                        {
-                            continue; // Variable is used directly in a return statement, so we skip it
-                        }
-                    }
-                    else if (references.Count <= 1)
-                    {
-                        // If not found or only declared, it's considered unused
-                        unusedVarCount++;
-                    }
+                    score = Math.Max(0f, 100f / (1 + userAllocations)); // Penalize the score based on user allocations
+                    feedback.Add("More memory allocations than expected! Improvements possible");
                 }
             }
-
-            if (unusedVarCount > 0)
+            else // The solution code has allocations
             {
-                score *= 0.95f;
-                feedback.Add($"Found {unusedVarCount} potentially unused variables");
+                if (userAllocations == 0) // If the user's code has zero allocations
+                {
+                    score = 100f * solutionAllocations; // Score based on the number of solution allocations
+                    feedback.Add("Remarkable! Less memory usage than before!");
+                    feedbackKeys.Add("MEM_Super");
+                }
+                else // User's code has allocations
+                {
+                    score = 100f * solutionAllocations / userAllocations; // Calculate score based on user vs. solution allocations
+
+                    if (solutionAllocations == userAllocations)
+                    {
+                        feedbackKeys.Add("MEM_EQUAL");
+                        feedback.Add("Memory usage matches expected pattern.");
+                    }
+                    else
+                    {
+                        feedbackKeys.Add("MEM_Subopt");
+
+                        // Check if the user created more object allocations than the solution
+                        if (userObjects > solutionObjects)
+                        {
+                            feedback.Add("More object allocations than required.");
+                        }
+                        else if (userObjects < solutionObjects) // User created fewer object allocations than the solution
+                        {
+                            //feedback.Add("Reduced object allocations. Potential optimization.");
+                        }
+
+                        // Check if the user created more array allocations than the solution
+                        if (userArrays > solutionArrays)
+                        {
+                            feedback.Add("More array allocations than expected");
+                        }
+                        else if (userArrays < solutionArrays) // User created fewer array allocations than the solution
+                        {
+                            //feedback.Add("Memory storage refined: Fewer arrays in use. This may improve efficiency—ensure all necessary data is still accessible. Wohoo!");
+                        }
+
+                        // Check if the user created more variable allocations than the solution
+                        if (userVars > solutionVars)
+                        {
+                            feedback.Add("More variables than expected.");
+                        }
+                        else if (userVars < solutionVars) // User created fewer variable allocations than the solution
+                        {
+                            //feedback.Add("Variable usage optimized: Fewer direct memory allocations. A more compact footprint—good for performance. Nice!");
+                        }
+
+                        // Compare total user allocations to solution allocations
+                        if (userAllocations > solutionAllocations)
+                        {
+                            feedback.Add("Higher total memory allocations. Optimization possible.");
+                        }
+                        else if (userAllocations < solutionAllocations) // User has fewer total allocations than the solution
+                        {
+                            //feedback.Add("Memory footprint reduced. Fewer allocations without loss of stability! An efficient optimization. ");
+                        }
+                    }
+
+
+                }
+
+                score = Math.Max(0f, score); // Ensure the score is not negative
             }
 
-            // Check for unnecessary object creation
-            var objectCreations = root.DescendantNodes()
-                .OfType<ObjectCreationExpressionSyntax>()
-                .Count();
 
-            if (objectCreations > 0)
-            {
-                //score *= 0.9f;
-                //feedback.Add("The Add method shouldn't require object creation");
-            }
 
-            // Check for array allocations
-            var arrayCreations = root.DescendantNodes()
-                .OfType<ArrayCreationExpressionSyntax>()
-                .Count();
 
-            if (arrayCreations > 0)
-            {
-                //score *= 0.9f;
-                //feedback.Add("The Add method shouldn't require array allocation");
-            }
+
+
+            // Add detailed feedback
+            //feedback.Add($"Solution Total Allocations: {solutionAllocations}");
+            //feedback.Add($"User Total Allocations: {userAllocations}");
         }
-        catch (System.Exception e)
+        catch (Exception ex)
         {
-            feedback.Add($"Error during memory analysis: {e.Message}");
+            // If there's an error parsing, assume 0 score
+            score = 0f;
+            feedback.Add($"Error analyzing code: {ex.Message}");
         }
 
-        return (score, feedback);
+        return (score, feedback, feedbackKeys);
     }
 
-    private (float score, List<string> feedback) GradeNaming(string userCode)
+    private (float score, List<string> feedback, List<string> feedbackKeys) GradeNaming(string userCode, string solutionCode)
     {
         var feedback = new List<string>();
+        var feedbackKeys = new List<string>();
         float score = 100;
 
         try
@@ -309,29 +401,29 @@ public class CodeGradingSystem : MonoBehaviour
             {
                 string name = variable.Identifier.Text;
 
-                // Check for single-letter variables (except loop counters)
+                // Check for single-letter variables (except common ones)
                 if (name.Length == 1 && name != "i" && name != "j" && name != "k" && name != "x" && name != "y" && name != "z" && name != "a" && name != "b" && name != "c" && name != "d")
                 {
-                    score *= 0.95f;
+                    score *= 0.5f;
                     feedback.Add($"Variable '{name}' should have a more descriptive name");
                 }
 
                 // Check for proper casing (camelCase for variables)
                 if (char.IsUpper(name[0]))
                 {
-                    score *= 0.95f;
-                    feedback.Add($"Variable '{name}' should start with lowercase letter");
+                    score *= 0.5f;
+                    feedback.Add($"Variable '{name}' should start with a lowercase letter");
                 }
 
                 // Check for numeric suffixes
                 if (System.Text.RegularExpressions.Regex.IsMatch(name, @"\d+$"))
                 {
-                    score *= 0.95f;
+                    score *= 0.5f;
                     feedback.Add($"Variable '{name}' uses a numeric suffix - consider a more descriptive name");
                 }
             }
 
-            // Check method naming (although Add is predefined in this case)
+            // Check method naming
             var methods = root.DescendantNodes()
                 .OfType<MethodDeclarationSyntax>();
 
@@ -340,9 +432,16 @@ public class CodeGradingSystem : MonoBehaviour
                 string name = method.Identifier.Text;
                 if (!char.IsUpper(name[0]))
                 {
-                    score *= 0.95f;
-                    feedback.Add($"Method '{name}' should start with uppercase letter");
+                    score *= 0.5f;
+                    feedback.Add($"Method '{name}' should start with an uppercase letter");
                 }
+            }
+
+            // Check if user code is too long compared to the solution
+            if (userCode.Length > 2.5 * solutionCode.Length)
+            {
+                score *= 0.5f;
+                feedback.Add("Your code is significantly longer than necessary. Consider simplifying your implementation.");
             }
         }
         catch (System.Exception e)
@@ -350,6 +449,170 @@ public class CodeGradingSystem : MonoBehaviour
             feedback.Add($"Error during naming analysis: {e.Message}");
         }
 
-        return (score, feedback);
+        if (score < 100f)
+        {
+            feedbackKeys.Add("MAINTAIN_Subopt");
+        }
+        else
+        {
+            feedbackKeys.Add("MAINTAIN_Opt");
+        }
+
+        return (score, feedback, feedbackKeys);
     }
+
+
+
+    public void StructureFeedback(string userCode, string solutionCode, List<string> feedback, StructureFeedbackTypes feedbackTypes)
+    {
+        try
+        {
+            // Parse both user and solution code
+            var userTree = CSharpSyntaxTree.ParseText(userCode);
+            var solutionTree = CSharpSyntaxTree.ParseText(solutionCode);
+
+            // Count the number of for loops, while loops, if statements, switch statements, methods, and variables in both codes
+            int CountForLoops(SyntaxTree tree) =>
+                tree.GetRoot().DescendantNodes().OfType<ForStatementSyntax>().Count();
+
+            int CountWhileLoops(SyntaxTree tree) =>
+                tree.GetRoot().DescendantNodes().OfType<WhileStatementSyntax>().Count();
+
+            int CountIfStatements(SyntaxTree tree) =>
+                tree.GetRoot().DescendantNodes().OfType<IfStatementSyntax>().Count();
+
+            int CountSwitchStatements(SyntaxTree tree) =>
+                tree.GetRoot().DescendantNodes().OfType<SwitchStatementSyntax>().Count();
+
+            int CountMethods(SyntaxTree tree) =>
+                tree.GetRoot().DescendantNodes().OfType<MethodDeclarationSyntax>().Count();
+
+            int CountVariables(SyntaxTree tree) =>
+                tree.GetRoot().DescendantNodes().OfType<VariableDeclarationSyntax>().Count();
+
+            // Get counts for user and solution code
+            int userForLoops = CountForLoops(userTree);
+            int solutionForLoops = CountForLoops(solutionTree);
+            int userWhileLoops = CountWhileLoops(userTree);
+            int solutionWhileLoops = CountWhileLoops(solutionTree);
+            int userIfStatements = CountIfStatements(userTree);
+            int solutionIfStatements = CountIfStatements(solutionTree);
+            int userSwitchStatements = CountSwitchStatements(userTree);
+            int solutionSwitchStatements = CountSwitchStatements(solutionTree);
+            int userMethods = CountMethods(userTree);
+            int solutionMethods = CountMethods(solutionTree);
+            int userVariables = CountVariables(userTree);
+            int solutionVariables = CountVariables(solutionTree);
+
+            // Provide subtle feedback based on comparisons
+            if (feedbackTypes.HasFlag(StructureFeedbackTypes.ForLoops))
+            {
+                if (userForLoops < solutionForLoops)
+                {
+                    feedback.Add("Consider using loops for repeating segments.");
+                    return;
+                }
+                else if (userForLoops > solutionForLoops)
+                {
+                    feedback.Add("More loops than expected.");
+                    return;
+                }
+            }
+
+            if (feedbackTypes.HasFlag(StructureFeedbackTypes.WhileLoops))
+            {
+                if (userWhileLoops < solutionWhileLoops)
+                {
+                    feedback.Add("Consider using while loops for better control flow.");
+                    return;
+
+                }
+            }
+
+            if (feedbackTypes.HasFlag(StructureFeedbackTypes.IfStatements))
+            {
+                if (userIfStatements < solutionIfStatements)
+                {
+                    feedback.Add("Additional conditional checks may prove useful.");
+                    return;
+
+                }
+                else if (userIfStatements > solutionIfStatements)
+                {
+                    //feedback.Add("Too many conditions may impact readability.");
+                    return;
+
+                }
+            }
+
+            if (feedbackTypes.HasFlag(StructureFeedbackTypes.SwitchStatements))
+            {
+                if (userSwitchStatements < solutionSwitchStatements)
+                {
+                    feedback.Add("A switch statement might help");
+                    return;
+
+                }
+                else if (userSwitchStatements > solutionSwitchStatements)
+                {
+                    //feedback.Add("A switch statement might help");
+                    return;
+
+                }
+            }
+
+            if (feedbackTypes.HasFlag(StructureFeedbackTypes.Methods))
+            {
+                if (userMethods < solutionMethods)
+                {
+                    feedback.Add("Consider modularizing code by adding more methods.");
+                    return;
+
+                }
+                else if (userMethods > solutionMethods)
+                {
+                    //feedback.Add("Review method usage—simpler structure may be possible.");
+                    return;
+
+                }
+            }
+
+            if (feedbackTypes.HasFlag(StructureFeedbackTypes.Variables))
+            {
+                if (userVariables < solutionVariables)
+                {
+                    //feedback.Add("Ensure all required variables are declared.");
+                    return;
+
+                }
+                else if (userVariables > solutionVariables)
+                {
+                    feedback.Add("Reduce number of variables for cleaner code.");
+                    return;
+
+                }
+            }
+        }
+        catch (Exception e)
+        {
+            feedback.Add($"Error analyzing structure: {e.Message}");
+            return;
+
+        }
+    }
+
+
+}
+
+[Flags]
+public enum StructureFeedbackTypes
+{
+    None = 0,
+    ForLoops = 1 << 0,          // 1
+    WhileLoops = 1 << 1,        // 2
+    IfStatements = 1 << 2,      // 4
+    SwitchStatements = 1 << 3,   // 8
+    Methods = 1 << 4,           // 16
+    Variables = 1 << 5,         // 32
+    All = ForLoops | WhileLoops | IfStatements | SwitchStatements | Methods | Variables // 63
 }

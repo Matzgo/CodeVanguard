@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: SOL_Safe
   m_EditorClassIdentifier: 
   _fileName: SafeSecurity
-  _text: "public class SafeSecurity\n{\n\tpublic void OpenSafeButton()\n\t{\n\t\t\n\t\t\tSafe.Open();\n\t\t\n\t}\n}"
+  _text: "public class SafeSecurity\n{\n\tpublic void OpenSafeButton()\n\t{\n\t\t\n\t\tbool
+    locked = false;\n\t\tif(locked)\n\t\t{\n\t\t\tSafe.Alarm();\n\t\t}\n\t\telse\n\t\t{\n\t\t\tSafe.Open();\n\t\t}\n\t\t\n\t}\n}"

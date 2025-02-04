@@ -24,7 +24,10 @@ public class MainScreen : MonoBehaviour
     [Header("FETCH")]
     [SerializeField]
     private GameObject _fetchingWindow;
+    [SerializeField]
+    TMPro.TextMeshProUGUI _fetchingText
 
+        ;
     [Header("PRE TASK")]
 
     [SerializeField]
@@ -133,17 +136,35 @@ public class MainScreen : MonoBehaviour
     {
         SetActiveWindow(MainScreenType.Fetching);
         _audioSource.Play();
-        _coroutine = StartCoroutine(FetchForSeconds(2f));
+        if (CodeVanguardManager.Instance.CurrentTask != null)
+        {
+            _coroutine = StartCoroutine(FetchForSeconds(2f));
+        }
+        else
+        {
+
+            _coroutine = StartCoroutine(ReturnToMainAfterSeconds(5f));
+
+        }
     }
 
     private IEnumerator FetchForSeconds(float v)
     {
+        _fetchingText.text = "Connecting...";
         yield return new WaitForSeconds(v);
         DisableAll();
         CodeVanguardManager.Instance.StartPreTask();
         _audioSource.Play();
 
     }
+    private IEnumerator ReturnToMainAfterSeconds(float v)
+    {
+        _fetchingText.text = "No Connection\n\nPlug in a Cable";
+        yield return new WaitForSeconds(v);
+        DisableAll();
+        CodeVanguardManager.Instance.ResetToLogInScreen();
+    }
+
 
     internal void LoadTask(CSFileSet task)
     {

@@ -39,5 +39,5 @@ public abstract class Scenario : MonoBehaviour
 
     protected abstract void ResetSimulator();
 
-    public abstract (bool b, List<string> feedback) CheckCorrectness();
+    public abstract (bool b, List<string> feedback, List<string> feedbackKey) CheckCorrectness();
 }

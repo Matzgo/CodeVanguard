@@ -15,6 +15,8 @@ namespace CodeInspector
 
         public bool IsSimOn => _simMode;
 
+        public Action ResetStartButton;
+
         [SerializeField]
         CustomCodeEditor _customCodeEditor;
 
@@ -44,6 +46,11 @@ namespace CodeInspector
             {
                 Destroy(gameObject);
             }
+        }
+
+        public void ResetStartButtons()
+        {
+            ResetStartButton?.Invoke();
         }
 
         public void ResetMiniGame()

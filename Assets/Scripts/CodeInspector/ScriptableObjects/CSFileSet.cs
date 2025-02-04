@@ -12,9 +12,24 @@ namespace CodeInspector
     }
 
 
+
+
+
     [CreateAssetMenu(fileName = "FileSet", menuName = "Game/CSFileSet")]
     public class CSFileSet : ScriptableObject
     {
+        [SerializeField]
+        string _taskId;
+        public string TaskID => _taskId;
+
+        [SerializeField]
+        StructureFeedbackTypes _structureFeedbackTypes;
+        public StructureFeedbackTypes StructureFeedbackTypes => _structureFeedbackTypes;
+
+
+        [SerializeField]
+        string _onPluggedInFeedbackKey;
+        public string OnPluggedInFeedbackKey => _onPluggedInFeedbackKey;
 
         [SerializeField]
         private TaskType _taskType;
@@ -65,6 +80,7 @@ namespace CodeInspector
         [SerializeField]
         List<CSFileSetEntry> _csFiles;
         public List<CSFileSetEntry> CSFiles => _csFiles;
+
 
 
         private void OnValidate()

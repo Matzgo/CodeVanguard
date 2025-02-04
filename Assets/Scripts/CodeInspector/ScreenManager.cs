@@ -22,8 +22,8 @@ public class ScreenManager : MonoBehaviour
     GameObject _consoleScreen;
 
     [SerializeField]
-    FeedbackBot _task;
-    public FeedbackBot Task => _task;
+    FeedbackBotBehaviour _task;
+    public FeedbackBotBehaviour Task => _task;
 
     [SerializeField]
     GameObject _taskScreen;
@@ -91,6 +91,6 @@ public class ScreenManager : MonoBehaviour
     internal void LoadResult(GradingResult res)
     {
         _main.LoadResult(res);
-        _task.QueueFeedback(res.Feedback);
+        _task.QueueFeedback(res.Feedback, res.FeedbackKeys);
     }
 }

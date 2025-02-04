@@ -1,0 +1,359 @@
+CompilationUnitSyntax (CompilationUnit)
+Code: using Game;
+using System;
+using System.Collections.Generic;
+using Console = Game.Console;
+using Crane = Game.Crane;
+
+public class GeneratorController
+{
+	
+	
+	int beamCount;
+	public void HandleBeam()
+	{
+		beamCount++;	
+		
+		if(beamCount % 2 == 0)
+		{
+			Generator.RedirectBeam();
+		}
+	}
+
+	public void TestBeams()
+	{
+		Generator.FireBeam();
+		HandleBeam();
+		Generator.FireBeam();
+		HandleBeam();
+		Generator.FireBeam();
+		HandleBeam();
+		Generator.FireBeam();
+		HandleBeam();
+		Generator.FireBeam();
+		HandleBeam();
+		Generator.FireBeam();
+		HandleBeam();
+		Generator.Start();
+	}
+
+	
+
+}
+    UsingDirectiveSyntax (UsingDirective)
+    Code: using Game;
+        IdentifierNameSyntax (IdentifierName)
+        Code: Game
+    UsingDirectiveSyntax (UsingDirective)
+    Code: using System;
+        IdentifierNameSyntax (IdentifierName)
+        Code: System
+    UsingDirectiveSyntax (UsingDirective)
+    Code: using System.Collections.Generic;
+        QualifiedNameSyntax (QualifiedName)
+        Code: System.Collections.Generic
+            QualifiedNameSyntax (QualifiedName)
+            Code: System.Collections
+                IdentifierNameSyntax (IdentifierName)
+                Code: System
+                IdentifierNameSyntax (IdentifierName)
+                Code: Collections
+            IdentifierNameSyntax (IdentifierName)
+            Code: Generic
+    UsingDirectiveSyntax (UsingDirective)
+    Code: using Console = Game.Console;
+        NameEqualsSyntax (NameEquals)
+        Code: Console =
+            IdentifierNameSyntax (IdentifierName)
+            Code: Console
+        QualifiedNameSyntax (QualifiedName)
+        Code: Game.Console
+            IdentifierNameSyntax (IdentifierName)
+            Code: Game
+            IdentifierNameSyntax (IdentifierName)
+            Code: Console
+    UsingDirectiveSyntax (UsingDirective)
+    Code: using Crane = Game.Crane;
+        NameEqualsSyntax (NameEquals)
+        Code: Crane =
+            IdentifierNameSyntax (IdentifierName)
+            Code: Crane
+        QualifiedNameSyntax (QualifiedName)
+        Code: Game.Crane
+            IdentifierNameSyntax (IdentifierName)
+            Code: Game
+            IdentifierNameSyntax (IdentifierName)
+            Code: Crane
+    ClassDeclarationSyntax (ClassDeclaration)
+    Code: public class GeneratorController
+{
+	
+	
+	int beamCount;
+	public void HandleBeam()
+	{
+		beamCount++;	
+		
+		if(beamCount % 2 == 0)
+		{
+			Generator.RedirectBeam();
+		}
+	}
+
+	public void TestBeams()
+	{
+		Generator.FireBeam();
+		HandleBeam();
+		Generator.FireBeam();
+		HandleBeam();
+		Generator.FireBeam();
+		HandleBeam();
+		Generator.FireBeam();
+		HandleBeam();
+		Generator.FireBeam();
+		HandleBeam();
+		Generator.FireBeam();
+		HandleBeam();
+		Generator.Start();
+	}
+
+	
+
+}
+        FieldDeclarationSyntax (FieldDeclaration)
+        Code: int beamCount;
+            VariableDeclarationSyntax (VariableDeclaration)
+            Code: int beamCount
+                PredefinedTypeSyntax (PredefinedType)
+                Code: int
+                VariableDeclaratorSyntax (VariableDeclarator)
+                Code: beamCount
+        MethodDeclarationSyntax (MethodDeclaration)
+        Code: public void HandleBeam()
+	{
+		beamCount++;	
+		
+		if(beamCount % 2 == 0)
+		{
+			Generator.RedirectBeam();
+		}
+	}
+            PredefinedTypeSyntax (PredefinedType)
+            Code: void
+            ParameterListSyntax (ParameterList)
+            Code: ()
+            BlockSyntax (Block)
+            Code: {
+		beamCount++;	
+		
+		if(beamCount % 2 == 0)
+		{
+			Generator.RedirectBeam();
+		}
+	}
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: beamCount++;
+                    PostfixUnaryExpressionSyntax (PostIncrementExpression)
+                    Code: beamCount++
+                        IdentifierNameSyntax (IdentifierName)
+                        Code: beamCount
+                IfStatementSyntax (IfStatement)
+                Code: if(beamCount % 2 == 0)
+		{
+			Generator.RedirectBeam();
+		}
+                    BinaryExpressionSyntax (EqualsExpression)
+                    Code: beamCount % 2 == 0
+                        BinaryExpressionSyntax (ModuloExpression)
+                        Code: beamCount % 2
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: beamCount
+                            LiteralExpressionSyntax (NumericLiteralExpression)
+                            Code: 2
+                        LiteralExpressionSyntax (NumericLiteralExpression)
+                        Code: 0
+                    BlockSyntax (Block)
+                    Code: {
+			Generator.RedirectBeam();
+		}
+                        ExpressionStatementSyntax (ExpressionStatement)
+                        Code: Generator.RedirectBeam();
+                            InvocationExpressionSyntax (InvocationExpression)
+                            Code: Generator.RedirectBeam()
+                                MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                                Code: Generator.RedirectBeam
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: Generator
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: RedirectBeam
+                                ArgumentListSyntax (ArgumentList)
+                                Code: ()
+        MethodDeclarationSyntax (MethodDeclaration)
+        Code: public void TestBeams()
+	{
+		Generator.FireBeam();
+		HandleBeam();
+		Generator.FireBeam();
+		HandleBeam();
+		Generator.FireBeam();
+		HandleBeam();
+		Generator.FireBeam();
+		HandleBeam();
+		Generator.FireBeam();
+		HandleBeam();
+		Generator.FireBeam();
+		HandleBeam();
+		Generator.Start();
+	}
+            PredefinedTypeSyntax (PredefinedType)
+            Code: void
+            ParameterListSyntax (ParameterList)
+            Code: ()
+            BlockSyntax (Block)
+            Code: {
+		Generator.FireBeam();
+		HandleBeam();
+		Generator.FireBeam();
+		HandleBeam();
+		Generator.FireBeam();
+		HandleBeam();
+		Generator.FireBeam();
+		HandleBeam();
+		Generator.FireBeam();
+		HandleBeam();
+		Generator.FireBeam();
+		HandleBeam();
+		Generator.Start();
+	}
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: Generator.FireBeam();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: Generator.FireBeam()
+                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                        Code: Generator.FireBeam
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Generator
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: FireBeam
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: HandleBeam();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: HandleBeam()
+                        IdentifierNameSyntax (IdentifierName)
+                        Code: HandleBeam
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: Generator.FireBeam();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: Generator.FireBeam()
+                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                        Code: Generator.FireBeam
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Generator
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: FireBeam
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: HandleBeam();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: HandleBeam()
+                        IdentifierNameSyntax (IdentifierName)
+                        Code: HandleBeam
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: Generator.FireBeam();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: Generator.FireBeam()
+                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                        Code: Generator.FireBeam
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Generator
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: FireBeam
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: HandleBeam();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: HandleBeam()
+                        IdentifierNameSyntax (IdentifierName)
+                        Code: HandleBeam
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: Generator.FireBeam();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: Generator.FireBeam()
+                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                        Code: Generator.FireBeam
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Generator
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: FireBeam
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: HandleBeam();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: HandleBeam()
+                        IdentifierNameSyntax (IdentifierName)
+                        Code: HandleBeam
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: Generator.FireBeam();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: Generator.FireBeam()
+                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                        Code: Generator.FireBeam
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Generator
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: FireBeam
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: HandleBeam();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: HandleBeam()
+                        IdentifierNameSyntax (IdentifierName)
+                        Code: HandleBeam
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: Generator.FireBeam();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: Generator.FireBeam()
+                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                        Code: Generator.FireBeam
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Generator
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: FireBeam
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: HandleBeam();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: HandleBeam()
+                        IdentifierNameSyntax (IdentifierName)
+                        Code: HandleBeam
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: Generator.Start();
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: Generator.Start()
+                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                        Code: Generator.Start
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Generator
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: Start
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()

@@ -32,7 +32,9 @@ public class CraneScenario : Scenario
     float _itemHeight;
     [SerializeField]
     float _craneHeight;
-
+    private Vector3 _targetPosition;
+    [SerializeField]
+    private float craneSpeed;
 
     protected override void Start()
     {
@@ -76,11 +78,16 @@ public class CraneScenario : Scenario
 
         Vector3 position = new Vector3(_colPositions[_currentCraneCol].transform.position.x, _craneHeight, _colPositions[_currentCraneCol].transform.position.z);
         _crane.transform.position = position;
-
+        _targetPosition = position;
         UpdateCraneItems();
     }
 
-    public override (bool b, List<string> feedback) CheckCorrectness()
+    private void Update()
+    {
+        _crane.transform.position = Vector3.Slerp(_crane.transform.position, _targetPosition, Time.deltaTime * craneSpeed);
+    }
+
+    public override (bool b, List<string> feedback, List<string> feedbackKey) CheckCorrectness()
     {
         return _sim.CheckCorrectness(_parameters);
 
@@ -129,7 +136,8 @@ public class CraneScenario : Scenario
 
         _currentCraneCol = Mathf.Clamp(_currentCraneCol + 1, 0, _cols.Length - 1);
         Vector3 position = new Vector3(_colPositions[_currentCraneCol].transform.position.x, _craneHeight, _colPositions[_currentCraneCol].transform.position.z);
-        _crane.transform.position = position;
+        _targetPosition = position;
+
     }
 
     public void MoveLeft()
@@ -142,7 +150,8 @@ public class CraneScenario : Scenario
 
         _currentCraneCol = Mathf.Clamp(_currentCraneCol - 1, 0, _cols.Length - 1);
         Vector3 position = new Vector3(_colPositions[_currentCraneCol].transform.position.x, _craneHeight, _colPositions[_currentCraneCol].transform.position.z);
-        _crane.transform.position = position;
+        _targetPosition = position;
+
     }
 
     public void UpdateCraneItems()

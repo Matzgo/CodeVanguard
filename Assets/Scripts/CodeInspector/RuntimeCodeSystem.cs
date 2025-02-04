@@ -59,8 +59,7 @@ public class RuntimeCodeSystem : MonoBehaviour
     private string _solutionCode;
     private string _entryPointMethodName;
     private ScriptProxy _solutionScript;
-
-
+    private CSFileSet _lastTask;
     CSFileSet _currentTask;
     private Scenario _scenario;
     private string _usingStatements;
@@ -79,6 +78,9 @@ public class RuntimeCodeSystem : MonoBehaviour
     [SerializeField]
     private bool _coroutineDisabled;
     private bool _codeRunning;
+    public bool CodeRunning => _codeRunning;
+    private string _compiledUserCode;
+    private string _compiledSolutionCode;
 
     private void Awake()
     {
@@ -135,6 +137,7 @@ public class RuntimeCodeSystem : MonoBehaviour
 
     internal void LoadTask(CSFileSet task)
     {
+        _lastTask = _currentTask;
         _currentTask = task;
         if (_scenario != null)
             _scenario.RunButton.ClearRegisteredAction();
@@ -144,11 +147,14 @@ public class RuntimeCodeSystem : MonoBehaviour
 
         var before = (_currentTask.EntryPointFile as EditableCSFile).BeforeText;
         var after = (_currentTask.EntryPointFile as EditableCSFile).AfterText;
+
         var input = (_currentTask.EntryPointFile as EditableCSFile).Input;
-        _codeEditorWindow.SetText(before, input, after);
+        // Only update input if the last task was different
+        if (_lastTask == null || _lastTask != task)
+            _codeEditorWindow.SetText(before, input, after);
         _fileNameText.text = task.EntryPointFile.FileName + ".cs";
         _solutionCode = task.CSFiles[0].SolutionFile.Text;
-
+        CodeVanguardManager.Instance.LoadFeedback(new List<string> { task.OnPluggedInFeedbackKey });
         _entryPointMethodName = task.EntryPoint;
 
     }
@@ -178,30 +184,6 @@ public class RuntimeCodeSystem : MonoBehaviour
         CompileAndRun();
 
     }
-
-
-    private void CompileAndRun()
-    {
-        try
-        {
-            if (ShouldRecompileCode())
-            {
-                CompileAndRunUserCode();
-                CompileAndRunSolutionCode();
-            }
-            else
-            {
-                //RuntimeManager.Instance.ResetMiniGame();
-                RuntimeManager.Instance.ResetWorld();
-                RunVoidMethodTest();
-            }
-        }
-        catch (Exception e)
-        {
-            HandleException(e);
-        }
-    }
-
     public void OnRunCompleted()
     {
         GradingResult res = null;
@@ -211,7 +193,7 @@ public class RuntimeCodeSystem : MonoBehaviour
         CodeVanguardManager.Instance.EndTask(res);
 
         _codeRunning = false;
-
+        RuntimeManager.Instance.ResetStartButtons();
         RuntimeManager.Instance.CoroutineRunner.OnCoroutineFinshed -= OnRunCompleted;
 
     }
@@ -250,6 +232,30 @@ public class RuntimeCodeSystem : MonoBehaviour
         }
     }
 
+    private void CompileAndRun()
+    {
+        try
+        {
+            if (ShouldRecompileCode())
+            {
+                CompileAndRunUserCode();
+                CompileAndRunSolutionCode();
+            }
+            else
+            {
+                //RuntimeManager.Instance.ResetMiniGame();
+                RuntimeManager.Instance.ResetWorld();
+                RunVoidMethodTest();
+            }
+        }
+        catch (Exception e)
+        {
+            HandleException(e);
+        }
+    }
+
+
+
     private bool ShouldRecompileCode()
     {
         // The || true is a workaround to make this run every time
@@ -262,15 +268,16 @@ public class RuntimeCodeSystem : MonoBehaviour
         string userCode = _codeEditorWindow.Text;
         string userCodeWithDirectives = _usingStatements + "\n" + userCode;
 
-        ScriptType userType = CompileCode(userCodeWithDirectives, _domain);
+        _compiledUserCode = userCodeWithDirectives;
+        ScriptType userType = CompileCode(_compiledUserCode, _domain);
         if (userType == null) return;
 
-        if (!ValidateCodeSecurity(userCodeWithDirectives)) return;
+        if (!ValidateCodeSecurity(_compiledUserCode)) return;
 
         _userScript = userType.CreateInstance();
         _activeCSharpSource = userCode;
 
-        SaveSyntaxTree(userCodeWithDirectives);
+        SaveSyntaxTree(_compiledUserCode);
 
         //RuntimeManager.Instance.ResetMiniGame();
         RuntimeManager.Instance.ResetWorld();
@@ -283,11 +290,11 @@ public class RuntimeCodeSystem : MonoBehaviour
     private void CompileAndRunSolutionCode()
     {
         string solutionWithAddedDirectives = _usingStatements + "\n" + _solutionCode;
-
-        ScriptType solutionType = CompileCode(solutionWithAddedDirectives, _domain);
+        _compiledSolutionCode = solutionWithAddedDirectives;
+        ScriptType solutionType = CompileCode(_compiledSolutionCode, _domain);
         if (solutionType == null) return;
 
-        if (!ValidateCodeSecurity(solutionWithAddedDirectives)) return;
+        if (!ValidateCodeSecurity(_compiledSolutionCode)) return;
 
         _solutionScript = solutionType.CreateInstance();
     }
@@ -303,7 +310,7 @@ public class RuntimeCodeSystem : MonoBehaviour
 
         if (compiledType == null)
         {
-            HandleCompilationErrors(domain);
+            HandleCompilationErrors(domain, _lineOffsetCount);
             return null;
         }
 
@@ -326,12 +333,6 @@ public class RuntimeCodeSystem : MonoBehaviour
         return true;
     }
 
-    private void SaveSyntaxTree(string codeWithDirectives)
-    {
-        var userSyntaxTree = CSharpSyntaxTree.ParseText(codeWithDirectives);
-        var p = Path.Combine(Directory.GetParent(Application.dataPath).FullName, outputPath);
-        DebugFileSaving.SaveSyntaxTree(userSyntaxTree, $"{p}/{outputSyntaxTreeName}");
-    }
 
     private void RunVoidMethodTest()
     {
@@ -380,20 +381,39 @@ public class RuntimeCodeSystem : MonoBehaviour
         RuntimeManager.Instance.EnableWorldGame();
         RuntimeManager.Instance.EnableWorldSimulator();
         _userScript.Call(_entryPointMethodName);
-        (bool correct, var feedback) = _scenario.CheckCorrectness();
 
+
+        (bool correct, var feedback, var feedbackKeys) = _scenario.CheckCorrectness();
+
+
+
+        List<string> strucFeedback = new List<string>();
+        if (!correct)
+        {
+            _codeGradingSystem.StructureFeedback(_compiledUserCode, _compiledSolutionCode, strucFeedback, _currentTask.StructureFeedbackTypes);
+        }
+        if (strucFeedback.Count > 0)
+            feedback.AddRange(strucFeedback);
 
 
         var gradingResult = _codeGradingSystem.GradeSubmission(
-            _usingStatements + "\n" + _codeEditorWindow.Text,
+            correct,
+            _compiledUserCode,
+            _compiledSolutionCode,
             _userScript,
             _solutionScript, _entryPointMethodName, _currentTask.ScenarioType
         );
         RuntimeManager.Instance.DisableWorldSimulator();
 
-
-        gradingResult.Correct = correct;
         gradingResult.Feedback.AddRange(feedback);
+
+        feedbackKeys.AddRange(gradingResult.FeedbackKeys);
+        gradingResult.FeedbackKeys = feedbackKeys;
+        gradingResult.FeedbackKeys.Insert(0, "GEN_Analyzing");
+        gradingResult.FeedbackKeys.Add("GEN_Details");
+        gradingResult.Feedback.Insert(0, $"Maintainability Score: {gradingResult.NamingScore}");
+        gradingResult.Feedback.Insert(0, $"Memory Score: {gradingResult.MemoryScore}");
+        gradingResult.Feedback.Insert(0, $"Performance Score: {gradingResult.PerformanceScore}");
 
         LogGradingResults(gradingResult);
         return gradingResult;
@@ -448,8 +468,16 @@ public class RuntimeCodeSystem : MonoBehaviour
     private void SaveCoroutineCode(string coroutineCode)
     {
         var p = Path.Combine(Directory.GetParent(Application.dataPath).FullName, outputPath);
-        DebugFileSaving.SaveCSharp(coroutineCode, $"{p}/{outputCSFileName}");
+        DebugFileSaving.SaveCSharp(coroutineCode, $"{p}/{DateTime.Now:yyyy-MM-dd_HH-mm-ss}_{outputCSFileName}");
     }
+
+    private void SaveSyntaxTree(string codeWithDirectives)
+    {
+        var userSyntaxTree = CSharpSyntaxTree.ParseText(codeWithDirectives);
+        var p = Path.Combine(Directory.GetParent(Application.dataPath).FullName, outputPath);
+        DebugFileSaving.SaveSyntaxTree(userSyntaxTree, $"{p}/{DateTime.Now:yyyy-MM-dd_HH-mm-ss}_{outputSyntaxTreeName}");
+    }
+
 
     private ScriptType CompileCoroutine(string coroutineCode)
     {

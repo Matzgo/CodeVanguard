@@ -1,5 +1,7 @@
 using CodeInspector;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -29,10 +31,16 @@ public class CodeVanguardManager : MonoBehaviour
     }
 
     [SerializeField] private CodeVanguardState currentState = CodeVanguardState.Offline;
+    public CodeVanguardState CurrentState => currentState;
     [SerializeField] ScreenManager _screenManager;
     [SerializeField] RuntimeCodeSystem _runtimeCodeSystem;
-
+    public RuntimeCodeSystem RuntimeCodeSystem => _runtimeCodeSystem;
+    [SerializeField] FeedbackBot _feedbackBot;
     [SerializeField] CSFileSet _task;
+    public CSFileSet CurrentTask => _task;
+
+    public Action<string, GradingResult> OnTaskEnd;
+
     private void Awake()
     {
 
@@ -100,13 +108,17 @@ public class CodeVanguardManager : MonoBehaviour
         }
         _runtimeCodeSystem.LoadTask(task);
         _screenManager.LoadTask(task);
-
+        currentState = CodeVanguardState.Task;
     }
+
+
 
     public void EndTask(GradingResult res)
     {
         _screenManager.TurnOffAllScreens();
+        currentState = CodeVanguardState.TaskEnd;
 
+        OnTaskEnd?.Invoke(_task.TaskID, res);
 
 
 
@@ -126,6 +138,13 @@ public class CodeVanguardManager : MonoBehaviour
         _task = null;
     }
 
+    public void ResetToLogInScreen()
+    {
+        _screenManager.TurnOffAllScreens();
+        _screenManager.TurnOn(ScreenType.Main);
+        _screenManager.Main.ShowLogInWindow();
+    }
+
     internal void PlugIn(CSFileSet task)
     {
         _task = task;
@@ -134,4 +153,11 @@ public class CodeVanguardManager : MonoBehaviour
         _screenManager.TurnOn(ScreenType.Main);
         _screenManager.Main.ShowLogInWindow();
     }
+
+
+    public void LoadFeedback(List<string> l)
+    {
+        _feedbackBot.LoadFeedback(l);
+    }
+
 }

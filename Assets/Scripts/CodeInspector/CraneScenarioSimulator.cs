@@ -38,6 +38,7 @@ public class CraneScenarioSimulator
             _craneCarryingItem = true;
             _carriedItemCount = 1; // Assuming the crane can carry one item at a time.
             _cols[_currentCraneCol]--;
+
             return true;
         }
         return false;
@@ -50,37 +51,48 @@ public class CraneScenarioSimulator
             _craneCarryingItem = false;
             _carriedItemCount = 0;
             _cols[_currentCraneCol]++;
+
             return true;
         }
         return false;
     }
 
-    public (bool isCorrect, List<string> feedback) CheckCorrectness(CraneMiniGameParameters parameters)
+    public (bool isCorrect, List<string> feedback, List<string> feedbackKey) CheckCorrectness(CraneMiniGameParameters parameters)
     {
         var feedback = new List<string>();
+        var feedbackKey = new List<string>();
         if (parameters.targetCols == null)
         {
             feedback.Add("Target columns are not set.");
-            return (false, feedback);
+            return (false, feedback, feedbackKey);
         }
 
         if (_cols.Length != parameters.targetCols.Length)
         {
             feedback.Add("The number of columns does not match the target.");
-            return (false, feedback);
+            return (false, feedback, feedbackKey);
         }
 
+        bool noMatch = false;
         for (int i = 0; i < _cols.Length; i++)
         {
             if (_cols[i] != parameters.targetCols[i])
             {
-                feedback.Add($"Column {i} does not match the target value.");
-                return (false, feedback);
+                feedback.Add($"Column {i + 1} does not match the target value. Expected: {parameters.targetCols[i]} Current: {_cols[i]}");
+
+                noMatch = true;
             }
+        }
+        if (noMatch)
+        {
+            feedbackKey.Add("CRANE_Invalid");
+            return (false, feedback, feedbackKey);
         }
 
         feedback.Add("All columns match the target configuration.");
-        return (true, feedback);
+        feedbackKey.Add("CRANE_Valid");
+
+        return (true, feedback, feedbackKey);
     }
 
     public int[] GetCurrentState()

@@ -79,7 +79,7 @@ public class SafeScenario : Scenario
         _audioSource.PlayOneShot(_denySFX);
     }
 
-    public override (bool b, List<string> feedback) CheckCorrectness()
+    public override (bool b, List<string> feedback, List<string> feedbackKey) CheckCorrectness()
     {
         return _sim.CheckCorrectness();
     }

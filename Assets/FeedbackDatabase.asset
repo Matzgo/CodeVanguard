@@ -1,0 +1,123 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d311328f112f6f45aa57c850e9d38fc, type: 3}
+  m_Name: FeedbackDatabase
+  m_EditorClassIdentifier: 
+  feedbackEntries:
+  - key: START_Welcome
+    feedbackText: 'Welcome Code Vanguard Operative! This is Moon Base 256! I am M.O.A.
+      - Moon Operations Assistant. '
+    audioClip: {fileID: 8300000, guid: 4271e891c3041c84291eeb9cb3d3f3e2, type: 3}
+    postDelay: 0
+  - key: START_MoonBase
+    feedbackText: 'The Solar Storm hit the Base pretty hard and scrambled the Code
+      of many critical Systems. I''m so glad you''re here to fix it! '
+    audioClip: {fileID: 8300000, guid: b1e9181dc8104e5439a559419ff75ea6, type: 3}
+    postDelay: 0
+  - key: START_Terminal
+    feedbackText: The Main Terminal is right down this hall.
+    audioClip: {fileID: 8300000, guid: 972e4a94316f13540a1c362c44ce7985, type: 3}
+    postDelay: 0
+  - key: START_Cable
+    feedbackText: Pick up Cables and plug them into the Main Terminal to modify the
+      connected System's Code.
+    audioClip: {fileID: 8300000, guid: f182690a1d3ee48458ee46fb74c8fdf7, type: 3}
+    postDelay: 0
+  - key: START_Evaluate
+    feedbackText: It is important to keep Performance and Memory usage of Code in
+      Mind to ensure optimal Operation of the Base.
+    audioClip: {fileID: 8300000, guid: 653ff78e1942018459bc6779891774e1, type: 3}
+    postDelay: 0
+  - key: START_CleanCode
+    feedbackText: Please write clean and well-structured Code. This way when the
+      next Solar Storm scrambles everything again, it will be much easier to decipher.
+    audioClip: {fileID: 8300000, guid: a66a90c97d69fdc4b91c80eb77f2d7b7, type: 3}
+    postDelay: 0
+  - key: SAFE_Start
+    feedbackText: Maybe you can modify the Button Code to access the Safe. Press
+      on the Screen near the Safe to run the code.
+    audioClip: {fileID: 8300000, guid: 82d66fa3550c52945bac815746444c3c, type: 3}
+    postDelay: 0
+  - key: SAFE_Locked
+    feedbackText: The safe is still closed. Maybe you could change how the condition
+      works.
+    audioClip: {fileID: 8300000, guid: 635524cc429043643bdd8b461205a044, type: 3}
+    postDelay: 0
+  - key: SAFE_Unlocked
+    feedbackText: The safe is open! Great Job!
+    audioClip: {fileID: 8300000, guid: df53b27cca66ad74397b117b91561d64, type: 3}
+    postDelay: 0
+  - key: GEN_Analyzing
+    feedbackText: Analyzing
+    audioClip: {fileID: 8300000, guid: f39ca0045c9df114c8f51a55629a301f, type: 3}
+    postDelay: 0
+  - key: GEN_Details
+    feedbackText: Tap on my Screen for Details!
+    audioClip: {fileID: 8300000, guid: 78b4a08ccff753147a2158501888a0d9, type: 3}
+    postDelay: 0
+  - key: MEM_EQUAL
+    feedbackText: Optimal memory usage.
+    audioClip: {fileID: 8300000, guid: 7e662f16ef7b5e8469df6d8ce12070f7, type: 3}
+    postDelay: 0
+  - key: MEM_Subopt
+    feedbackText: Hmm, i think we can improve memory usage here.
+    audioClip: {fileID: 8300000, guid: 78817e869a142824db4e8adb4140b466, type: 3}
+    postDelay: 0
+  - key: MEM_Super
+    feedbackText: Improved memory usage!
+    audioClip: {fileID: 8300000, guid: 8684efcd24a55ca42bdcb7cd82382623, type: 3}
+    postDelay: 0
+  - key: MAINTAIN_Subopt
+    feedbackText: I think we could name things a little better.
+    audioClip: {fileID: 8300000, guid: b797407ec8ad0194f97fc8892b039832, type: 3}
+    postDelay: 0
+  - key: MAINTAIN_Opt
+    feedbackText: The Code looks nice and clean!
+    audioClip: {fileID: 8300000, guid: 368b6c7d12a85024cb632b25d1d24e4a, type: 3}
+    postDelay: 0
+  - key: PERF_Subopt
+    feedbackText: Performance of the Code sub optimal. We should improve it.
+    audioClip: {fileID: 8300000, guid: ca19bf26bca76a7409b8a41f6774aaa5, type: 3}
+    postDelay: 0
+  - key: PERF_Opt
+    feedbackText: Optimal Performance!
+    audioClip: {fileID: 8300000, guid: 6040cf410ec601d4c8c986393873c1dc, type: 3}
+    postDelay: 0
+  - key: POW_Start
+    feedbackText: To establish a stable power supply from the generator, every other
+      beam must be redirected.
+    audioClip: {fileID: 8300000, guid: b078b0853e4d1d94a9c8784c792a476f, type: 3}
+    postDelay: 0
+  - key: POW_Valid
+    feedbackText: Perfect! Every other beam is being redirected as intended.
+    audioClip: {fileID: 8300000, guid: 5f37dbeed13e10443b596c362aa0d28c, type: 3}
+    postDelay: 0
+  - key: POW_Invalid
+    feedbackText: Oh no! That doesn't seem right. We need to redirect every other
+      Power Beam to start the generator.
+    audioClip: {fileID: 8300000, guid: 494d8a613ca34794b928b632997973de, type: 3}
+    postDelay: 0
+  - key: CRANE_Start
+    feedbackText: We need to move all Fuel Crates into the Fuel Burner on the right.
+    audioClip: {fileID: 8300000, guid: a11f04cb7eccf1b4f8bcb06d36980cc8, type: 3}
+    postDelay: 0
+  - key: CRANE_Invalid
+    feedbackText: Hmm, doesnt seem like all crates have made it's way into the Fuel
+      Burner. Let's go over the code again.
+    audioClip: {fileID: 8300000, guid: 4457e485cbb9d1945a4b1eba3b71b293, type: 3}
+    postDelay: 0
+  - key: CRANE_Valid
+    feedbackText: Nice Job! All the Fuel Crates are burned up. The Moon Base will
+      be powered for thirty seven point five six eight years before it needs to be
+      refueled again.
+    audioClip: {fileID: 8300000, guid: fa425ef615439424c92f159358566a7c, type: 3}
+    postDelay: 0
