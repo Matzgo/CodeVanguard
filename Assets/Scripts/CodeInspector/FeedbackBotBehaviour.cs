@@ -27,6 +27,18 @@ public class FeedbackBotBehaviour : MonoBehaviour, IInteractable
     [SerializeField]
     GameObject _robotFace;
 
+    [SerializeField]
+    TMPro.TextMeshProUGUI _validText;
+
+    [SerializeField]
+    TMPro.TextMeshProUGUI _perfScore;
+
+    [SerializeField]
+    TMPro.TextMeshProUGUI _memScore;
+
+
+    [SerializeField]
+    TMPro.TextMeshProUGUI _maintainScore;
 
     [SerializeField]
     GameObject _taskInfo;
@@ -41,8 +53,8 @@ public class FeedbackBotBehaviour : MonoBehaviour, IInteractable
     public void LoadTask(CSFileSet task)
     {
         _currentTask = task;
-        _feedbackIndicator.SetActive(true);
-        _audio.Play();
+        //_feedbackIndicator.SetActive(true);
+        //_audio.Play();
     }
 
 
@@ -65,13 +77,22 @@ public class FeedbackBotBehaviour : MonoBehaviour, IInteractable
         }
     }
 
-    public void QueueFeedback(List<string> feedback, List<string> feedbackKeys)
+    public void QueueFeedback(GradingResult res)
     {
         _feedbackIndicator.SetActive(true);
-        _feedbackQueue.Add(feedback);
-        _feedbackBot.LoadFeedback(feedbackKeys);
+        _feedbackQueue.Add(res.Feedback);
+        _validText.text = res.Correct ? "VALID" : "INVALID";
+        _perfScore.text = res.PerformanceScore.ToString("F0");
+        _memScore.text = res.MemoryScore.ToString("F0");
+        _maintainScore.text = res.NamingScore.ToString("F0");
+        _feedbackBot.LoadFeedback(res.FeedbackKeys);
         _audio.Play();
 
+    }
+
+    public bool CanInteract()
+    {
+        return _feedbackQueue.Count > 0 || _isShowingFeedback;
     }
 
     public void OnInteract()
@@ -96,33 +117,10 @@ public class FeedbackBotBehaviour : MonoBehaviour, IInteractable
             HideFeedback();
             _isShowingFeedback = false;
         }
-        else if (_isShowingTask)
-        {
-            HideTask();
-            _isShowingTask = false;
-        }
-        else if (_currentTask != null)
-        {
-            ShowTask();
-            _isShowingTask = true;
-        }
         _feedbackIndicator.SetActive(false);
 
     }
 
-    private void ShowTask()
-    {
-        _taskType.text = _currentTask.Title;
-        _taskDescription.text = _currentTask.Description;
-        _taskInfo.SetActive(true);
-        _robotFace.SetActive(false);
-    }
-
-    private void HideTask()
-    {
-        _taskInfo.SetActive(false);
-        _robotFace.SetActive(true);
-    }
 
     private void HideFeedback()
     {

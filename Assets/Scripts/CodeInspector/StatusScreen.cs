@@ -9,11 +9,43 @@ public class StatusScreen : MonoBehaviour
 
 
     [SerializeField]
-    TMPro.TextMeshProUGUI statusText;
+    Image _imgInvalid;
+
+
+    [SerializeField]
+    Image _imgValid;
+
+
+
+    [SerializeField]
+    Image _star1;
+    [SerializeField]
+    Image _star1Inner;
+    [SerializeField]
+    Image _star2;
+    [SerializeField]
+    Image _star2Inner;
+
+    [SerializeField]
+    Image _star3;
+    [SerializeField]
+    Image _star3Inner;
+
+    [SerializeField]
+    Image _star4;
+    [SerializeField]
+    Image _star4Inner;
+
+    [SerializeField]
+    Image _star5;
+    [SerializeField]
+    Image _star5Inner;
+
     [SerializeField]
     Image bg;
     private void Awake()
     {
+        HideAll();
         SetInvalid();
 
     }
@@ -31,40 +63,100 @@ public class StatusScreen : MonoBehaviour
         }
     }
 
-    public void SetSuboptimal()
+    public void HideAll()
     {
-        statusText.text = "SUBOPTIMAL";
-        bg.color = Color.yellow;
+        _imgInvalid.gameObject.SetActive(false);
+        _imgValid.gameObject.SetActive(false);
+        _star1.gameObject.SetActive(false);
+        _star2.gameObject.SetActive(false);
+        _star3.gameObject.SetActive(false);
+        _star4.gameObject.SetActive(false);
+        _star5.gameObject.SetActive(false);
+        _star1Inner.gameObject.SetActive(false);
+        _star2Inner.gameObject.SetActive(false);
+        _star3Inner.gameObject.SetActive(false);
+        _star4Inner.gameObject.SetActive(false);
+        _star5Inner.gameObject.SetActive(false);
     }
+
     public void SetOptimal()
     {
-        statusText.text = "OPTIMAL";
+        _imgValid.gameObject.SetActive(true);
+
         bg.color = Color.green;
 
     }
     public void SetInvalid()
     {
-        statusText.text = "INVALID";
+        _imgInvalid.gameObject.SetActive(true);
         bg.color = Color.red;
     }
+
+    public void SetStarRating(int i)
+    {
+        //bg.color = Color.green;
+
+        // Ensure all stars are active
+        _star1.gameObject.SetActive(true);
+        _star2.gameObject.SetActive(true);
+        _star3.gameObject.SetActive(true);
+        _star4.gameObject.SetActive(true);
+        _star5.gameObject.SetActive(true);
+        _star1Inner.gameObject.SetActive(true);
+        _star2Inner.gameObject.SetActive(true);
+        _star3Inner.gameObject.SetActive(true);
+        _star4Inner.gameObject.SetActive(true);
+        _star5Inner.gameObject.SetActive(true);
+        // Set the stars' colors based on the rating
+        _star1Inner.color = (i >= 1) ? Color.white : Color.gray;
+        _star2Inner.color = (i >= 2) ? Color.white : Color.gray;
+        _star3Inner.color = (i >= 3) ? Color.white : Color.gray;
+        _star4Inner.color = (i >= 4) ? Color.white : Color.gray;
+        _star5Inner.color = (i >= 5) ? Color.white : Color.gray;
+
+        bg.color = (i >= 5) ? Color.green : Color.yellow;
+    }
+
+
     public void UpdateStatus(GradingResult res)
     {
-        if (!res.Correct)
+        HideAll();
+
+        if (CodeVanguardManager.Instance.UseStarSystem)
         {
-            SetInvalid();
-        }
-        else
-        {
-            if (res.NamingScore < 100f || res.PerformanceScore < 100f || res.MemoryScore < 100f)
+            if (!res.Correct)
             {
-                SetSuboptimal();
+                SetInvalid();
             }
             else
             {
-                SetOptimal();
+                var userScore = res.TotalScore;
+                if (userScore < 25f)
+                    SetStarRating(1);
+                else if (userScore < 50f)
+                    SetStarRating(2);
+                else if (userScore < 75f)
+                    SetStarRating(3);
+                else if (userScore < 100f)
+                    SetStarRating(4);
+                else if (userScore == 100f) // Only perfect score gets 5 stars
+                    SetStarRating(5);
+
             }
-
         }
+        else
+        {
+            if (!res.Correct)
+            {
+                SetInvalid();
+            }
+            else
+            {
 
+                SetOptimal();
+
+
+            }
+        }
     }
 }

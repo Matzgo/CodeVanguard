@@ -40,6 +40,11 @@ public class CodeVanguardManager : MonoBehaviour
     public CSFileSet CurrentTask => _task;
 
     public Action<string, GradingResult> OnTaskEnd;
+    [SerializeField]
+    UIObjective _uiObjective;
+
+    [SerializeField] bool _useStarSystem;
+    public bool UseStarSystem => _useStarSystem;
 
     private void Awake()
     {
@@ -89,6 +94,7 @@ public class CodeVanguardManager : MonoBehaviour
     {
 
         _screenManager.TurnOffAllScreens();
+        currentState = CodeVanguardState.Task;
 
         RuntimeManager.Instance.Console.ClearConsole();
         _screenManager.Main.ShowCodeWindow();
@@ -108,7 +114,7 @@ public class CodeVanguardManager : MonoBehaviour
         }
         _runtimeCodeSystem.LoadTask(task);
         _screenManager.LoadTask(task);
-        currentState = CodeVanguardState.Task;
+        _uiObjective.LoadTask(task);
     }
 
 
@@ -128,6 +134,8 @@ public class CodeVanguardManager : MonoBehaviour
         _screenManager.Main.ShowPostTaskWindow();
         _screenManager.TurnOn(ScreenType.Console);
         _screenManager.TurnOn(ScreenType.Task);
+        _uiObjective.Disable();
+
     }
 
     internal void Unplug()
@@ -136,6 +144,8 @@ public class CodeVanguardManager : MonoBehaviour
         _screenManager.TurnOn(ScreenType.Main);
         _screenManager.Main.ShowLogInWindow();
         _task = null;
+        _uiObjective.Disable();
+
     }
 
     public void ResetToLogInScreen()

@@ -2,6 +2,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -214,7 +215,7 @@ public class CoroutineTransformer : MonoBehaviour
 
 
             newStatements.Add(SyntaxFactory.ParseStatement($"CodeInspector.RuntimeManager.Instance.HighlightLine({lineNumber - _lineOffset});"));
-            newStatements.Add(SyntaxFactory.ParseStatement($"yield return new UnityEngine.WaitForSeconds({_codeRate}f);"));
+            newStatements.Add(SyntaxFactory.ParseStatement($"yield return new UnityEngine.WaitForSeconds({_codeRate.ToString(CultureInfo.InvariantCulture)}f);"));
 
 
 

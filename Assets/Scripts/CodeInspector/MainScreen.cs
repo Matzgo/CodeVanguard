@@ -2,7 +2,6 @@ using CodeInspector;
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 public enum MainScreenType
 {
     Start,
@@ -19,7 +18,7 @@ public class MainScreen : MonoBehaviour
 
 
     [SerializeField]
-    Button _logInButton;
+    MainComputerButtonInteractable _logInButton;
 
     [Header("FETCH")]
     [SerializeField]
@@ -37,7 +36,7 @@ public class MainScreen : MonoBehaviour
     private TextMeshProUGUI _preTaskText;
 
     [SerializeField]
-    Button _beginTaskButton;
+    MainComputerButtonInteractable _beginTaskButton;
 
     [Header("CODE")]
 
@@ -61,7 +60,7 @@ public class MainScreen : MonoBehaviour
     [SerializeField]
     private TextMeshProUGUI _postTaskReward;
     [SerializeField]
-    private Button _postTaskContinue;
+    private MainComputerButtonInteractable _postTaskContinue;
     [Header("------")]
 
     [SerializeField]
@@ -109,9 +108,9 @@ public class MainScreen : MonoBehaviour
     }
     private void Start()
     {
-        _logInButton.onClick.AddListener(() => OnLogIn());
-        _beginTaskButton.onClick.AddListener(() => StartTask());
-        _postTaskContinue.onClick.AddListener(() => PostTaskContinue());
+        _logInButton.RegisterAction(OnLogIn);
+        _beginTaskButton.RegisterAction(StartTask);
+        _postTaskContinue.RegisterAction(PostTaskContinue);
     }
 
     private void PostTaskContinue()

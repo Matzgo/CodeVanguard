@@ -198,8 +198,8 @@ public class CodeGradingSystem : MonoBehaviour
         double averageUserTime = totalUserTime / testCaseCount; /// testCaseCount;
         double averageSolTime = totalGoalTime / testCaseCount; /// testCaseCount;
         //feedback.Add($"USER: {averageUserTime} | SOL: {averageSolTime} | USER/SOL: {averageUserTime / averageSolTime}");
-        feedback.Add($"Current: {averageUserTime}ms | Expected: {averageSolTime}ms");
-        feedback.Add($"Current Code is {averageSolTime / averageUserTime} as performant as expected");
+        feedback.Add($"RUNTIME: {averageUserTime}ms | Expected: {averageSolTime}ms");
+        //feedback.Add($"Current Code is {averageSolTime / averageUserTime} faster than expected");
 
         // Compare with goal solution time
         if (averageUserTime > averageSolTime * 1.4)
@@ -225,8 +225,8 @@ public class CodeGradingSystem : MonoBehaviour
         }
         else
         {
-            feedbackKeys.Add("PERF_Opt");
-            feedback.Add("Optimal Performance!");
+            //feedbackKeys.Add("PERF_Opt");
+            //feedback.Add("Optimal Performance!");
         }
 
 
@@ -283,8 +283,8 @@ public class CodeGradingSystem : MonoBehaviour
                 if (userAllocations == 0) // If the user's code also has zero allocations
                 {
                     score = 100f; // Perfect score for matching the solution
-                    feedbackKeys.Add("MEM_EQUAL");
-                    feedback.Add("Memory usage matches expected pattern.");
+                    //feedbackKeys.Add("MEM_EQUAL");
+                    //feedback.Add("Memory usage matches expected pattern.");
                     //feedback.Add("No allocations detected. Matches expected behavior.");
                 }
                 else // User's code has allocations while the solution does not
@@ -299,8 +299,8 @@ public class CodeGradingSystem : MonoBehaviour
             {
                 if (userAllocations == 0) // If the user's code has zero allocations
                 {
-                    score = 100f * solutionAllocations; // Score based on the number of solution allocations
-                    feedback.Add("Remarkable! Less memory usage than before!");
+                    score = 100f; // Score based on the number of solution allocations
+                    //feedback.Add("Remarkable! Less memory usage than before!");
                     feedbackKeys.Add("MEM_Super");
                 }
                 else // User's code has allocations
@@ -309,8 +309,8 @@ public class CodeGradingSystem : MonoBehaviour
 
                     if (solutionAllocations == userAllocations)
                     {
-                        feedbackKeys.Add("MEM_EQUAL");
-                        feedback.Add("Memory usage matches expected pattern.");
+                        //feedbackKeys.Add("MEM_EQUAL");
+                        //feedback.Add("Memory usage matches expected pattern.");
                     }
                     else
                     {
@@ -455,7 +455,7 @@ public class CodeGradingSystem : MonoBehaviour
         }
         else
         {
-            feedbackKeys.Add("MAINTAIN_Opt");
+            //feedbackKeys.Add("MAINTAIN_Opt");
         }
 
         return (score, feedback, feedbackKeys);

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-
 public class CraneScenario : Scenario
 {
     CraneScenarioSimulator _sim;
@@ -199,6 +198,7 @@ public class CraneScenario : Scenario
         UpdateCraneItems();
 
     }
+
 
 }
 

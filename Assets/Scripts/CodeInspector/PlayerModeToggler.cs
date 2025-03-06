@@ -6,6 +6,9 @@ public class PlayerModeToggler : MonoBehaviour
 
     bool _active;
 
+    [SerializeField]
+    GameObject _crosshair;
+
     private void Awake()
     {
         _active = false;
@@ -25,6 +28,7 @@ public class PlayerModeToggler : MonoBehaviour
         {
             InputManager.Instance.Input.Player.Disable();
             InputManager.Instance.Input.Player.Disable();
+            _crosshair.SetActive(false);
             UnlockAndShowCursor();
             _active = true;
 
@@ -33,6 +37,7 @@ public class PlayerModeToggler : MonoBehaviour
         {
             InputManager.Instance.Input.Player.Enable();
             InputManager.Instance.Input.Player.Enable();
+            _crosshair.SetActive(true);
 
             LockAndHideCursor();
 

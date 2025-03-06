@@ -30,9 +30,13 @@ public class ScreenManager : MonoBehaviour
     [SerializeField]
     GameObject _taskActionScreen;
     [SerializeField]
+    GameObject _taskActionScreen2;
+    [SerializeField]
     GameObject _visualScreen;
     [SerializeField]
     GameObject _docsScreen;
+
+
 
     public void TurnOffAllScreens()
     {
@@ -41,6 +45,7 @@ public class ScreenManager : MonoBehaviour
         //_taskScreen.SetActive(false);
         _visualScreen.SetActive(false);
         _taskActionScreen.SetActive(false);
+        _taskActionScreen2.SetActive(false);
         _docsScreen.SetActive(false);
     }
 
@@ -59,6 +64,8 @@ public class ScreenManager : MonoBehaviour
             //break;
             case ScreenType.TaskAction:
                 _taskActionScreen.SetActive(true);
+                _taskActionScreen2.SetActive(true);
+
                 break;
         }
     }
@@ -78,6 +85,8 @@ public class ScreenManager : MonoBehaviour
             //    break;
             case ScreenType.TaskAction:
                 _taskActionScreen.SetActive(false);
+                _taskActionScreen2.SetActive(false);
+
                 break;
         }
     }
@@ -86,11 +95,12 @@ public class ScreenManager : MonoBehaviour
     {
         _main.LoadTask(task);
         _task.LoadTask(task);
+
     }
 
     internal void LoadResult(GradingResult res)
     {
         _main.LoadResult(res);
-        _task.QueueFeedback(res.Feedback, res.FeedbackKeys);
+        _task.QueueFeedback(res);
     }
 }

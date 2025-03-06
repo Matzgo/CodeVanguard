@@ -36,6 +36,9 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     PlayerCarry _playerCarry;
+    [SerializeField]
+    private GameObject _interactCrosshair;
+
     void Awake()
     {
         controller = GetComponent<CharacterController>();
@@ -59,7 +62,7 @@ public class PlayerController : MonoBehaviour
 
         if (_playerCarry.IsCarrying)
         {
-            if (Physics.Raycast(_camera.transform.position, _camera.transform.forward, out RaycastHit socketHit, 2f, _interactLayerMask))
+            if (Physics.Raycast(_camera.transform.position, _camera.transform.forward, out RaycastHit socketHit, 2.3f, _interactLayerMask))
             {
                 if (socketHit.collider.TryGetComponent<CableSocket>(out var socket))
                 {
@@ -88,6 +91,7 @@ public class PlayerController : MonoBehaviour
                 _playerCarry.PickUp(plug);
                 return;
             }
+
         }
     }
 
@@ -112,11 +116,52 @@ public class PlayerController : MonoBehaviour
         moveInput = InputManager.Instance.Input.Player.Move.ReadValue<Vector2>();
         lookInput = InputManager.Instance.Input.Player.Look.ReadValue<Vector2>();
 
+        HandleInteractCrosshair();
+
         HandleLook();
         HandleMovement();
         HandleGravityAndJump();
         HandleZoom();
     }
+
+    private void HandleInteractCrosshair()
+    {
+        float interactionRange = _playerCarry.IsCarrying ? 2.3f : 4f; // Adjust range based on carrying state
+
+        if (Physics.Raycast(_camera.transform.position, _camera.transform.forward, out RaycastHit hit, interactionRange, _interactLayerMask))
+        {
+            bool canShowCrosshair = false;
+
+            if (_playerCarry.IsCarrying)
+            {
+                // Only allow crosshair to appear for CableSocket when carrying
+                if (hit.collider.TryGetComponent<CableSocket>(out var socket))
+                {
+                    canShowCrosshair = true;
+                }
+            }
+            else
+            {
+                // When NOT carrying, check other interactables in full range
+                if (hit.collider.TryGetComponent<IInteractable>(out var interactable))
+                {
+                    canShowCrosshair = interactable.CanInteract();
+                }
+                else if (hit.collider.GetComponent<PickupableCable>() != null)
+                {
+                    canShowCrosshair = true;
+                }
+            }
+
+            _interactCrosshair.SetActive(canShowCrosshair);
+            return;
+        }
+
+        _interactCrosshair.SetActive(false);
+    }
+
+
+
 
     void HandleLook()
     {

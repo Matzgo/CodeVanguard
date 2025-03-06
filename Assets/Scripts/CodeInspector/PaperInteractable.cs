@@ -18,4 +18,9 @@ public class PaperInteractable : MonoBehaviour, IInteractable
     {
         _objectInspector.Show(this, _inspectRotate, _distance);
     }
+
+    public bool CanInteract()
+    {
+        return true;
+    }
 }

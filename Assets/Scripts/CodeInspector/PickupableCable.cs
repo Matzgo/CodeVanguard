@@ -11,8 +11,11 @@ public class PickupableCable : MonoBehaviour
     Rope _rope;
 
     CableSocket _socket;
-    private int _forceCooldown = 2;
+    private float _forceCooldown = .2f;
     private float _lastForceTime;
+
+    int waitFrames = 300;
+    private int _frameCount = 0;
 
     public void Unplug()
     {
@@ -42,14 +45,18 @@ public class PickupableCable : MonoBehaviour
 
     private void FixedUpdate()
     {
+        _frameCount++;
+        if (_frameCount < waitFrames)
+            return;
+
         if (IsBeyondMaxLength())
         {
-            // Check if enough time has passed since the last force application
-            //if (Time.time - _lastForceTime >= _forceCooldown)
-            //{
-            GetComponent<Rigidbody>().AddForce(_rope.EndDirection * 70f);
-            _lastForceTime = Time.time; // Update the last force time
-            //}
+            //Check if enough time has passed since the last force application
+            if (Time.time - _lastForceTime >= _forceCooldown)
+            {
+                GetComponent<Rigidbody>().AddForce(_rope.EndDirection * 70f);
+                _lastForceTime = Time.time; // Update the last force time
+            }
         }
     }
 }

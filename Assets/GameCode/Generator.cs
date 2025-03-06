@@ -1,21 +1,21 @@
 namespace Game
 {
-    public static class Generator
+    public class Generator
     {
-        public static void FireBeam()
+        public void FireBeam()
         {
 
             CodeInspector.RuntimeManager.Instance.Console.WriteLine("Firing Beam");
             CodeInspector.RuntimeManager.Instance.Trigger("FireBeam");
         }
 
-        public static void RedirectBeam()
+        public void RedirectBeam()
         {
             CodeInspector.RuntimeManager.Instance.Console.WriteLine("Redirecting Beam");
             CodeInspector.RuntimeManager.Instance.Trigger("RedirectBeam");
 
         }
-        public static void Start()
+        public void Start()
         {
             CodeInspector.RuntimeManager.Instance.Console.WriteLine("Blocking Beam");
             CodeInspector.RuntimeManager.Instance.Trigger("Start");

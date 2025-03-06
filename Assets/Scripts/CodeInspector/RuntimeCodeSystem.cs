@@ -35,11 +35,18 @@ public class RuntimeCodeSystem : MonoBehaviour
     /// The run code primerButton.
     /// </summary>
     [SerializeField]
-    private Button _resetButton;
+    private MainComputerButtonInteractable _resetButton;
     [SerializeField]
-    private Button _simulateButton;
+    private MainComputerButtonInteractable _simulateButton;
     [SerializeField]
-    private Button _runButton;
+    private MainComputerButtonInteractable _fasterButton;
+    [SerializeField]
+    private MainComputerButtonInteractable _slowerButton;
+    [SerializeField]
+    Slider _slider;
+
+    [SerializeField]
+    private UnityEngine.UI.Button _runButton;
     [SerializeField]
     TextMeshProUGUI _fileNameText;
     [SerializeField]
@@ -61,6 +68,7 @@ public class RuntimeCodeSystem : MonoBehaviour
     private ScriptProxy _solutionScript;
     private CSFileSet _lastTask;
     CSFileSet _currentTask;
+    public CSFileSet CurrentTask => _currentTask;
     private Scenario _scenario;
     private string _usingStatements;
     private string _coroutineUsingStatements;
@@ -79,14 +87,30 @@ public class RuntimeCodeSystem : MonoBehaviour
     private bool _coroutineDisabled;
     private bool _codeRunning;
     public bool CodeRunning => _codeRunning;
+
+    public Action<ScriptProxy, ScenarioType> OnReflectionInitialize { get; set; }
+
     private string _compiledUserCode;
     private string _compiledSolutionCode;
 
     private void Awake()
     {
-        _simulateButton.onClick.AddListener(OnSimulateClicked);
-        _resetButton.onClick.AddListener(OnResetClicked);
+        _simulateButton.RegisterAction(OnSimulateClicked);
+        _resetButton.RegisterAction(OnResetClicked);
+
+        _fasterButton.RegisterAction(Faster);
+        _slowerButton.RegisterAction(Slower);
         //_runButton.onClick.AddListener(OnRunClicked);
+    }
+
+    private void Slower()
+    {
+        _slider.value = Mathf.Clamp(_slider.value - .1f, 0, 1);
+    }
+
+    private void Faster()
+    {
+        _slider.value = Mathf.Clamp(_slider.value + .1f, 0, 1);
     }
 
     private void OnResetClicked()
@@ -342,6 +366,7 @@ public class RuntimeCodeSystem : MonoBehaviour
         RuntimeManager.Instance.DisableWorldGame();
         RuntimeManager.Instance.Console.SetActive(false);
 
+        OnReflectionInitialize?.Invoke(_userScript, _currentTask.ScenarioType);
         _userScript.Call(_entryPointMethodName);
         //RuntimeManager.Instance.EnableMiniGame();
         if (p)
@@ -380,6 +405,12 @@ public class RuntimeCodeSystem : MonoBehaviour
         RuntimeManager.Instance.ResetWorld();
         RuntimeManager.Instance.EnableWorldGame();
         RuntimeManager.Instance.EnableWorldSimulator();
+
+
+        OnReflectionInitialize?.Invoke(_userScript, _currentTask.ScenarioType);
+        OnReflectionInitialize?.Invoke(_solutionScript, _currentTask.ScenarioType);
+
+
         _userScript.Call(_entryPointMethodName);
 
 
@@ -411,9 +442,9 @@ public class RuntimeCodeSystem : MonoBehaviour
         gradingResult.FeedbackKeys = feedbackKeys;
         gradingResult.FeedbackKeys.Insert(0, "GEN_Analyzing");
         gradingResult.FeedbackKeys.Add("GEN_Details");
-        gradingResult.Feedback.Insert(0, $"Maintainability Score: {gradingResult.NamingScore}");
-        gradingResult.Feedback.Insert(0, $"Memory Score: {gradingResult.MemoryScore}");
-        gradingResult.Feedback.Insert(0, $"Performance Score: {gradingResult.PerformanceScore}");
+        //gradingResult.Feedback.Insert(0, $"Maintainability Score: {gradingResult.NamingScore}");
+        //gradingResult.Feedback.Insert(0, $"Memory Score: {gradingResult.MemoryScore}");
+        //gradingResult.Feedback.Insert(0, $"Performance Score: {gradingResult.PerformanceScore}");
 
         LogGradingResults(gradingResult);
         return gradingResult;
@@ -455,20 +486,33 @@ public class RuntimeCodeSystem : MonoBehaviour
             _coroutineCode = _coroutineTransformer.TransformToCoroutine(userCodeWithCoroutineDirectives);
 
         }
+        SaveUserCode(_compiledUserCode);
         SaveCoroutineCode(_coroutineCode);
 
         ScriptType coroutineType = CompileCoroutine(_coroutineCode);
         if (coroutineType == null) return;
 
         var transformedActiveScript = coroutineType.CreateInstance();
+
+
+
+        //TODO reflection
+        OnReflectionInitialize?.Invoke(transformedActiveScript, _currentTask.ScenarioType);
+
         //StartTransformedCoroutine(transformedActiveScript, "COR_Add", 5, 3);
         StartTransformedCoroutine(transformedActiveScript, "COR_" + _entryPointMethodName);
+    }
+
+    private void SaveUserCode(string coroutineCode)
+    {
+        var p = Path.Combine(Directory.GetParent(Application.dataPath).FullName, outputPath);
+        DebugFileSaving.SaveCSharp(_compiledUserCode, $"{p}/{DateTime.Now:yyyy-MM-dd_HH-mm-ss}_USER_{outputCSFileName}");
     }
 
     private void SaveCoroutineCode(string coroutineCode)
     {
         var p = Path.Combine(Directory.GetParent(Application.dataPath).FullName, outputPath);
-        DebugFileSaving.SaveCSharp(coroutineCode, $"{p}/{DateTime.Now:yyyy-MM-dd_HH-mm-ss}_{outputCSFileName}");
+        DebugFileSaving.SaveCSharp(coroutineCode, $"{p}/{DateTime.Now:yyyy-MM-dd_HH-mm-ss}_COR_{outputCSFileName}");
     }
 
     private void SaveSyntaxTree(string codeWithDirectives)

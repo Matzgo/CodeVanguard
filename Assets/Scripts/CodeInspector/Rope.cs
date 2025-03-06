@@ -80,6 +80,7 @@ public class Rope : MonoBehaviour
     public float CurrentRopeLength => currentRopeLength;
     [SerializeField] private float initialRopeLength;
     [SerializeField] private float floorHeight = .15f;
+    private int _frameNr;
 
     public float InitialRopeLength => initialRopeLength;
     public Vector3 EndDirection => (currentNodePositions[totalNodes - 4] - currentNodePositions[totalNodes - 1]).normalized;
@@ -167,9 +168,9 @@ public class Rope : MonoBehaviour
         isStartLocked = true;
         endLock = end.transform.position;
         isEndLocked = true;
-        DrawRope();
+        //DrawRope();
         CalculateRopeLength();
-        ValidateMatrices();
+        //ValidateMatrices();
         // Instanced drawing here is really performant over using GameObjects
         if (drawMesh)
             Graphics.DrawMeshInstanced(link, 0, linkMaterial, matrices, totalIntermediateNodes);
@@ -203,6 +204,10 @@ public class Rope : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //_frameNr++;
+        //if (_frameNr < 100)
+        //    return;
+
         Simulate();
 
         for (int i = 0; i < iterations; i++)
@@ -226,7 +231,11 @@ public class Rope : MonoBehaviour
         {
             // Calculate velocity
             Vector3 velocity = currentNodePositions[i] - previousNodePositions[i];
+
+
+
             velocity *= velocityDampen;
+
 
             // Clamp the velocity to the maximum allowed value
             if (velocity.magnitude > maxVelocity)
@@ -240,6 +249,11 @@ public class Rope : MonoBehaviour
             // Calculate the new position
             Vector3 newPos = currentNodePositions[i] + velocity;
             newPos += gravity * fixedDt;
+
+            if (float.IsNaN(newPos.x) || float.IsNaN(newPos.y) || float.IsNaN(newPos.z))
+            {
+                newPos = previousNodePositions[i];  // Recover using previous position
+            }
 
             if (newPos.y < floorHeight)
             {
@@ -421,12 +435,12 @@ public class Rope : MonoBehaviour
             }
         }
 
-        // Set the last main node
-        matrices[currentIndex].SetTRS(
-            currentNodePositions[totalNodes - 1],
-            currentNodeRotations[totalNodes - 1],
-            Vector3.one
-        );
+        //// Set the last main node
+        //matrices[currentIndex].SetTRS(
+        //    currentNodePositions[totalNodes - 1],
+        //    currentNodeRotations[totalNodes - 1],
+        //    Vector3.one
+        //);
     }
 
     private void DrawRope()

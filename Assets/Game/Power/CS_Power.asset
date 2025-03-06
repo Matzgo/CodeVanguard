@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CS_Power
   m_EditorClassIdentifier: 
   _fileName: Generator
-  _beforeText: "public class GeneratorController\n{\n\t\n\t\n\tint beamCount;\n\tpublic
-    void HandleBeam()\n\t{\n\t\tbeamCount++;\t"
-  _input: "\n\t\tGenerator.RedirectBeam();\n\t\t"
-  _afterText: "\t}\n\n\tpublic void TestBeams()\n\t{\n\t\tGenerator.FireBeam();\n\t\tHandleBeam();\n\t\tGenerator.FireBeam();\n\t\tHandleBeam();\n\t\tGenerator.FireBeam();\n\t\tHandleBeam();\n\t\tGenerator.FireBeam();\n\t\tHandleBeam();\n\t\tGenerator.FireBeam();\n\t\tHandleBeam();\n\t\tGenerator.FireBeam();\n\t\tHandleBeam();\n\t\tGenerator.Start();\n\t}\n\n\t\n\n}"
+  _beforeText: "public class GeneratorController\n{\n\tpublic Generator generator;\n\t\n\tint
+    beamCount;\n\tpublic void HandleBeam()\n\t{\n\t\tbeamCount++;\t"
+  _input: "\n\t\tgenerator.RedirectBeam();\n\t\t"
+  _afterText: "\t}\n\n\tpublic void TestBeams()\n\t{\n\t\tgenerator.FireBeam();\n\t\tHandleBeam();\n\t\tgenerator.FireBeam();\n\t\tHandleBeam();\n\t\tgenerator.FireBeam();\n\t\tHandleBeam();\n\t\tgenerator.FireBeam();\n\t\tHandleBeam();\n\t\tgenerator.FireBeam();\n\t\tHandleBeam();\n\t\tgenerator.FireBeam();\n\t\tHandleBeam();\n\t\tgenerator.Start();\n\t}\n\n\t\n\n}"

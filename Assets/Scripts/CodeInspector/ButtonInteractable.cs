@@ -7,6 +7,7 @@ public class ButtonInteractable : MonoBehaviour, IInteractable
     private Action registeredAction;
 
     [SerializeField] GameObject buttonScreen;
+    [SerializeField] AudioSource _audio;
 
     private void Start()
     {
@@ -40,7 +41,7 @@ public class ButtonInteractable : MonoBehaviour, IInteractable
         if (CodeVanguardManager.Instance.RuntimeCodeSystem.CodeRunning)
             return;
 
-
+        _audio.Play();
         buttonScreen.SetActive(false);
 
 
@@ -59,5 +60,18 @@ public class ButtonInteractable : MonoBehaviour, IInteractable
     public void ClearRegisteredAction()
     {
         registeredAction = null;
+    }
+
+    public bool CanInteract()
+    {
+        if (CodeVanguardManager.Instance.CurrentState != CodeVanguardState.Task)
+        {
+            return false;
+        }
+
+        if (CodeVanguardManager.Instance.RuntimeCodeSystem.CodeRunning)
+            return false;
+
+        return true;
     }
 }
