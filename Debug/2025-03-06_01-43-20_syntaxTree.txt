@@ -1,0 +1,187 @@
+CompilationUnitSyntax (CompilationUnit)
+Code: using Game;
+using System;
+using System.Collections.Generic;
+using Console = Game.Console;
+using Crane = Game.Crane;
+
+public class SafeSecurity
+{
+	public Safe safe;
+
+	public void OpenSafeButton()
+	{
+		bool locked = safe.Locked;
+		if(false)
+		{
+			safe.Alarm();
+		}
+		else
+		{
+			safe.Open();
+		}
+	}
+}
+    UsingDirectiveSyntax (UsingDirective)
+    Code: using Game;
+        IdentifierNameSyntax (IdentifierName)
+        Code: Game
+    UsingDirectiveSyntax (UsingDirective)
+    Code: using System;
+        IdentifierNameSyntax (IdentifierName)
+        Code: System
+    UsingDirectiveSyntax (UsingDirective)
+    Code: using System.Collections.Generic;
+        QualifiedNameSyntax (QualifiedName)
+        Code: System.Collections.Generic
+            QualifiedNameSyntax (QualifiedName)
+            Code: System.Collections
+                IdentifierNameSyntax (IdentifierName)
+                Code: System
+                IdentifierNameSyntax (IdentifierName)
+                Code: Collections
+            IdentifierNameSyntax (IdentifierName)
+            Code: Generic
+    UsingDirectiveSyntax (UsingDirective)
+    Code: using Console = Game.Console;
+        NameEqualsSyntax (NameEquals)
+        Code: Console =
+            IdentifierNameSyntax (IdentifierName)
+            Code: Console
+        QualifiedNameSyntax (QualifiedName)
+        Code: Game.Console
+            IdentifierNameSyntax (IdentifierName)
+            Code: Game
+            IdentifierNameSyntax (IdentifierName)
+            Code: Console
+    UsingDirectiveSyntax (UsingDirective)
+    Code: using Crane = Game.Crane;
+        NameEqualsSyntax (NameEquals)
+        Code: Crane =
+            IdentifierNameSyntax (IdentifierName)
+            Code: Crane
+        QualifiedNameSyntax (QualifiedName)
+        Code: Game.Crane
+            IdentifierNameSyntax (IdentifierName)
+            Code: Game
+            IdentifierNameSyntax (IdentifierName)
+            Code: Crane
+    ClassDeclarationSyntax (ClassDeclaration)
+    Code: public class SafeSecurity
+{
+	public Safe safe;
+
+	public void OpenSafeButton()
+	{
+		bool locked = safe.Locked;
+		if(false)
+		{
+			safe.Alarm();
+		}
+		else
+		{
+			safe.Open();
+		}
+	}
+}
+        FieldDeclarationSyntax (FieldDeclaration)
+        Code: public Safe safe;
+            VariableDeclarationSyntax (VariableDeclaration)
+            Code: Safe safe
+                IdentifierNameSyntax (IdentifierName)
+                Code: Safe
+                VariableDeclaratorSyntax (VariableDeclarator)
+                Code: safe
+        MethodDeclarationSyntax (MethodDeclaration)
+        Code: public void OpenSafeButton()
+	{
+		bool locked = safe.Locked;
+		if(false)
+		{
+			safe.Alarm();
+		}
+		else
+		{
+			safe.Open();
+		}
+	}
+            PredefinedTypeSyntax (PredefinedType)
+            Code: void
+            ParameterListSyntax (ParameterList)
+            Code: ()
+            BlockSyntax (Block)
+            Code: {
+		bool locked = safe.Locked;
+		if(false)
+		{
+			safe.Alarm();
+		}
+		else
+		{
+			safe.Open();
+		}
+	}
+                LocalDeclarationStatementSyntax (LocalDeclarationStatement)
+                Code: bool locked = safe.Locked;
+                    VariableDeclarationSyntax (VariableDeclaration)
+                    Code: bool locked = safe.Locked
+                        PredefinedTypeSyntax (PredefinedType)
+                        Code: bool
+                        VariableDeclaratorSyntax (VariableDeclarator)
+                        Code: locked = safe.Locked
+                            EqualsValueClauseSyntax (EqualsValueClause)
+                            Code: = safe.Locked
+                                MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                                Code: safe.Locked
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: safe
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: Locked
+                IfStatementSyntax (IfStatement)
+                Code: if(false)
+		{
+			safe.Alarm();
+		}
+		else
+		{
+			safe.Open();
+		}
+                    LiteralExpressionSyntax (FalseLiteralExpression)
+                    Code: false
+                    BlockSyntax (Block)
+                    Code: {
+			safe.Alarm();
+		}
+                        ExpressionStatementSyntax (ExpressionStatement)
+                        Code: safe.Alarm();
+                            InvocationExpressionSyntax (InvocationExpression)
+                            Code: safe.Alarm()
+                                MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                                Code: safe.Alarm
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: safe
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: Alarm
+                                ArgumentListSyntax (ArgumentList)
+                                Code: ()
+                    ElseClauseSyntax (ElseClause)
+                    Code: else
+		{
+			safe.Open();
+		}
+                        BlockSyntax (Block)
+                        Code: {
+			safe.Open();
+		}
+                            ExpressionStatementSyntax (ExpressionStatement)
+                            Code: safe.Open();
+                                InvocationExpressionSyntax (InvocationExpression)
+                                Code: safe.Open()
+                                    MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                                    Code: safe.Open
+                                        IdentifierNameSyntax (IdentifierName)
+                                        Code: safe
+                                        IdentifierNameSyntax (IdentifierName)
+                                        Code: Open
+                                    ArgumentListSyntax (ArgumentList)
+                                    Code: ()

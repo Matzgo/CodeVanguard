@@ -7758,7 +7758,7 @@ PrefabInstance:
     - target: {fileID: 5019981858311579505, guid: 3b17d6fa464f8424d8e54ddbf78355ce,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.759
+      value: 0.746
       objectReference: {fileID: 0}
     - target: {fileID: 5019981858311579505, guid: 3b17d6fa464f8424d8e54ddbf78355ce,
         type: 3}
@@ -17831,8 +17831,10 @@ PrefabInstance:
     - target: {fileID: 635022560329602839, guid: 41897486ae15e524193558f3b4d9a574,
         type: 3}
       propertyPath: m_text
-      value: "\tCrane\n\n   Crane.MoveLeft();\n\n   Crane.MoveRight();\n\n   Crane.PickUp();\n\n  
-        Crane.Drop();"
+      value: "public class Crane\n{\n\t//Moves the Crane to the right\n\tpublic void
+        MoveRight();\n\n\t//Moves the Crane to the left\n\tpublic void MoveLeft();\n\n\t//Picks
+        up an item from the current column\t\n\tpublic void PickUp();\n\n\t//Drops
+        up an item on the current column\t\n\tpublic void Drop();\n}"
       objectReference: {fileID: 0}
     - target: {fileID: 2897827211572258882, guid: 41897486ae15e524193558f3b4d9a574,
         type: 3}
@@ -21416,6 +21418,11 @@ PrefabInstance:
       propertyPath: _taskId
       value: POWER
       objectReference: {fileID: 0}
+    - target: {fileID: 825829350361660379, guid: 3b17d6fa464f8424d8e54ddbf78355ce,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1919030308120637535, guid: 3b17d6fa464f8424d8e54ddbf78355ce,
         type: 3}
       propertyPath: m_Name
@@ -21544,12 +21551,12 @@ PrefabInstance:
     - target: {fileID: 5019981858311579505, guid: 3b17d6fa464f8424d8e54ddbf78355ce,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 2
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 5019981858311579505, guid: 3b17d6fa464f8424d8e54ddbf78355ce,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0.4
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 5019981858311579505, guid: 3b17d6fa464f8424d8e54ddbf78355ce,
         type: 3}
@@ -21564,7 +21571,7 @@ PrefabInstance:
     - target: {fileID: 5019981858311579505, guid: 3b17d6fa464f8424d8e54ddbf78355ce,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -36.1
+      value: -36.063
       objectReference: {fileID: 0}
     - target: {fileID: 5019981858311579505, guid: 3b17d6fa464f8424d8e54ddbf78355ce,
         type: 3}
@@ -21594,7 +21601,7 @@ PrefabInstance:
     - target: {fileID: 5019981858311579505, guid: 3b17d6fa464f8424d8e54ddbf78355ce,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.881
+      value: 0.916
       objectReference: {fileID: 0}
     - target: {fileID: 5019981858311579505, guid: 3b17d6fa464f8424d8e54ddbf78355ce,
         type: 3}
@@ -39394,6 +39401,11 @@ PrefabInstance:
       propertyPath: _taskId
       value: CRANE
       objectReference: {fileID: 0}
+    - target: {fileID: 825829350361660379, guid: 3b17d6fa464f8424d8e54ddbf78355ce,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1919030308120637535, guid: 3b17d6fa464f8424d8e54ddbf78355ce,
         type: 3}
       propertyPath: m_Name
@@ -39522,12 +39534,12 @@ PrefabInstance:
     - target: {fileID: 5019981858311579505, guid: 3b17d6fa464f8424d8e54ddbf78355ce,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 2
+      value: 200
       objectReference: {fileID: 0}
     - target: {fileID: 5019981858311579505, guid: 3b17d6fa464f8424d8e54ddbf78355ce,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0.4
+      value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 5019981858311579505, guid: 3b17d6fa464f8424d8e54ddbf78355ce,
         type: 3}
@@ -39542,7 +39554,7 @@ PrefabInstance:
     - target: {fileID: 5019981858311579505, guid: 3b17d6fa464f8424d8e54ddbf78355ce,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.444
+      value: 0.282
       objectReference: {fileID: 0}
     - target: {fileID: 5019981858311579505, guid: 3b17d6fa464f8424d8e54ddbf78355ce,
         type: 3}
@@ -39572,7 +39584,7 @@ PrefabInstance:
     - target: {fileID: 5019981858311579505, guid: 3b17d6fa464f8424d8e54ddbf78355ce,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.685
+      value: 0.752
       objectReference: {fileID: 0}
     - target: {fileID: 5019981858311579505, guid: 3b17d6fa464f8424d8e54ddbf78355ce,
         type: 3}
@@ -41022,6 +41034,17 @@ PrefabInstance:
       propertyPath: _objectInspector
       value: 
       objectReference: {fileID: 870992057}
+    - target: {fileID: 8644844407704575474, guid: 41897486ae15e524193558f3b4d9a574,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9f77cb399857eab488bb4fefc3c7d469, type: 2}
+    - target: {fileID: 8644844407704575474, guid: 41897486ae15e524193558f3b4d9a574,
+        type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 3589333493158463532, guid: 39b34bb9b2441574c930437f58d8ff8f,
+        type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
