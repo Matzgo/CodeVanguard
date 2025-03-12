@@ -45,7 +45,8 @@ public class CodeVanguardManager : MonoBehaviour
 
     [SerializeField] bool _useStarSystem;
     public bool UseStarSystem => _useStarSystem;
-
+    [SerializeField] bool _useFeedbackSystem;
+    public bool UseFeedbackSystem => _useFeedbackSystem;
     private void Awake()
     {
 

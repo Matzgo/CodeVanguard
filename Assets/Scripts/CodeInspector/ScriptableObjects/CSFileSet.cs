@@ -82,7 +82,9 @@ namespace CodeInspector
         public List<CSFileSetEntry> CSFiles => _csFiles;
 
 
-
+        [SerializeField]
+        List<string> _optimalVariableNames;
+        public List<string> OptimalVariableNames => _optimalVariableNames;
         private void OnValidate()
         {
 

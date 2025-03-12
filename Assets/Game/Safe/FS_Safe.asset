@@ -22,8 +22,17 @@ MonoBehaviour:
   _fileSetName: Safe
   _entryPointFile: {fileID: 11400000, guid: 763334f5804992a4cb5c7046a2b6a18e, type: 2}
   _entryPoint: OpenSafeButton
-  _testCaseCalls: []
+  _testCaseCalls:
+  - OpenSafeButton();
   _testMethod: 
   _csFiles:
   - _file: {fileID: 11400000, guid: 763334f5804992a4cb5c7046a2b6a18e, type: 2}
     _solutionFile: {fileID: 11400000, guid: cba2aa629829d904594410fad4e51ca8, type: 2}
+  _optimalVariableNames:
+  - locked
+  - safeLocked
+  - lckd
+  - lock
+  - safelock
+  - safelocked
+  - lck

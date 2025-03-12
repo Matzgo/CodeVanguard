@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 08796a4ec126aac448e20991f1bbcf1e, type: 3}
-  m_Name: CS_Test2
+  m_Name: SOL_Door
   m_EditorClassIdentifier: 
   _fileName: 
-  _text: "public class Test\n{\n\tpublic int Add(int a, int b)\n\t{\n\t\treturn a
-    + b;\n\t}\n}"
+  _text: "public class DoorSecurity\n{\n\tpublic int CombineSecurityCode(int a, int
+    b)\n\t{\n\t\treturn a + b;\n\t}\n}"

@@ -1,3 +1,5 @@
+using System;
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(LineRenderer))]
@@ -110,14 +112,28 @@ public class Rope : MonoBehaviour
         float adjustedNodeDistance = nodeDistance * (totalNodes - 1) / (totalIntermediateNodes - 1);
 
         Vector3 startPosition = start.transform.position;
+        Vector3 endPosition = end.transform.position;
+        Vector3 curPos = start.transform.position;  // Note: curPos is defined but not used
         for (int i = 0; i < totalNodes; i++)
         {
             // Use original nodeDistance for physics simulation nodes
             currentNodePositions[i] = startPosition;
             currentNodeRotations[i] = Quaternion.identity;
             previousNodePositions[i] = startPosition;
+            //startPosition += (endPosition - startPosition).normalized * nodeDistance;
             startPosition.y += nodeDistance;
         }
+
+        Debug.Log("WTF!");
+        Debug.Log(start.transform.position.ToString());
+        Debug.Log(end.transform.position.ToString());
+        end.GetComponent<Rigidbody>().isKinematic = true;
+        //end.transform.position = new Vector3(0, 0, 0);
+        end.transform.position = currentNodePositions[totalNodes - 1];
+
+        StartCoroutine(KinNextFrame());
+        Debug.Log(end.transform.position.ToString());
+
 
         // Initialize matrices
         for (int i = 0; i < totalIntermediateNodes; i++)
@@ -129,6 +145,13 @@ public class Rope : MonoBehaviour
 
         CalculateRopeLength();
         initialRopeLength = currentRopeLength;
+    }
+
+    private IEnumerator KinNextFrame()
+    {
+        yield return null;
+        end.GetComponent<Rigidbody>().isKinematic = false;
+
     }
 
     private void CalculateRopeLength()

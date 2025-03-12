@@ -15,5 +15,5 @@ MonoBehaviour:
   _fileName: SafeSecurity
   _beforeText: "public class SafeSecurity\n{\n\tpublic Safe safe;\n\n\tpublic void
     OpenSafeButton()\n\t{"
-  _input: "\t\tbool LoCkeD = safe.Locked;\n\t\tif(LoCkeD)\n\t\t{\n\t\t\tsafe.Alarm();\n\t\t}\n\t\telse\n\t\t{\n\t\t\tsafe.Open();\n\t\t}"
+  _input: "\t\tbool LOCKED = safe.Locked;\n\t\tif(LOCKED)\n\t\t{\n\t\t\tsafe.Alarm();\n\t\t}\n\t\telse\n\t\t{\n\t\t\tsafe.Open();\n\t\t}"
   _afterText: "\t}\n}"

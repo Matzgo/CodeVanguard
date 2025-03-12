@@ -7,6 +7,8 @@ public enum ScenarioType
     Crane = 0,
     Safe = 1,
     Power = 2,
+    Door = 3,
+    Antenna = 4,
 }
 
 public abstract class Scenario : MonoBehaviour

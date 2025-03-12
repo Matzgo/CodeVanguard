@@ -432,7 +432,7 @@ public class RuntimeCodeSystem : MonoBehaviour
             _compiledUserCode,
             _compiledSolutionCode,
             _userScript,
-            _solutionScript, _entryPointMethodName, _currentTask.ScenarioType
+            _solutionScript, _entryPointMethodName, _currentTask.ScenarioType, _currentTask
         );
         RuntimeManager.Instance.DisableWorldSimulator();
 

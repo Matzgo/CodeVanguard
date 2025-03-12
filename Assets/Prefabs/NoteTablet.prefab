@@ -172,7 +172,7 @@ GameObject:
   - component: {fileID: 6929684557969223836}
   - component: {fileID: 6584316099058702744}
   m_Layer: 0
-  m_Name: Paper
+  m_Name: NoteTablet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

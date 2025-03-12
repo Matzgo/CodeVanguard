@@ -41,7 +41,7 @@ public class CodeGradingSystem : MonoBehaviour
         string solutionCode,
         ScriptProxy userScriptProxy,
         ScriptProxy goalScriptProxy,
-        string entryPointMethodName, ScenarioType scenario)
+        string entryPointMethodName, ScenarioType scenario, CSFileSet task)
     {
 
         _scenarioType = scenario;
@@ -81,7 +81,7 @@ public class CodeGradingSystem : MonoBehaviour
         result.FeedbackKeys.AddRange(memoryFeedbackKeys);
 
         // Naming convention grading
-        var (namingScore, namingFeedback, namingFeedbackKeys) = GradeNaming(userCode, solutionCode);
+        var (namingScore, namingFeedback, namingFeedbackKeys) = GradeNaming(userCode, solutionCode, task);
         result.NamingScore = namingScore;
         result.Feedback.AddRange(namingFeedback);
         result.FeedbackKeys.AddRange(namingFeedbackKeys);
@@ -382,7 +382,7 @@ public class CodeGradingSystem : MonoBehaviour
         return (score, feedback, feedbackKeys);
     }
 
-    private (float score, List<string> feedback, List<string> feedbackKeys) GradeNaming(string userCode, string solutionCode)
+    private (float score, List<string> feedback, List<string> feedbackKeys) GradeNaming(string userCode, string solutionCode, CSFileSet task)
     {
         var feedback = new List<string>();
         var feedbackKeys = new List<string>();
@@ -393,47 +393,53 @@ public class CodeGradingSystem : MonoBehaviour
             var tree = CSharpSyntaxTree.ParseText(userCode);
             var root = tree.GetRoot();
 
-            // Check variable naming
-            var variables = root.DescendantNodes()
-                .OfType<VariableDeclaratorSyntax>();
+            // Ensure OptimalNames list is not null
+            HashSet<string> optimalNames = task.OptimalVariableNames != null ? new HashSet<string>(task.OptimalVariableNames) : new HashSet<string>();
 
+            // Check variable naming
+            var variables = root.DescendantNodes().OfType<VariableDeclaratorSyntax>();
             foreach (var variable in variables)
             {
                 string name = variable.Identifier.Text;
 
                 // Check for single-letter variables (except common ones)
-                if (name.Length == 1 && name != "i" && name != "j" && name != "k" && name != "x" && name != "y" && name != "z" && name != "a" && name != "b" && name != "c" && name != "d")
+                if (name.Length == 1 && !new HashSet<string> { "i", "j", "k", "x", "y", "z", "a", "b", "c", "d" }.Contains(name))
                 {
                     score *= 0.5f;
-                    feedback.Add($"Variable '{name}' should have a more descriptive name");
+                    feedback.Add($"Variable '{name}' should have a more descriptive name.");
                 }
 
                 // Check for proper casing (camelCase for variables)
                 if (char.IsUpper(name[0]))
                 {
                     score *= 0.5f;
-                    feedback.Add($"Variable '{name}' should start with a lowercase letter");
+                    feedback.Add($"Variable '{name}' should start with a lowercase letter.");
                 }
 
                 // Check for numeric suffixes
                 if (System.Text.RegularExpressions.Regex.IsMatch(name, @"\d+$"))
                 {
                     score *= 0.5f;
-                    feedback.Add($"Variable '{name}' uses a numeric suffix - consider a more descriptive name");
+                    feedback.Add($"Variable '{name}' uses a numeric suffix - consider a more descriptive name.");
+                }
+
+                // Check if variable name is not in the OptimalNames list
+                if (optimalNames.Count > 0 && !optimalNames.Contains(name))
+                {
+                    score *= 0.5f; // Less harsh penalty compared to other naming issues
+                    feedback.Add($"Variable '{name}' could have a name that makes its' purpose easier to understand");
                 }
             }
 
             // Check method naming
-            var methods = root.DescendantNodes()
-                .OfType<MethodDeclarationSyntax>();
-
+            var methods = root.DescendantNodes().OfType<MethodDeclarationSyntax>();
             foreach (var method in methods)
             {
                 string name = method.Identifier.Text;
                 if (!char.IsUpper(name[0]))
                 {
                     score *= 0.5f;
-                    feedback.Add($"Method '{name}' should start with an uppercase letter");
+                    feedback.Add($"Method '{name}' should start with an uppercase letter.");
                 }
             }
 
@@ -453,13 +459,10 @@ public class CodeGradingSystem : MonoBehaviour
         {
             feedbackKeys.Add("MAINTAIN_Subopt");
         }
-        else
-        {
-            //feedbackKeys.Add("MAINTAIN_Opt");
-        }
 
         return (score, feedback, feedbackKeys);
     }
+
 
 
 

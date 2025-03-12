@@ -10,17 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7b539acad177ac245b86051f55621890, type: 3}
-  m_Name: FS_Test
+  m_Name: FS_Door
   m_EditorClassIdentifier: 
+  _taskId: DoorSecurity
+  _structureFeedbackTypes: 32
+  _onPluggedInFeedbackKey: 
   _taskType: 0
-  _title: Simple Methods
-  _description: 'Make a method called
-
-    Add(int x, int y)
-
-    that returns the
-    sum of two integers'
-  _fileSetName: TestSet
+  _scenarioType: 3
+  _title: Door
+  _description: Finish the method to add up and return the two security codes
+  _fileSetName: DoorSecurity
   _entryPointFile: {fileID: 11400000, guid: 0f126f2fecb78ec4c959da3fa8032c91, type: 2}
   _entryPoint: Add(5,3);
   _testCaseCalls:
@@ -29,8 +28,14 @@ MonoBehaviour:
   - Add(-1000,1000);
   - Add(-1000,-1000);
   - Add(0,0);
+  _testMethod: 
   _csFiles:
   - _file: {fileID: 11400000, guid: 0f126f2fecb78ec4c959da3fa8032c91, type: 2}
     _solutionFile: {fileID: 11400000, guid: ffc0a9a9964ab744cb27139264e62c89, type: 2}
-  - _file: {fileID: 11400000, guid: c4f7a774cc3e4bd459356ca964c8e697, type: 2}
-    _solutionFile: {fileID: 0}
+  _optimalVariableNames:
+  - result
+  - res
+  - r
+  - add
+  - val
+  - value
