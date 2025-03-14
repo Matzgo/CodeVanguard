@@ -88,7 +88,7 @@ public class RuntimeCodeSystem : MonoBehaviour
     private bool _codeRunning;
     public bool CodeRunning => _codeRunning;
 
-    public Action<ScriptProxy, ScenarioType> OnReflectionInitialize { get; set; }
+    public Action<ScriptProxy, ScenarioType, Scenario> OnReflectionInitialize { get; set; }
 
     private string _compiledUserCode;
     private string _compiledSolutionCode;
@@ -204,6 +204,12 @@ public class RuntimeCodeSystem : MonoBehaviour
 
     private void OnSimulateClicked()
     {
+        if (_currentTask == null)
+            return;
+
+        EvaluationDataTracker.Instance.RecordPuzzleTestAttempt(_currentTask.TaskID);
+        EvaluationDataTracker.Instance.TrackEvent("debugClicked");
+
         RuntimeManager.Instance.DisableWorldGame();
         CompileAndRun();
 
@@ -213,6 +219,8 @@ public class RuntimeCodeSystem : MonoBehaviour
         GradingResult res = null;
         if (_userScript != null)
             res = EvaluateSubmission();
+
+        EvaluationDataTracker.Instance.TrackEvent("runClicked");
 
         CodeVanguardManager.Instance.EndTask(res);
 
@@ -226,6 +234,9 @@ public class RuntimeCodeSystem : MonoBehaviour
     {
         try
         {
+            RuntimeManager.Instance.CoroutineRunner.OnCoroutineFinshed += OnRunCompleted;
+            _codeRunning = true;
+
             RuntimeManager.Instance.Console.SetActive(false);
             _coroutineDisabled = true;
             RuntimeManager.Instance.DisableWorldGame();
@@ -235,10 +246,11 @@ public class RuntimeCodeSystem : MonoBehaviour
             RuntimeManager.Instance.Console.SetActive(true);
             RuntimeManager.Instance.ResetWorld();
 
-            RuntimeManager.Instance.CoroutineRunner.OnCoroutineFinshed += OnRunCompleted;
+
+
+
             TransformAndRunCoroutine(true);
 
-            _codeRunning = true;
 
             //After code done:
 
@@ -253,6 +265,9 @@ public class RuntimeCodeSystem : MonoBehaviour
         catch (Exception e)
         {
             HandleException(e);
+            _codeRunning = false;
+            RuntimeManager.Instance.CoroutineRunner.OnCoroutineFinshed -= OnRunCompleted;
+
         }
     }
 
@@ -275,6 +290,9 @@ public class RuntimeCodeSystem : MonoBehaviour
         catch (Exception e)
         {
             HandleException(e);
+            _codeRunning = false;
+            RuntimeManager.Instance.CoroutineRunner.OnCoroutineFinshed -= OnRunCompleted;
+
         }
     }
 
@@ -366,8 +384,16 @@ public class RuntimeCodeSystem : MonoBehaviour
         RuntimeManager.Instance.DisableWorldGame();
         RuntimeManager.Instance.Console.SetActive(false);
 
-        OnReflectionInitialize?.Invoke(_userScript, _currentTask.ScenarioType);
-        _userScript.Call(_entryPointMethodName);
+        OnReflectionInitialize?.Invoke(_userScript, _currentTask.ScenarioType, _scenario);
+
+        if (_currentTask.ScenarioType != ScenarioType.Antenna)
+        {
+            _userScript.Call(_entryPointMethodName);
+        }
+        else
+        {
+            _userScript.Call(_entryPointMethodName, (_scenario as AntennaScenario).AwakeParams.startingArray);
+        }
         //RuntimeManager.Instance.EnableMiniGame();
         if (p)
             RuntimeManager.Instance.EnableWorldGame();
@@ -407,15 +433,28 @@ public class RuntimeCodeSystem : MonoBehaviour
         RuntimeManager.Instance.EnableWorldSimulator();
 
 
-        OnReflectionInitialize?.Invoke(_userScript, _currentTask.ScenarioType);
-        OnReflectionInitialize?.Invoke(_solutionScript, _currentTask.ScenarioType);
+        OnReflectionInitialize?.Invoke(_userScript, _currentTask.ScenarioType, _scenario);
+        OnReflectionInitialize?.Invoke(_solutionScript, _currentTask.ScenarioType, _scenario);
 
 
-        _userScript.Call(_entryPointMethodName);
 
+        bool correct;
+        List<string> feedback;
+        List<string> feedbackKeys;
 
-        (bool correct, var feedback, var feedbackKeys) = _scenario.CheckCorrectness();
+        if (_currentTask.ScenarioType != ScenarioType.Antenna)
+        {
+            _userScript.Call(_entryPointMethodName);
 
+            (correct, feedback, feedbackKeys) = _scenario.CheckCorrectness();
+        }
+        else
+        {
+            AntennaScenario antennaScenario = (_scenario as AntennaScenario);
+            List<int> res = (List<int>)_userScript.Call(_entryPointMethodName, antennaScenario.AwakeParams.startingArray);
+            (correct, feedback, feedbackKeys) = antennaScenario.CheckCorrectness(res);
+        }
+        _scenario.OnEnd();
 
 
         List<string> strucFeedback = new List<string>();
@@ -434,6 +473,14 @@ public class RuntimeCodeSystem : MonoBehaviour
             _userScript,
             _solutionScript, _entryPointMethodName, _currentTask.ScenarioType, _currentTask
         );
+
+
+        EvaluationDataTracker.Instance.MarkPuzzleCorrect(_currentTask.TaskID, gradingResult);
+
+        EvaluationDataTracker.Instance.RecordPuzzleAttempt(_currentTask.TaskID);
+
+
+
         RuntimeManager.Instance.DisableWorldSimulator();
 
         gradingResult.Feedback.AddRange(feedback);
@@ -495,12 +542,19 @@ public class RuntimeCodeSystem : MonoBehaviour
         var transformedActiveScript = coroutineType.CreateInstance();
 
 
-
         //TODO reflection
-        OnReflectionInitialize?.Invoke(transformedActiveScript, _currentTask.ScenarioType);
+        OnReflectionInitialize?.Invoke(transformedActiveScript, _currentTask.ScenarioType, _scenario);
 
         //StartTransformedCoroutine(transformedActiveScript, "COR_Add", 5, 3);
-        StartTransformedCoroutine(transformedActiveScript, "COR_" + _entryPointMethodName);
+        if (_currentTask.ScenarioType != ScenarioType.Antenna)
+        {
+            StartTransformedCoroutine(transformedActiveScript, "COR_" + _entryPointMethodName);
+        }
+        else
+        {
+            StartTransformedCoroutine(transformedActiveScript, "COR_" + _entryPointMethodName, (_scenario as AntennaScenario).AwakeParams.startingArray);
+
+        }
     }
 
     private void SaveUserCode(string coroutineCode)
@@ -558,6 +612,12 @@ public class RuntimeCodeSystem : MonoBehaviour
                 "SECURITY FAILED: " + domain.SecurityResult.GetAllText(true)
             );
         }
+
+        _codeRunning = false;
+        RuntimeManager.Instance.CoroutineRunner.OnCoroutineFinshed -= OnRunCompleted;
+        RuntimeManager.Instance.ResetStartButtons();
+
+
     }
 
     private void HandleException(Exception e)

@@ -10,17 +10,17 @@ public class ReflectionInitializer : MonoBehaviour
 
     private void Awake()
     {
-        _runtimeCodeSystem.OnReflectionInitialize += HandleReflection;
+        _runtimeCodeSystem.OnReflectionInitialize += HandleReflectionInitialization;
     }
 
     private void OnDestroy()
     {
-        _runtimeCodeSystem.OnReflectionInitialize -= HandleReflection;
+        _runtimeCodeSystem.OnReflectionInitialize -= HandleReflectionInitialization;
 
     }
 
 
-    private void HandleReflection(ScriptProxy scriptProxy, ScenarioType scenarioType)
+    private void HandleReflectionInitialization(ScriptProxy scriptProxy, ScenarioType scenarioType, Scenario scenario)
     {
         switch (scenarioType)
         {
@@ -32,6 +32,8 @@ public class ReflectionInitializer : MonoBehaviour
                 break;
             case ScenarioType.Power:
                 HandlePowerReflection(scriptProxy);
+                break;
+            case ScenarioType.Antenna:
                 break;
         }
     }

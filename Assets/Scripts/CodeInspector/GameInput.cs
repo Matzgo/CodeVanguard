@@ -147,6 +147,15 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pause"",
+                    ""type"": ""Button"",
+                    ""id"": ""a1e22cb0-65cb-4194-8f3f-6f914f72acae"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -158,6 +167,17 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""ToggleCode"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""569fba32-481a-420e-ba94-412ba286d3ea"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Pause"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -208,6 +228,7 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
         // Code
         m_Code = asset.FindActionMap("Code", throwIfNotFound: true);
         m_Code_ToggleCode = m_Code.FindAction("ToggleCode", throwIfNotFound: true);
+        m_Code_Pause = m_Code.FindAction("Pause", throwIfNotFound: true);
         // Camera
         m_Camera = asset.FindActionMap("Camera", throwIfNotFound: true);
         m_Camera_Zoom = m_Camera.FindAction("Zoom", throwIfNotFound: true);
@@ -342,11 +363,13 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Code;
     private List<ICodeActions> m_CodeActionsCallbackInterfaces = new List<ICodeActions>();
     private readonly InputAction m_Code_ToggleCode;
+    private readonly InputAction m_Code_Pause;
     public struct CodeActions
     {
         private @GameInput m_Wrapper;
         public CodeActions(@GameInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @ToggleCode => m_Wrapper.m_Code_ToggleCode;
+        public InputAction @Pause => m_Wrapper.m_Code_Pause;
         public InputActionMap Get() { return m_Wrapper.m_Code; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -359,6 +382,9 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
             @ToggleCode.started += instance.OnToggleCode;
             @ToggleCode.performed += instance.OnToggleCode;
             @ToggleCode.canceled += instance.OnToggleCode;
+            @Pause.started += instance.OnPause;
+            @Pause.performed += instance.OnPause;
+            @Pause.canceled += instance.OnPause;
         }
 
         private void UnregisterCallbacks(ICodeActions instance)
@@ -366,6 +392,9 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
             @ToggleCode.started -= instance.OnToggleCode;
             @ToggleCode.performed -= instance.OnToggleCode;
             @ToggleCode.canceled -= instance.OnToggleCode;
+            @Pause.started -= instance.OnPause;
+            @Pause.performed -= instance.OnPause;
+            @Pause.canceled -= instance.OnPause;
         }
 
         public void RemoveCallbacks(ICodeActions instance)
@@ -447,6 +476,7 @@ public partial class @GameInput: IInputActionCollection2, IDisposable
     public interface ICodeActions
     {
         void OnToggleCode(InputAction.CallbackContext context);
+        void OnPause(InputAction.CallbackContext context);
     }
     public interface ICameraActions
     {

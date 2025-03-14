@@ -98,9 +98,6 @@ public class PlayerCarry : MonoBehaviour
             Drop();
 
         _currentCarry.PlugIn(socket); // Call PlugIn logic of PickupableCable
-        _currentCarry.transform.position = socket.transform.position;
-        _currentCarry.transform.rotation = socket.transform.rotation;
-
 
         if (_currentRigidbody)
         {
@@ -108,6 +105,12 @@ public class PlayerCarry : MonoBehaviour
             _currentRigidbody.velocity = Vector3.zero;
             _currentRigidbody.detectCollisions = true;
         }
+
+        _currentCarry.transform.position = socket.transform.position;
+        _currentCarry.transform.rotation = socket.transform.rotation;
+
+
+
 
         _currentCarry = null;
         _currentRigidbody = null;

@@ -35,7 +35,6 @@ MonoBehaviour:
   _optimalVariableNames:
   - result
   - res
-  - r
   - add
   - val
   - value

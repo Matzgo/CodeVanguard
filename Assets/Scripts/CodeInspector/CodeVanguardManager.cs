@@ -2,6 +2,7 @@ using CodeInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 
@@ -47,9 +48,11 @@ public class CodeVanguardManager : MonoBehaviour
     public bool UseStarSystem => _useStarSystem;
     [SerializeField] bool _useFeedbackSystem;
     public bool UseFeedbackSystem => _useFeedbackSystem;
+
+    public string UniqueId { get; set; }
+
     private void Awake()
     {
-
         if (_instance != null && _instance != this)
         {
             Destroy(gameObject);
@@ -57,7 +60,18 @@ public class CodeVanguardManager : MonoBehaviour
         }
 
         _instance = this;
+        UniqueId = GenerateUniqueId();
+    }
 
+    private string GenerateUniqueId()
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder result = new StringBuilder(5);
+        for (int i = 0; i < 5; i++)
+        {
+            result.Append(chars[UnityEngine.Random.Range(0, chars.Length)]);
+        }
+        return result.ToString();
     }
 
     private void Start()
@@ -96,6 +110,10 @@ public class CodeVanguardManager : MonoBehaviour
 
         _screenManager.TurnOffAllScreens();
         currentState = CodeVanguardState.Task;
+        if (_task != null)
+        {
+            EvaluationDataTracker.Instance.TrackTime(_task.TaskID);
+        }
 
         RuntimeManager.Instance.Console.ClearConsole();
         _screenManager.Main.ShowCodeWindow();
@@ -127,6 +145,10 @@ public class CodeVanguardManager : MonoBehaviour
 
         OnTaskEnd?.Invoke(_task.TaskID, res);
 
+        if (_task != null)
+        {
+            EvaluationDataTracker.Instance.StopTrackTime(_task.TaskID);
+        }
 
 
         _screenManager.LoadResult(res);
@@ -144,6 +166,11 @@ public class CodeVanguardManager : MonoBehaviour
         _screenManager.TurnOffAllScreens();
         _screenManager.TurnOn(ScreenType.Main);
         _screenManager.Main.ShowLogInWindow();
+        if (_task != null)
+        {
+            EvaluationDataTracker.Instance.StopTrackTime(_task.TaskID);
+        }
+
         _task = null;
         _uiObjective.Disable();
 

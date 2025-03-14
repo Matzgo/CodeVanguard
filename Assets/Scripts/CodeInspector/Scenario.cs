@@ -33,6 +33,11 @@ public abstract class Scenario : MonoBehaviour
         RuntimeManager.Instance.WorldGameSimulation -= OnEval;
     }
 
+    public virtual void OnEnd()
+    {
+
+    }
+
     protected virtual void OnEval(bool b)
     {
         _simulate = b;

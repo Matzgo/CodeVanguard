@@ -5,10 +5,11 @@ public class PlayerModeToggler : MonoBehaviour
 {
 
     bool _active;
+    public bool CodeModeActive => _active;
 
     [SerializeField]
     GameObject _crosshair;
-
+    [SerializeField] private GameObject _pauseMenu; // Reference to the Pause UI
     private void Awake()
     {
         _active = false;
@@ -18,7 +19,46 @@ public class PlayerModeToggler : MonoBehaviour
     void Start()
     {
         InputManager.Instance.Input.Code.ToggleCode.performed += ToggleCode;
+        InputManager.Instance.Input.Code.Pause.performed += TogglePauseMenu;
+    }
 
+    private void TogglePauseMenu(UnityEngine.InputSystem.InputAction.CallbackContext context)
+    {
+        if (_active)
+        {
+            // If in Code Mode, exit Code Mode instead of opening the Pause Menu
+            ToggleCode(context);
+        }
+        else
+        {
+            // Otherwise, toggle the Pause UI
+            if (_pauseMenu != null)
+            {
+                bool isPaused = _pauseMenu.activeSelf;
+                _pauseMenu.SetActive(!isPaused);
+
+                if (isPaused)
+                {
+                    Time.timeScale = 1f;
+                    LockAndHideCursor();
+                    InputManager.Instance.Input.Player.Enable();
+                }
+                else
+                {
+                    Time.timeScale = 0f;
+                    UnlockAndShowCursor();
+                    InputManager.Instance.Input.Player.Disable();
+                }
+            }
+        }
+    }
+
+    private void Update()
+    {
+        if (!_active)
+        {
+            //UnfocusAllUIElements();
+        }
     }
 
     private void ToggleCode(UnityEngine.InputSystem.InputAction.CallbackContext context)
@@ -46,6 +86,8 @@ public class PlayerModeToggler : MonoBehaviour
 
         }
     }
+
+
     private void UnfocusAllUIElements()
     {
         // Use the EventSystem to unfocus any currently selected UI elements
@@ -72,6 +114,7 @@ public class PlayerModeToggler : MonoBehaviour
     private void OnDestroy()
     {
         InputManager.Instance.Input.Code.ToggleCode.performed -= ToggleCode;
+        InputManager.Instance.Input.Code.Pause.performed -= TogglePauseMenu;
 
     }
 }

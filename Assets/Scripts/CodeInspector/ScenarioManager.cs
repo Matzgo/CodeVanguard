@@ -11,6 +11,8 @@ public class ScenarioManager : MonoBehaviour
     private SafeScenario _safeScenario;
     [SerializeField]
     private PowerScenario _powerScenario;
+    [SerializeField]
+    private AntennaScenario _antennaScenario;
 
     private void Awake()
     {
@@ -44,6 +46,10 @@ public class ScenarioManager : MonoBehaviour
                 return _safeScenario;
             case ScenarioType.Power:
                 return _powerScenario;
+            case ScenarioType.Door:
+                break;
+            case ScenarioType.Antenna:
+                return _antennaScenario;
         }
         Debug.LogError("INVALID ScenarioType");
         return null;

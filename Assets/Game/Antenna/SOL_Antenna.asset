@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 08796a4ec126aac448e20991f1bbcf1e, type: 3}
+  m_Name: SOL_Antenna
+  m_EditorClassIdentifier: 
+  _fileName: 
+  _text: "public class Antenna\n{\n\n\tpublic List<int> SortNumbers(List<int> numbers)\n\t{\n\n\t\tList<int>
+    sortedNumbers = new List<int>(numbers); // Clone to avoid modifying the original
+    list\r\n        int n = sortedNumbers.Count;\r\n\r\n        for (int i = 0; i
+    < n - 1; i++)\r\n        {\r\n            int minIndex = i; // Assume current
+    index is the smallest\r\n\r\n            // Find the minimum element in the remaining
+    list\r\n            for (int j = i + 1; j < n; j++)\r\n            {\r\n               
+    if (sortedNumbers[j] < sortedNumbers[minIndex])\r\n                {\r\n                   
+    minIndex = j; // Update index of the smallest value\r\n                }\r\n           
+    }\r\n\r\n            // Swap the found minimum element with the first element
+    of the unsorted part\r\n            int temp = sortedNumbers[i];\r\n           
+    sortedNumbers[i] = sortedNumbers[minIndex];\r\n            sortedNumbers[minIndex]
+    = temp;\r\n        }\r\n\r\n        return sortedNumbers;\n\t\t\n\t}\n}"

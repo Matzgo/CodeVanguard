@@ -28,3 +28,10 @@ MonoBehaviour:
   _csFiles:
   - _file: {fileID: 11400000, guid: 701ad7169c3fef4459cb76585165408d, type: 2}
     _solutionFile: {fileID: 11400000, guid: cb117ecb675b8ee41b9d1c7f538fe135, type: 2}
+  _optimalVariableNames:
+  - cntr
+  - counter
+  - count
+  - beam
+  - even
+  - odd

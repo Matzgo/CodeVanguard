@@ -359,7 +359,9 @@ namespace CodeInspector
         public void SetText(string before, string input, string after)
         {
             BeforeText = before;
-            inputField.text = input;
+
+            inputField.caretPosition = 0;
+            inputField.text = string.IsNullOrEmpty(input) ? "\n" : input;
             AfterText = after;
             delayedRefresh = true;
             UpdateLayout();
@@ -697,30 +699,43 @@ namespace CodeInspector
 
         private void UpdateCurrentLineHighlight()
         {
-            // Check if code editor is not active
-            if (isActiveAndEnabled == false || lineHighlightLocked == true)
+            // Check if code editor is not active or line highlighting is locked
+            if (!isActiveAndEnabled || lineHighlightLocked)
                 return;
+
+            // Ensure inputText and inputText.textInfo are valid before proceeding
+            if (inputText == null || inputText.textInfo == null || inputText.textInfo.characterInfo.Length == 0)
+            {
+                // If there is no text, reset the highlight position or hide it
+                lineHighlightTransform.anchoredPosition = new Vector2(5, 0);
+                return;
+            }
 
             int lineOffset = 0;
 
 #if UNITY_2018_2_OR_NEWER
-            if (applyLineOffsetFix == true)
+            if (applyLineOffsetFix)
                 lineOffset++;
 #endif
 
             // Compute the Y offset using beforeInputText's height
             float beforeInputOffset = beforeInputText != null ? beforeInputText.preferredHeight : 0f;
 
+            // Get the current line number, ensuring caretPosition is within bounds
+            int caretPosition = Mathf.Clamp(inputField.caretPosition, 0, inputText.textInfo.characterInfo.Length - 1);
+            int currentLine = inputText.textInfo.characterInfo[caretPosition].lineNumber;
+
             // Highlight the current line
             lineHighlightTransform.anchoredPosition = new Vector2(
                 5,
-                inputText.textInfo.lineInfo[inputText.textInfo.characterInfo[0].lineNumber].lineHeight *
-                (-inputText.textInfo.characterInfo[inputField.caretPosition].lineNumber + lineOffset) -
+                inputText.textInfo.lineInfo[currentLine].lineHeight *
+                (-currentLine + lineOffset) -
                 _perLineHightlightOffset +
                 inputTextTransform.anchoredPosition.y -
                 beforeInputOffset // Apply the Y offset
             );
         }
+
 
         private string SyntaxHighlightContent(string inputText)
         {

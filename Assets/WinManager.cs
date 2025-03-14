@@ -26,7 +26,7 @@ public class WinManager : MonoBehaviour
             finishedTasks.Add(id); // HashSet prevents duplicates
         }
 
-        if (finishedTasks.Count == scenarioIds.Count) // Check if all tasks are done
+        if (finishedTasks.Count == scenarioIds.Count) // Check if most tasks are done
         {
             StartCoroutine(ShowWinScreenWithDelay(15f)); // Delay showing win screen by 5 seconds
         }

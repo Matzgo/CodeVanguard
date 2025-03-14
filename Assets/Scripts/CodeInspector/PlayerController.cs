@@ -56,6 +56,7 @@ public class PlayerController : MonoBehaviour
     {
         if (_objectInspector.IsInspecting)
         {
+            EvaluationDataTracker.Instance.StopTrackTime("inspectingNotes");
             _objectInspector.Hide();
             return;
         }
@@ -67,11 +68,15 @@ public class PlayerController : MonoBehaviour
                 if (socketHit.collider.TryGetComponent<CableSocket>(out var socket))
                 {
                     _playerCarry.PlugIn(socket);
+                    EvaluationDataTracker.Instance.StopTrackTime("carryingCable");
+
                     return;
                 }
             }
 
             _playerCarry.Drop();
+            EvaluationDataTracker.Instance.StopTrackTime("carryingCable");
+
             return;
         }
 
@@ -83,12 +88,26 @@ public class PlayerController : MonoBehaviour
             if (hit.collider.TryGetComponent<IInteractable>(out var interactable))
             {
                 interactable.OnInteract();
+                if (interactable is PaperInteractable)
+                {
+                    EvaluationDataTracker.Instance.TrackTime("inspectingNotes");
+                    EvaluationDataTracker.Instance.TrackEvent("inspectingNotes");
+
+                }
+                else if (interactable is FeedbackBotBehaviour)
+                {
+                    EvaluationDataTracker.Instance.TrackEvent("feedback");
+                }
+
                 return;
             }
 
             if (hit.collider.TryGetComponent<PickupableCable>(out var plug))
             {
                 _playerCarry.PickUp(plug);
+                EvaluationDataTracker.Instance.TrackTime("carryingCable");
+                EvaluationDataTracker.Instance.TrackEvent("carryingCable");
+
                 return;
             }
 

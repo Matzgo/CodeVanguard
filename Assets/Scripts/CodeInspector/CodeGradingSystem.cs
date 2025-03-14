@@ -20,6 +20,14 @@ public class GradingResult
     public List<string> FeedbackKeys { get; set; }
     public float TotalScore => (PerformanceScore + MemoryScore + NamingScore) / 3;
 
+    public override string ToString()
+    {
+        return $"Correct: {Correct}\n" +
+               $"Performance Score: {PerformanceScore:F2}\n" +
+               $"Memory Score: {MemoryScore:F2}\n" +
+               $"Naming Score: {NamingScore:F2}\n";
+    }
+
 }
 public class CodeGradingSystem : MonoBehaviour
 {
@@ -69,7 +77,7 @@ public class CodeGradingSystem : MonoBehaviour
         }
 
         // Performance grading
-        var (performanceScore, performanceFeedback, performanceFeedbackKeys, avg) = GradePerformance(userScriptProxy, goalScriptProxy);
+        var (performanceScore, performanceFeedback, performanceFeedbackKeys, avg) = GradePerformance(userScriptProxy, goalScriptProxy, scenario);
         result.PerformanceScore = performanceScore;
         //result.Feedback.Add($"Average runtime: {avg}");
         result.Feedback.AddRange(performanceFeedback);
@@ -128,7 +136,7 @@ public class CodeGradingSystem : MonoBehaviour
 
     //    return (isCorrect, feedback);
     //}
-    private (float score, List<string> feedback, List<string> feedbackKeys, double avgTime) GradePerformance(ScriptProxy userProxy, ScriptProxy goalProxy)
+    private (float score, List<string> feedback, List<string> feedbackKeys, double avgTime) GradePerformance(ScriptProxy userProxy, ScriptProxy goalProxy, ScenarioType scenarioType)
     {
         RuntimeManager.Instance.Console.SetActive(false);
 
@@ -139,11 +147,13 @@ public class CodeGradingSystem : MonoBehaviour
         double totalGoalTime = 0;
         int testCaseCount = 0;
 
+
+        var scenario = ScenarioManager.Instance.GetScenario(scenarioType);
         //warmup calls
         //userProxy.Call("Add", 1, 1);
         //goalProxy.Call("Add", 1, 1);
-        ScenarioCodeCalls.DoTestCall(_scenarioType, userProxy);
-        ScenarioCodeCalls.DoTestCall(_scenarioType, goalProxy);
+        ScenarioCodeCalls.DoTestCall(_scenarioType, userProxy, scenario);
+        ScenarioCodeCalls.DoTestCall(_scenarioType, goalProxy, scenario);
 
         try
         {
@@ -166,12 +176,12 @@ public class CodeGradingSystem : MonoBehaviour
                 testCaseCount++;
                 var sw = Stopwatch.StartNew();
                 //var userResult = userProxy.Call("Add", testCase[0], testCase[1]);
-                ScenarioCodeCalls.DoTestCall(_scenarioType, userProxy);
+                ScenarioCodeCalls.DoTestCall(_scenarioType, userProxy, scenario);
                 var userTime = sw.ElapsedTicks;
                 var userTimeMS = sw.ElapsedMilliseconds;
                 totalUserTime += userTime;
                 sw.Restart();
-                ScenarioCodeCalls.DoTestCall(_scenarioType, goalProxy);
+                ScenarioCodeCalls.DoTestCall(_scenarioType, goalProxy, scenario);
                 var goalTime = sw.ElapsedTicks;
                 totalGoalTime += goalTime;
 
@@ -403,7 +413,8 @@ public class CodeGradingSystem : MonoBehaviour
                 string name = variable.Identifier.Text;
 
                 // Check for single-letter variables (except common ones)
-                if (name.Length == 1 && !new HashSet<string> { "i", "j", "k", "x", "y", "z", "a", "b", "c", "d" }.Contains(name))
+                bool isSingleLetter = name.Length == 1;
+                if (isSingleLetter && !new HashSet<string> { "i", "j", "k", "x", "y", "z", "a", "b", "c", "d", "n", "m" }.Contains(name))
                 {
                     score *= 0.5f;
                     feedback.Add($"Variable '{name}' should have a more descriptive name.");
@@ -423,11 +434,11 @@ public class CodeGradingSystem : MonoBehaviour
                     feedback.Add($"Variable '{name}' uses a numeric suffix - consider a more descriptive name.");
                 }
 
-                // Check if variable name is not in the OptimalNames list
-                if (optimalNames.Count > 0 && !optimalNames.Contains(name))
+                // ✅ Skip single-letter variables for optimal name checking
+                if (!isSingleLetter && optimalNames.Count > 0 && !optimalNames.Any(optimal => name.IndexOf(optimal, StringComparison.OrdinalIgnoreCase) >= 0))
                 {
                     score *= 0.5f; // Less harsh penalty compared to other naming issues
-                    feedback.Add($"Variable '{name}' could have a name that makes its' purpose easier to understand");
+                    feedback.Add($"Variable '{name}' could have a name that makes its purpose easier to understand.");
                 }
             }
 
