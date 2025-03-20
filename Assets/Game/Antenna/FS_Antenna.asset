@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _taskId: ANTENNA
   _structureFeedbackTypes: 33
-  _onPluggedInFeedbackKey: 
+  _onPluggedInFeedbackKey: ANTENNA_Start
   _taskType: 0
   _scenarioType: 4
   _title: Antenna

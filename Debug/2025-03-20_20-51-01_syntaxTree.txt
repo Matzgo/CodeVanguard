@@ -1,0 +1,453 @@
+CompilationUnitSyntax (CompilationUnit)
+Code: using Game;
+using System;
+using System.Collections.Generic;
+using Console = Game.Console;
+using Crane = Game.Crane;
+
+public class CraneController
+{
+	public Crane crane;
+
+	public void MoveItems()
+	{
+			        for (int i = 0; i < 6; i++)
+        {
+            crane.PickUp();
+            crane.MoveRight();
+            crane.MoveRight();
+            crane.MoveRight();
+            crane.Drop();
+            crane.MoveLeft();
+            crane.MoveLeft();
+            crane.MoveLeft();
+        }
+
+        // Move 4 items from Column 2 to Column 4
+        crane.MoveRight(); // Move to Column 2
+        for (int i = 0; i < 4; i++)
+        {
+            crane.PickUp();
+            crane.MoveRight();
+            crane.MoveRight();
+            crane.Drop();
+            crane.MoveLeft();
+            crane.MoveLeft();
+        }
+
+		
+	}
+}
+    UsingDirectiveSyntax (UsingDirective)
+    Code: using Game;
+        IdentifierNameSyntax (IdentifierName)
+        Code: Game
+    UsingDirectiveSyntax (UsingDirective)
+    Code: using System;
+        IdentifierNameSyntax (IdentifierName)
+        Code: System
+    UsingDirectiveSyntax (UsingDirective)
+    Code: using System.Collections.Generic;
+        QualifiedNameSyntax (QualifiedName)
+        Code: System.Collections.Generic
+            QualifiedNameSyntax (QualifiedName)
+            Code: System.Collections
+                IdentifierNameSyntax (IdentifierName)
+                Code: System
+                IdentifierNameSyntax (IdentifierName)
+                Code: Collections
+            IdentifierNameSyntax (IdentifierName)
+            Code: Generic
+    UsingDirectiveSyntax (UsingDirective)
+    Code: using Console = Game.Console;
+        NameEqualsSyntax (NameEquals)
+        Code: Console =
+            IdentifierNameSyntax (IdentifierName)
+            Code: Console
+        QualifiedNameSyntax (QualifiedName)
+        Code: Game.Console
+            IdentifierNameSyntax (IdentifierName)
+            Code: Game
+            IdentifierNameSyntax (IdentifierName)
+            Code: Console
+    UsingDirectiveSyntax (UsingDirective)
+    Code: using Crane = Game.Crane;
+        NameEqualsSyntax (NameEquals)
+        Code: Crane =
+            IdentifierNameSyntax (IdentifierName)
+            Code: Crane
+        QualifiedNameSyntax (QualifiedName)
+        Code: Game.Crane
+            IdentifierNameSyntax (IdentifierName)
+            Code: Game
+            IdentifierNameSyntax (IdentifierName)
+            Code: Crane
+    ClassDeclarationSyntax (ClassDeclaration)
+    Code: public class CraneController
+{
+	public Crane crane;
+
+	public void MoveItems()
+	{
+			        for (int i = 0; i < 6; i++)
+        {
+            crane.PickUp();
+            crane.MoveRight();
+            crane.MoveRight();
+            crane.MoveRight();
+            crane.Drop();
+            crane.MoveLeft();
+            crane.MoveLeft();
+            crane.MoveLeft();
+        }
+
+        // Move 4 items from Column 2 to Column 4
+        crane.MoveRight(); // Move to Column 2
+        for (int i = 0; i < 4; i++)
+        {
+            crane.PickUp();
+            crane.MoveRight();
+            crane.MoveRight();
+            crane.Drop();
+            crane.MoveLeft();
+            crane.MoveLeft();
+        }
+
+		
+	}
+}
+        FieldDeclarationSyntax (FieldDeclaration)
+        Code: public Crane crane;
+            VariableDeclarationSyntax (VariableDeclaration)
+            Code: Crane crane
+                IdentifierNameSyntax (IdentifierName)
+                Code: Crane
+                VariableDeclaratorSyntax (VariableDeclarator)
+                Code: crane
+        MethodDeclarationSyntax (MethodDeclaration)
+        Code: public void MoveItems()
+	{
+			        for (int i = 0; i < 6; i++)
+        {
+            crane.PickUp();
+            crane.MoveRight();
+            crane.MoveRight();
+            crane.MoveRight();
+            crane.Drop();
+            crane.MoveLeft();
+            crane.MoveLeft();
+            crane.MoveLeft();
+        }
+
+        // Move 4 items from Column 2 to Column 4
+        crane.MoveRight(); // Move to Column 2
+        for (int i = 0; i < 4; i++)
+        {
+            crane.PickUp();
+            crane.MoveRight();
+            crane.MoveRight();
+            crane.Drop();
+            crane.MoveLeft();
+            crane.MoveLeft();
+        }
+
+		
+	}
+            PredefinedTypeSyntax (PredefinedType)
+            Code: void
+            ParameterListSyntax (ParameterList)
+            Code: ()
+            BlockSyntax (Block)
+            Code: {
+			        for (int i = 0; i < 6; i++)
+        {
+            crane.PickUp();
+            crane.MoveRight();
+            crane.MoveRight();
+            crane.MoveRight();
+            crane.Drop();
+            crane.MoveLeft();
+            crane.MoveLeft();
+            crane.MoveLeft();
+        }
+
+        // Move 4 items from Column 2 to Column 4
+        crane.MoveRight(); // Move to Column 2
+        for (int i = 0; i < 4; i++)
+        {
+            crane.PickUp();
+            crane.MoveRight();
+            crane.MoveRight();
+            crane.Drop();
+            crane.MoveLeft();
+            crane.MoveLeft();
+        }
+
+		
+	}
+                ForStatementSyntax (ForStatement)
+                Code: for (int i = 0; i < 6; i++)
+        {
+            crane.PickUp();
+            crane.MoveRight();
+            crane.MoveRight();
+            crane.MoveRight();
+            crane.Drop();
+            crane.MoveLeft();
+            crane.MoveLeft();
+            crane.MoveLeft();
+        }
+                    VariableDeclarationSyntax (VariableDeclaration)
+                    Code: int i = 0
+                        PredefinedTypeSyntax (PredefinedType)
+                        Code: int
+                        VariableDeclaratorSyntax (VariableDeclarator)
+                        Code: i = 0
+                            EqualsValueClauseSyntax (EqualsValueClause)
+                            Code: = 0
+                                LiteralExpressionSyntax (NumericLiteralExpression)
+                                Code: 0
+                    BinaryExpressionSyntax (LessThanExpression)
+                    Code: i < 6
+                        IdentifierNameSyntax (IdentifierName)
+                        Code: i
+                        LiteralExpressionSyntax (NumericLiteralExpression)
+                        Code: 6
+                    PostfixUnaryExpressionSyntax (PostIncrementExpression)
+                    Code: i++
+                        IdentifierNameSyntax (IdentifierName)
+                        Code: i
+                    BlockSyntax (Block)
+                    Code: {
+            crane.PickUp();
+            crane.MoveRight();
+            crane.MoveRight();
+            crane.MoveRight();
+            crane.Drop();
+            crane.MoveLeft();
+            crane.MoveLeft();
+            crane.MoveLeft();
+        }
+                        ExpressionStatementSyntax (ExpressionStatement)
+                        Code: crane.PickUp();
+                            InvocationExpressionSyntax (InvocationExpression)
+                            Code: crane.PickUp()
+                                MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                                Code: crane.PickUp
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: crane
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: PickUp
+                                ArgumentListSyntax (ArgumentList)
+                                Code: ()
+                        ExpressionStatementSyntax (ExpressionStatement)
+                        Code: crane.MoveRight();
+                            InvocationExpressionSyntax (InvocationExpression)
+                            Code: crane.MoveRight()
+                                MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                                Code: crane.MoveRight
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: crane
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: MoveRight
+                                ArgumentListSyntax (ArgumentList)
+                                Code: ()
+                        ExpressionStatementSyntax (ExpressionStatement)
+                        Code: crane.MoveRight();
+                            InvocationExpressionSyntax (InvocationExpression)
+                            Code: crane.MoveRight()
+                                MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                                Code: crane.MoveRight
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: crane
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: MoveRight
+                                ArgumentListSyntax (ArgumentList)
+                                Code: ()
+                        ExpressionStatementSyntax (ExpressionStatement)
+                        Code: crane.MoveRight();
+                            InvocationExpressionSyntax (InvocationExpression)
+                            Code: crane.MoveRight()
+                                MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                                Code: crane.MoveRight
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: crane
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: MoveRight
+                                ArgumentListSyntax (ArgumentList)
+                                Code: ()
+                        ExpressionStatementSyntax (ExpressionStatement)
+                        Code: crane.Drop();
+                            InvocationExpressionSyntax (InvocationExpression)
+                            Code: crane.Drop()
+                                MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                                Code: crane.Drop
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: crane
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: Drop
+                                ArgumentListSyntax (ArgumentList)
+                                Code: ()
+                        ExpressionStatementSyntax (ExpressionStatement)
+                        Code: crane.MoveLeft();
+                            InvocationExpressionSyntax (InvocationExpression)
+                            Code: crane.MoveLeft()
+                                MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                                Code: crane.MoveLeft
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: crane
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: MoveLeft
+                                ArgumentListSyntax (ArgumentList)
+                                Code: ()
+                        ExpressionStatementSyntax (ExpressionStatement)
+                        Code: crane.MoveLeft();
+                            InvocationExpressionSyntax (InvocationExpression)
+                            Code: crane.MoveLeft()
+                                MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                                Code: crane.MoveLeft
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: crane
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: MoveLeft
+                                ArgumentListSyntax (ArgumentList)
+                                Code: ()
+                        ExpressionStatementSyntax (ExpressionStatement)
+                        Code: crane.MoveLeft();
+                            InvocationExpressionSyntax (InvocationExpression)
+                            Code: crane.MoveLeft()
+                                MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                                Code: crane.MoveLeft
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: crane
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: MoveLeft
+                                ArgumentListSyntax (ArgumentList)
+                                Code: ()
+                ExpressionStatementSyntax (ExpressionStatement)
+                Code: // Move 4 items from Column 2 to Column 4
+        crane.MoveRight(); // Move to Column 2
+                    InvocationExpressionSyntax (InvocationExpression)
+                    Code: // Move 4 items from Column 2 to Column 4
+        crane.MoveRight()
+                        MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                        Code: // Move 4 items from Column 2 to Column 4
+        crane.MoveRight
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: // Move 4 items from Column 2 to Column 4
+        crane
+                            IdentifierNameSyntax (IdentifierName)
+                            Code: MoveRight
+                        ArgumentListSyntax (ArgumentList)
+                        Code: ()
+                ForStatementSyntax (ForStatement)
+                Code: for (int i = 0; i < 4; i++)
+        {
+            crane.PickUp();
+            crane.MoveRight();
+            crane.MoveRight();
+            crane.Drop();
+            crane.MoveLeft();
+            crane.MoveLeft();
+        }
+                    VariableDeclarationSyntax (VariableDeclaration)
+                    Code: int i = 0
+                        PredefinedTypeSyntax (PredefinedType)
+                        Code: int
+                        VariableDeclaratorSyntax (VariableDeclarator)
+                        Code: i = 0
+                            EqualsValueClauseSyntax (EqualsValueClause)
+                            Code: = 0
+                                LiteralExpressionSyntax (NumericLiteralExpression)
+                                Code: 0
+                    BinaryExpressionSyntax (LessThanExpression)
+                    Code: i < 4
+                        IdentifierNameSyntax (IdentifierName)
+                        Code: i
+                        LiteralExpressionSyntax (NumericLiteralExpression)
+                        Code: 4
+                    PostfixUnaryExpressionSyntax (PostIncrementExpression)
+                    Code: i++
+                        IdentifierNameSyntax (IdentifierName)
+                        Code: i
+                    BlockSyntax (Block)
+                    Code: {
+            crane.PickUp();
+            crane.MoveRight();
+            crane.MoveRight();
+            crane.Drop();
+            crane.MoveLeft();
+            crane.MoveLeft();
+        }
+                        ExpressionStatementSyntax (ExpressionStatement)
+                        Code: crane.PickUp();
+                            InvocationExpressionSyntax (InvocationExpression)
+                            Code: crane.PickUp()
+                                MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                                Code: crane.PickUp
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: crane
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: PickUp
+                                ArgumentListSyntax (ArgumentList)
+                                Code: ()
+                        ExpressionStatementSyntax (ExpressionStatement)
+                        Code: crane.MoveRight();
+                            InvocationExpressionSyntax (InvocationExpression)
+                            Code: crane.MoveRight()
+                                MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                                Code: crane.MoveRight
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: crane
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: MoveRight
+                                ArgumentListSyntax (ArgumentList)
+                                Code: ()
+                        ExpressionStatementSyntax (ExpressionStatement)
+                        Code: crane.MoveRight();
+                            InvocationExpressionSyntax (InvocationExpression)
+                            Code: crane.MoveRight()
+                                MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                                Code: crane.MoveRight
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: crane
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: MoveRight
+                                ArgumentListSyntax (ArgumentList)
+                                Code: ()
+                        ExpressionStatementSyntax (ExpressionStatement)
+                        Code: crane.Drop();
+                            InvocationExpressionSyntax (InvocationExpression)
+                            Code: crane.Drop()
+                                MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                                Code: crane.Drop
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: crane
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: Drop
+                                ArgumentListSyntax (ArgumentList)
+                                Code: ()
+                        ExpressionStatementSyntax (ExpressionStatement)
+                        Code: crane.MoveLeft();
+                            InvocationExpressionSyntax (InvocationExpression)
+                            Code: crane.MoveLeft()
+                                MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                                Code: crane.MoveLeft
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: crane
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: MoveLeft
+                                ArgumentListSyntax (ArgumentList)
+                                Code: ()
+                        ExpressionStatementSyntax (ExpressionStatement)
+                        Code: crane.MoveLeft();
+                            InvocationExpressionSyntax (InvocationExpression)
+                            Code: crane.MoveLeft()
+                                MemberAccessExpressionSyntax (SimpleMemberAccessExpression)
+                                Code: crane.MoveLeft
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: crane
+                                    IdentifierNameSyntax (IdentifierName)
+                                    Code: MoveLeft
+                                ArgumentListSyntax (ArgumentList)
+                                Code: ()

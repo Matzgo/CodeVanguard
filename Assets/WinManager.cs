@@ -36,7 +36,7 @@ public class WinManager : MonoBehaviour
     {
         yield return new WaitForSeconds(delay);
         winScreen.SetActive(true);
-        StartCoroutine(HideWinScreenAfterDelay(6f)); // Hide after 6 seconds
+        //StartCoroutine(HideWinScreenAfterDelay(6f)); // Hide after 6 seconds
     }
 
     private IEnumerator HideWinScreenAfterDelay(float delay)

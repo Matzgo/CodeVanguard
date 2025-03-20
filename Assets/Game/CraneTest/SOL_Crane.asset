@@ -14,4 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _fileName: 
   _text: "public class CraneController\n{\n\tpublic Crane crane;\n\n\tpublic void
-    MoveItems()\n\t{\n\t\tfor(int i = 0; i < 10; i++)\n\t\t{\n\t\t\tcrane.PickUp();\n\t\t\tcrane.MoveRight();\n\t\t\tcrane.MoveRight();\n\t\t\tcrane.MoveRight();\n\t\t\tcrane.Drop();\n\t\t\tcrane.MoveLeft();\n\t\t\tcrane.MoveLeft();\n\t\t\tcrane.MoveLeft();\n\t\t}\n\t}\n}"
+    MoveItems()\n\t{\n        for (int i = 0; i < 6; i++)\n        {\n           
+    crane.PickUp();\n            crane.MoveRight();\n            crane.MoveRight();\n           
+    crane.MoveRight();\n            crane.Drop();\n            crane.MoveLeft();\n           
+    crane.MoveLeft();\n            crane.MoveLeft();\n        }\n\n        // Move
+    4 items from Column 2 to Column 4\n        crane.MoveRight(); // Move to Column
+    2\n        for (int i = 0; i < 4; i++)\n        {\n            crane.PickUp();\n           
+    crane.MoveRight();\n            crane.MoveRight();\n            crane.Drop();\n           
+    crane.MoveLeft();\n            crane.MoveLeft();\n        }\n\t}\n}"

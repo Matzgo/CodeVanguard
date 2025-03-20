@@ -27,6 +27,7 @@ namespace CodeInspector
         public StructureFeedbackTypes StructureFeedbackTypes => _structureFeedbackTypes;
 
 
+
         [SerializeField]
         string _onPluggedInFeedbackKey;
         public string OnPluggedInFeedbackKey => _onPluggedInFeedbackKey;
@@ -50,7 +51,9 @@ namespace CodeInspector
         public string Description => _description;
 
 
-
+        [SerializeField]
+        MiniGame _miniGame;
+        public MiniGame MiniGame => _miniGame;
 
         [SerializeField]
         string _fileSetName;

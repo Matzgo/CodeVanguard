@@ -116,8 +116,22 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: 4457e485cbb9d1945a4b1eba3b71b293, type: 3}
     postDelay: 0
   - key: CRANE_Valid
-    feedbackText: Nice Job! All the Fuel Crates are burned up. The Moon Base will
-      be powered for thirty seven point five six eight years before it needs to be
-      refueled again.
+    feedbackText: Nice Job! All the Fuel Crates are burned up. The Moon Base can
+      now stay powered for thirty two more years.
     audioClip: {fileID: 8300000, guid: fa425ef615439424c92f159358566a7c, type: 3}
+    postDelay: 0
+  - key: ANTENNA_Start
+    feedbackText: We need to calibrate the Antenna by sorting the shown signal numbers
+      in ascending order.
+    audioClip: {fileID: 8300000, guid: af644b82f3146ee4b9fa513326b620b5, type: 3}
+    postDelay: 0
+  - key: ANTENNA_Valid
+    feedbackText: Nice! The Antenna has been calibrated successfully!
+    audioClip: {fileID: 8300000, guid: 2f407bb6e66437c478d2ae15322ece4a, type: 3}
+    postDelay: 0
+  - key: ANTENNA_Invalid
+    feedbackText: Hmm that doesn't seem to be correct. We need to make sure that
+      the antenna code returns a list of numbers sorted in ascending order. Maybe
+      with some sorting algortihm.
+    audioClip: {fileID: 8300000, guid: 74d706ded3a1d344b8d6d997e0c9fa8b, type: 3}
     postDelay: 0

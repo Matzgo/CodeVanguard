@@ -15,6 +15,8 @@ namespace CodeInspector
 
         public bool IsSimOn => _simMode;
 
+        public bool IsMiniGameOn => _activeMiniGame;
+
         public Action ResetStartButton;
 
         [SerializeField]
@@ -61,6 +63,8 @@ namespace CodeInspector
         public void ResetWorld()
         {
             WorldGameReset?.Invoke();
+            MiniGameReset?.Invoke();
+
         }
 
         public void Trigger(string key)

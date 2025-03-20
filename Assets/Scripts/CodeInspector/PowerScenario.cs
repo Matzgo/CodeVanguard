@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -99,7 +100,16 @@ public class PowerScenario : Scenario
         _blueBeam.SetActive(true);
         // Reset redirect state for the new beam
         _wasBeamRedirected = false;
+
+        StartCoroutine(DisableBeamAfterSeconds(ScenarioTickTime * 3f));
+
         cntr++;
+    }
+
+    private IEnumerator DisableBeamAfterSeconds(float v)
+    {
+        yield return new WaitForSeconds(v);
+        _blueBeam.SetActive(false);
     }
 
     public void RedirectBeam()

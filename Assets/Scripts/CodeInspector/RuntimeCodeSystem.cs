@@ -211,6 +211,7 @@ public class RuntimeCodeSystem : MonoBehaviour
         EvaluationDataTracker.Instance.TrackEvent("debugClicked");
 
         RuntimeManager.Instance.DisableWorldGame();
+        RuntimeManager.Instance.EnableMiniGame();
         CompileAndRun();
 
     }
@@ -240,7 +241,9 @@ public class RuntimeCodeSystem : MonoBehaviour
             RuntimeManager.Instance.Console.SetActive(false);
             _coroutineDisabled = true;
             RuntimeManager.Instance.DisableWorldGame();
+            RuntimeManager.Instance.DisableMiniGame();
             CompileAndRun();
+            RuntimeManager.Instance.EnableMiniGame();
             RuntimeManager.Instance.EnableWorldGame();
             _coroutineDisabled = false;
             RuntimeManager.Instance.Console.SetActive(true);
@@ -380,8 +383,10 @@ public class RuntimeCodeSystem : MonoBehaviour
     {
         var p = RuntimeManager.Instance.IsWorldGameOn;
 
+        var mg = RuntimeManager.Instance.IsMiniGameOn;
         //RuntimeManager.Instance.DisableMiniGame();
         RuntimeManager.Instance.DisableWorldGame();
+        RuntimeManager.Instance.DisableMiniGame();
         RuntimeManager.Instance.Console.SetActive(false);
 
         OnReflectionInitialize?.Invoke(_userScript, _currentTask.ScenarioType, _scenario);
@@ -396,7 +401,13 @@ public class RuntimeCodeSystem : MonoBehaviour
         }
         //RuntimeManager.Instance.EnableMiniGame();
         if (p)
+        {
             RuntimeManager.Instance.EnableWorldGame();
+        }
+
+        if (mg)
+            RuntimeManager.Instance.EnableMiniGame();
+
 
 
         RuntimeManager.Instance.Console.SetActive(true);
@@ -431,6 +442,7 @@ public class RuntimeCodeSystem : MonoBehaviour
         RuntimeManager.Instance.ResetWorld();
         RuntimeManager.Instance.EnableWorldGame();
         RuntimeManager.Instance.EnableWorldSimulator();
+        RuntimeManager.Instance.DisableMiniGame();
 
 
         OnReflectionInitialize?.Invoke(_userScript, _currentTask.ScenarioType, _scenario);

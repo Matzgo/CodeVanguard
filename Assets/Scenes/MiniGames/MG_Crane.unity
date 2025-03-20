@@ -524,7 +524,7 @@ Camera:
     serializedVersion: 2
     m_Bits: 192
   m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: 0a37f308414112f42b88f99155704e01, type: 2}
+  m_TargetTexture: {fileID: 8400000, guid: afd0551e4a727594a9873d2f1fb1f554, type: 2}
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 1
@@ -1128,7 +1128,7 @@ MonoBehaviour:
   _craneItemPrefab: {fileID: 5677690688530006263, guid: 15b3b449555ca9044ac1e35b04fbf94a,
     type: 3}
   _awakeParams:
-    cols: 0a000000000000000000000000000000
+    cols: 06000000040000000000000000000000
     craneStartPos: 0
     targetCols: 0000000000000000000000000a000000
   _colPositions:

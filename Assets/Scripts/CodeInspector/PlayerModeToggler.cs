@@ -20,6 +20,18 @@ public class PlayerModeToggler : MonoBehaviour
     {
         InputManager.Instance.Input.Code.ToggleCode.performed += ToggleCode;
         InputManager.Instance.Input.Code.Pause.performed += TogglePauseMenu;
+
+        _pauseMenu.SetActive(true);
+
+        Time.timeScale = 0f;
+        UnlockAndShowCursor();
+        InputManager.Instance.Input.Player.Disable();
+    }
+
+    public void DisablePause()
+    {
+        var context = new UnityEngine.InputSystem.InputAction.CallbackContext();
+        TogglePauseMenu(context);
     }
 
     private void TogglePauseMenu(UnityEngine.InputSystem.InputAction.CallbackContext context)

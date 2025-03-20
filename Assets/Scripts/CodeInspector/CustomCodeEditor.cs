@@ -566,6 +566,14 @@ namespace CodeInspector
             this.lastText = newText;
         }
 
+
+        private void Update()
+        {
+            if (inputField != null)
+            {
+                inputField.interactable = CodeVanguardManager.Instance.PlayerModeToggler.CodeModeActive;
+            }
+        }
         //MTZ-Refactor
         private void UpdateCurrentLineNumbers()
         {

@@ -7,6 +7,7 @@ public enum ScreenType
     Console,
     Task,
     TaskAction,
+    Visual,
 }
 
 public class ScreenManager : MonoBehaviour
@@ -22,8 +23,8 @@ public class ScreenManager : MonoBehaviour
     GameObject _consoleScreen;
 
     [SerializeField]
-    FeedbackBotBehaviour _task;
-    public FeedbackBotBehaviour Task => _task;
+    FeedbackBotBehaviour _feedbackBot;
+    public FeedbackBotBehaviour FeedbackBot => _feedbackBot;
 
     [SerializeField]
     GameObject _taskScreen;
@@ -65,7 +66,9 @@ public class ScreenManager : MonoBehaviour
             case ScreenType.TaskAction:
                 _taskActionScreen.SetActive(true);
                 _taskActionScreen2.SetActive(true);
-
+                break;
+            case ScreenType.Visual:
+                _visualScreen.SetActive(true);
                 break;
         }
     }
@@ -86,21 +89,24 @@ public class ScreenManager : MonoBehaviour
             case ScreenType.TaskAction:
                 _taskActionScreen.SetActive(false);
                 _taskActionScreen2.SetActive(false);
-
                 break;
+            case ScreenType.Visual:
+                _visualScreen.SetActive(false);
+                break;
+
         }
     }
 
     internal void LoadTask(CSFileSet task)
     {
         _main.LoadTask(task);
-        _task.LoadTask(task);
+        _feedbackBot.LoadTask(task);
 
     }
 
     internal void LoadResult(GradingResult res)
     {
         _main.LoadResult(res);
-        _task.QueueFeedback(res);
+        _feedbackBot.QueueFeedback(res);
     }
 }

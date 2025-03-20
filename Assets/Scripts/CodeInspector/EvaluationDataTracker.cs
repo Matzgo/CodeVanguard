@@ -54,9 +54,13 @@ public class EvaluationDataTracker : MonoBehaviour
     public void TrackEvent(string key)
     {
         if (!_eventCount.ContainsKey(key))
+        {
             _eventCount.Add(key, 1);
+        }
 
         _eventCount[key]++;
+        AddTimestamp($"Event Occured {key}");
+
     }
 
     public void StopTrackTime(string key)

@@ -20,12 +20,13 @@ public class AntennaScenarioSimulator
         if (isCorrect)
         {
             //feedback.Add("Great job! The configuration is correct.");
-            //feedbackKey.Add("Correct");
+            feedbackKey.Add("ANTENNA_Valid");
         }
         else
         {
             feedback.Add("The order is incorrect, try changing the order");
-            //feedbackKey.Add("Incorrect");
+            feedbackKey.Add("ANTENNA_Invalid");
+
         }
 
         return (isCorrect, feedback, feedbackKey);

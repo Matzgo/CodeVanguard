@@ -399,7 +399,16 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Crane\n\n   Crane.MoveLeft();\n\n   Crane.MoveRight();"
+  m_text: 'MAIN TERMINAL INSTRUCTIONS:
+
+
+    The main terminal allows code modification
+    of moon base systems. Take the cable of any of the systems and plug it into the
+    main computer to modify it''s functionality.
+
+
+    Reset the Code to it''s initial
+    state with the '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 27d990be6d34e4148b569353d9903967, type: 2}
   m_sharedMaterial: {fileID: 21945991383466538, guid: 27d990be6d34e4148b569353d9903967,

@@ -49,6 +49,9 @@ public class CodeVanguardManager : MonoBehaviour
     [SerializeField] bool _useFeedbackSystem;
     public bool UseFeedbackSystem => _useFeedbackSystem;
 
+    [SerializeField] PlayerModeToggler _playerModeToggler;
+    public PlayerModeToggler PlayerModeToggler => _playerModeToggler;
+
     public string UniqueId { get; set; }
 
     private void Awake()
@@ -116,6 +119,11 @@ public class CodeVanguardManager : MonoBehaviour
         }
 
         RuntimeManager.Instance.Console.ClearConsole();
+        if (_task.MiniGame != null)
+        {
+            _task.MiniGame.LoadScene();
+            _screenManager.TurnOn(ScreenType.Visual);
+        }
         _screenManager.Main.ShowCodeWindow();
         _screenManager.TurnOn(ScreenType.Main);
         _screenManager.TurnOn(ScreenType.Task);
@@ -152,7 +160,7 @@ public class CodeVanguardManager : MonoBehaviour
 
 
         _screenManager.LoadResult(res);
-
+        _task.MiniGame.UnloadScene();
         _screenManager.TurnOn(ScreenType.Main);
         _screenManager.Main.ShowPostTaskWindow();
         _screenManager.TurnOn(ScreenType.Console);
@@ -166,8 +174,13 @@ public class CodeVanguardManager : MonoBehaviour
         _screenManager.TurnOffAllScreens();
         _screenManager.TurnOn(ScreenType.Main);
         _screenManager.Main.ShowLogInWindow();
+
         if (_task != null)
         {
+            if (_task.MiniGame != null)
+            {
+                _task.MiniGame.UnloadScene();
+            }
             EvaluationDataTracker.Instance.StopTrackTime(_task.TaskID);
         }
 
