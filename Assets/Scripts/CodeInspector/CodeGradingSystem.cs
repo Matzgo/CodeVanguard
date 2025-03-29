@@ -260,6 +260,8 @@ public class CodeGradingSystem : MonoBehaviour
             var userTree = CSharpSyntaxTree.ParseText(userCode);
             var solutionTree = CSharpSyntaxTree.ParseText(solutionCode);
 
+
+
             // Count various memory allocation types
             // Count allocation types separately
             int CountObjectCreations(SyntaxTree tree) =>
@@ -370,6 +372,14 @@ public class CodeGradingSystem : MonoBehaviour
 
                 }
 
+                int unusedVars = CountUnusedVariables(userTree);
+                if (unusedVars > 0)
+                {
+                    score -= 10f * unusedVars; // penalize per unused variable
+                    feedbackKeys.Add("MEM_UNUSED_VAR");
+                    feedback.Add($"{unusedVars} unused variable(s) detected. Consider removing them to reduce memory footprint.");
+                }
+
                 score = Math.Max(0f, score); // Ensure the score is not negative
             }
 
@@ -390,6 +400,32 @@ public class CodeGradingSystem : MonoBehaviour
         }
 
         return (score, feedback, feedbackKeys);
+    }
+
+    int CountUnusedVariables(SyntaxTree tree)
+    {
+        var root = tree.GetRoot();
+        var semanticModel = CSharpCompilation.Create("Temp")
+            .AddSyntaxTrees(tree)
+            .AddReferences(MetadataReference.CreateFromFile(typeof(object).Assembly.Location))
+            .GetSemanticModel(tree);
+
+        var declaredVariables = root.DescendantNodes()
+            .OfType<VariableDeclaratorSyntax>()
+            .Select(v => semanticModel.GetDeclaredSymbol(v))
+            .Where(s => s is ILocalSymbol)
+            .Cast<ILocalSymbol>()
+            .ToList();
+
+        var identifiers = root.DescendantNodes().OfType<IdentifierNameSyntax>();
+
+        var usedSymbols = identifiers
+            .Select(id => semanticModel.GetSymbolInfo(id).Symbol)
+            .OfType<ILocalSymbol>()
+            .ToHashSet();
+
+        int unusedCount = declaredVariables.Count(v => !usedSymbols.Contains(v));
+        return unusedCount;
     }
 
     private (float score, List<string> feedback, List<string> feedbackKeys) GradeNaming(string userCode, string solutionCode, CSFileSet task)

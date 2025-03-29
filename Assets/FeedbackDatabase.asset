@@ -43,9 +43,10 @@ MonoBehaviour:
     audioClip: {fileID: 8300000, guid: a66a90c97d69fdc4b91c80eb77f2d7b7, type: 3}
     postDelay: 0
   - key: SAFE_Start
-    feedbackText: Maybe you can modify the Button Code to access the Safe. Press
-      on the Screen near the Safe to run the code.
-    audioClip: {fileID: 8300000, guid: 82d66fa3550c52945bac815746444c3c, type: 3}
+    feedbackText: Maybe you can modify the button code to access the safe. The solar
+      storm must've messed up the names of some variables too. If you want to run
+      the code, click on the screen near the safe.
+    audioClip: {fileID: 8300000, guid: 23dd06ec3a70e034a890377587cdc086, type: 3}
     postDelay: 0
   - key: SAFE_Locked
     feedbackText: The safe is still closed. Maybe you could change how the condition
@@ -134,4 +135,8 @@ MonoBehaviour:
       the antenna code returns a list of numbers sorted in ascending order. Maybe
       with some sorting algortihm.
     audioClip: {fileID: 8300000, guid: 74d706ded3a1d344b8d6d997e0c9fa8b, type: 3}
+    postDelay: 0
+  - key: MEM_UNUSED_VAR
+    feedbackText: We should remove any unused variables to reduce the memory footprint.
+    audioClip: {fileID: 8300000, guid: bf5196bd96eded54caf3d6881260e61e, type: 3}
     postDelay: 0

@@ -19,7 +19,6 @@ using UnityEngine.UI;
 //-###################\\/      \//###################-
 //_#/|##########/\######(   /\   )######/\##########|\#_
 // |/ |#/\#/\#/\/  \#/\##\  |  |  /##/\#/  \/\#/\#/\| \
-// '  |/  _lerpSpeed  _lerpSpeed '   _lerpSpeed  \\#\| |  | |/#/  _lerpSpeed   '  _lerpSpeed  _lerpSpeed  \|
 //    '   '  '      '   / | |  | | \   '      '  '   '
 //                     (  | |  | |  )
 //                    __\ | |  | | /__
@@ -189,6 +188,13 @@ public class CoroutineTransformer : MonoBehaviour
 
         // Transform all statements, including nested blocks
         var transformedStatements = TransformStatements(originalStatements);
+
+        if (transformedStatements.Count == 0)
+        {
+            var fallbackYield = SyntaxFactory.ParseStatement(
+                $"yield return new UnityEngine.WaitForSeconds({_codeRate.ToString(CultureInfo.InvariantCulture)}f);");
+            transformedStatements.Add(fallbackYield);
+        }
 
         // DisableMiniGame highlight line after all statements
         var disableRunningLine = SyntaxFactory.ParseStatement($"CodeInspector.RuntimeManager.Instance.DisableHighlightLine();");

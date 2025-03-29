@@ -15731,14 +15731,14 @@ PrefabInstance:
 
         Reset
         the Code to it''s initial state with the red Reset button. You can test your
-        code with line by line executin by clicking the green Test button. You can
-        also adjust the speed of the line by line execution with the right buttons
-        on the test screen.
+        code with line by line executin by clicking the green Test button on the
+        right. You can also adjust the speed of the line by line execution with the
+        Faster and Slower buttons.
 
 
-        If you want to execute your code on the corresponding
-        system, go to the terminal located near the plugged in component and press
-        the Start button.'
+        If you want to execute your code on
+        the connected component of the moonbase, go to the other end of the cable
+        near the component location and use the screen located there.'
       objectReference: {fileID: 0}
     - target: {fileID: 2897827211572258882, guid: 41897486ae15e524193558f3b4d9a574,
         type: 3}
@@ -17567,17 +17567,17 @@ MonoBehaviour:
   nodeDistance: 0.6
   nodeColliderRadius: 0.15
   gravityStrength: 0.5
-  totalNodes: 30
+  totalNodes: 32
   velocityDampen: 0.95
   stiffness: 0.8
-  iterateCollisionsEvery: 5
-  iterations: 24
+  iterateCollisionsEvery: 2
+  iterations: 32
   colliderBufferSize: 3
   maxVelocity: 0.035
   ropeWidth: 0.1
   start: {fileID: 1772038494}
   end: {fileID: 1437528774}
-  drawMesh: 1
+  drawMesh: 0
   intermediateNodes: 10
   currentRopeLength: 0
   initialRopeLength: 0
@@ -17590,7 +17590,7 @@ LineRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 861294577}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -17647,8 +17647,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 1, b: 1, a: 1}
-      key1: {r: 1, g: 1, b: 1, a: 1}
+      key0: {r: 0.13962269, g: 0.13962269, b: 0.13962269, a: 1}
+      key1: {r: 0.14117648, g: 0.14117648, b: 0.14117648, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -17672,11 +17672,11 @@ LineRenderer:
       atime6: 0
       atime7: 0
       m_Mode: 0
-      m_ColorSpace: -1
+      m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 0
-    numCapVertices: 0
+    numCornerVertices: 5
+    numCapVertices: 3
     alignment: 0
     textureMode: 0
     textureScale: {x: 1, y: 1}
@@ -28649,7 +28649,7 @@ LineRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1448004728}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -28706,8 +28706,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 1, b: 1, a: 1}
-      key1: {r: 1, g: 1, b: 1, a: 1}
+      key0: {r: 0.13962269, g: 0.13962269, b: 0.13962269, a: 1}
+      key1: {r: 0.14117648, g: 0.14117648, b: 0.14117648, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -28731,11 +28731,11 @@ LineRenderer:
       atime6: 0
       atime7: 0
       m_Mode: 0
-      m_ColorSpace: -1
+      m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 0
-    numCapVertices: 0
+    numCornerVertices: 5
+    numCapVertices: 3
     alignment: 0
     textureMode: 0
     textureScale: {x: 1, y: 1}
@@ -28766,14 +28766,14 @@ MonoBehaviour:
   totalNodes: 50
   velocityDampen: 0.956
   stiffness: 0.866
-  iterateCollisionsEvery: 4
+  iterateCollisionsEvery: 2
   iterations: 32
   colliderBufferSize: 3
   maxVelocity: 0.035
   ropeWidth: 0.1
   start: {fileID: 610975501}
   end: {fileID: 2800372}
-  drawMesh: 1
+  drawMesh: 0
   intermediateNodes: 10
   currentRopeLength: 0
   initialRopeLength: 0
@@ -30898,14 +30898,14 @@ MonoBehaviour:
   totalNodes: 60
   velocityDampen: 0.956
   stiffness: 0.866
-  iterateCollisionsEvery: 4
+  iterateCollisionsEvery: 2
   iterations: 32
   colliderBufferSize: 3
   maxVelocity: 0.035
   ropeWidth: 0.1
   start: {fileID: 1856656625}
   end: {fileID: 1443537086}
-  drawMesh: 1
+  drawMesh: 0
   intermediateNodes: 10
   currentRopeLength: 0
   initialRopeLength: 0
@@ -30918,7 +30918,7 @@ LineRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1548802148}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -30975,8 +30975,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 1, b: 1, a: 1}
-      key1: {r: 1, g: 1, b: 1, a: 1}
+      key0: {r: 0.13962269, g: 0.13962269, b: 0.13962269, a: 1}
+      key1: {r: 0.14117648, g: 0.14117648, b: 0.14117648, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -31000,11 +31000,11 @@ LineRenderer:
       atime6: 0
       atime7: 0
       m_Mode: 0
-      m_ColorSpace: -1
+      m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 0
-    numCapVertices: 0
+    numCornerVertices: 5
+    numCapVertices: 3
     alignment: 0
     textureMode: 0
     textureScale: {x: 1, y: 1}
@@ -33547,50 +33547,6 @@ Transform:
   - {fileID: 1187423005}
   m_Father: {fileID: 1571753643}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1670803783
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1670803785}
-  - component: {fileID: 1670803784}
-  m_Layer: 0
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1670803784
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1670803783}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 235b05df5c4c56c46a67d76c17cb713b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!4 &1670803785
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1670803783}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1671986615
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -35404,7 +35360,7 @@ LineRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1747202501}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -35461,8 +35417,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 1, b: 1, a: 1}
-      key1: {r: 1, g: 1, b: 1, a: 1}
+      key0: {r: 0.13962269, g: 0.13962269, b: 0.13962269, a: 1}
+      key1: {r: 0.14117648, g: 0.14117648, b: 0.14117648, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -35486,11 +35442,11 @@ LineRenderer:
       atime6: 0
       atime7: 0
       m_Mode: 0
-      m_ColorSpace: -1
+      m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 0
-    numCapVertices: 0
+    numCornerVertices: 5
+    numCapVertices: 3
     alignment: 0
     textureMode: 0
     textureScale: {x: 1, y: 1}
@@ -35521,14 +35477,14 @@ MonoBehaviour:
   totalNodes: 16
   velocityDampen: 0.956
   stiffness: 0.814
-  iterateCollisionsEvery: 4
+  iterateCollisionsEvery: 2
   iterations: 32
   colliderBufferSize: 3
   maxVelocity: 0.035
   ropeWidth: 0.1
   start: {fileID: 1831903005}
   end: {fileID: 885092318}
-  drawMesh: 1
+  drawMesh: 0
   intermediateNodes: 10
   currentRopeLength: 0
   initialRopeLength: 0
@@ -39375,14 +39331,14 @@ MonoBehaviour:
   totalNodes: 50
   velocityDampen: 0.95
   stiffness: 0.8
-  iterateCollisionsEvery: 5
-  iterations: 24
+  iterateCollisionsEvery: 2
+  iterations: 32
   colliderBufferSize: 3
   maxVelocity: 0.035
   ropeWidth: 0.1
   start: {fileID: 198875807}
   end: {fileID: 364624430}
-  drawMesh: 1
+  drawMesh: 0
   intermediateNodes: 10
   currentRopeLength: 0
   initialRopeLength: 0
@@ -39395,7 +39351,7 @@ LineRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1953107253}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -39452,8 +39408,8 @@ LineRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 1, b: 1, a: 1}
-      key1: {r: 1, g: 1, b: 1, a: 1}
+      key0: {r: 0.13962269, g: 0.13962269, b: 0.13962269, a: 1}
+      key1: {r: 0.14117648, g: 0.14117648, b: 0.14117648, a: 1}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
       key4: {r: 0, g: 0, b: 0, a: 0}
@@ -39477,11 +39433,11 @@ LineRenderer:
       atime6: 0
       atime7: 0
       m_Mode: 0
-      m_ColorSpace: -1
+      m_ColorSpace: 0
       m_NumColorKeys: 2
       m_NumAlphaKeys: 2
-    numCornerVertices: 0
-    numCapVertices: 0
+    numCornerVertices: 5
+    numCapVertices: 3
     alignment: 0
     textureMode: 0
     textureScale: {x: 1, y: 1}
@@ -45436,7 +45392,6 @@ SceneRoots:
   - {fileID: 1522252284}
   - {fileID: 870992058}
   - {fileID: 899325946}
-  - {fileID: 1670803785}
   - {fileID: 1303038031}
   - {fileID: 484836524}
   - {fileID: 1524620867}

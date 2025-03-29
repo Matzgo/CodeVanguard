@@ -191,12 +191,15 @@ public class Rope : MonoBehaviour
         isStartLocked = true;
         endLock = end.transform.position;
         isEndLocked = true;
-        //DrawRope();
+
         CalculateRopeLength();
         //ValidateMatrices();
         // Instanced drawing here is really performant over using GameObjects
         if (drawMesh)
             Graphics.DrawMeshInstanced(link, 0, linkMaterial, matrices, totalIntermediateNodes);
+        else
+            DrawRope();
+
     }
 
     void ValidateMatrices()

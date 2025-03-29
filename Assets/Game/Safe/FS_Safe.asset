@@ -18,7 +18,9 @@ MonoBehaviour:
   _taskType: 0
   _scenarioType: 1
   _title: Safe
-  _description: Modify the Code to open the Safe
+  _description: Modify the Code to open the Safe. It also seems the code has scrambled
+    the name of some variables.
+  _miniGame: {fileID: 0}
   _fileSetName: Safe
   _entryPointFile: {fileID: 11400000, guid: 763334f5804992a4cb5c7046a2b6a18e, type: 2}
   _entryPoint: OpenSafeButton

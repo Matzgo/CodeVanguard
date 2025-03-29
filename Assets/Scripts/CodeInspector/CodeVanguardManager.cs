@@ -44,8 +44,7 @@ public class CodeVanguardManager : MonoBehaviour
     [SerializeField]
     UIObjective _uiObjective;
 
-    [SerializeField] bool _useStarSystem;
-    public bool UseStarSystem => _useStarSystem;
+    public bool UseStarSystem => GameManager.Instance.UseStarSystem;
     [SerializeField] bool _useFeedbackSystem;
     public bool UseFeedbackSystem => _useFeedbackSystem;
 
@@ -155,12 +154,15 @@ public class CodeVanguardManager : MonoBehaviour
 
         if (_task != null)
         {
+            if (_task.MiniGame != null)
+            {
+                _task.MiniGame.UnloadScene();
+            }
             EvaluationDataTracker.Instance.StopTrackTime(_task.TaskID);
         }
 
 
         _screenManager.LoadResult(res);
-        _task.MiniGame.UnloadScene();
         _screenManager.TurnOn(ScreenType.Main);
         _screenManager.Main.ShowPostTaskWindow();
         _screenManager.TurnOn(ScreenType.Console);
