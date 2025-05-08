@@ -21,11 +21,11 @@ public class PlayerModeToggler : MonoBehaviour
         InputManager.Instance.Input.Code.ToggleCode.performed += ToggleCode;
         InputManager.Instance.Input.Code.Pause.performed += TogglePauseMenu;
 
-        _pauseMenu.SetActive(true);
+        _pauseMenu.SetActive(false);
 
-        Time.timeScale = 0f;
-        UnlockAndShowCursor();
-        InputManager.Instance.Input.Player.Disable();
+        Time.timeScale = 1f;
+        LockAndHideCursor();
+        InputManager.Instance.Input.Player.Enable();
     }
 
     public void DisablePause()

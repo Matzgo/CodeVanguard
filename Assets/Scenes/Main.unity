@@ -4758,9 +4758,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "MOON BASE OPERATIONAL\nYOU WIN!\n\nContinue if you want to improve upen
-    your solutions!\n\nPlease fill out the rest of the survey when you're done!\n\nThen
-    exit the game by pressing ESC and clicking \non the Quit Button in the top right
-    corner"
+    your solutions!\n\nExit the game by pressing ESC and clicking \non the Quit Button
+    in the top right corner"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: dcf11b8e8d29a7a4c977b4bf11c7fd75, type: 2}
   m_sharedMaterial: {fileID: 371005227435882848, guid: dcf11b8e8d29a7a4c977b4bf11c7fd75,
@@ -25696,7 +25695,6 @@ MonoBehaviour:
   _feedbackBot: {fileID: 899325951}
   _task: {fileID: 0}
   _uiObjective: {fileID: 2049956353}
-  _useStarSystem: 1
   _useFeedbackSystem: 1
   _playerModeToggler: {fileID: 1559791157}
 --- !u!4 &1303038031
@@ -26779,7 +26777,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1360097137
 RectTransform:
   m_ObjectHideFlags: 0
@@ -29510,7 +29508,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1470300230
 RectTransform:
   m_ObjectHideFlags: 0
@@ -30219,7 +30217,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1511133341
 RectTransform:
   m_ObjectHideFlags: 0
@@ -33713,7 +33711,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1674635747
 RectTransform:
   m_ObjectHideFlags: 0
@@ -42084,7 +42082,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2136140619
 RectTransform:
   m_ObjectHideFlags: 0
